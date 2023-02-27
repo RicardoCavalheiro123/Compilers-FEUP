@@ -16,6 +16,7 @@ public class Launcher {
     public static void main(String[] args) {
         // Setups console logging and other things
         SpecsSystem.programStandardInit();
+        // test
 
         // Parse arguments as a map with predefined options
         var config = parseArgs(args);
