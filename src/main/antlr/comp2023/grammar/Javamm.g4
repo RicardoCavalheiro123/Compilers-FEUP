@@ -23,10 +23,10 @@ program
     ;
 
 importDeclaration
-    : 'import' ID ('.'ID)* ';';
+    : 'import' library=ID ('.'ID)* ';';
 
 classDeclaration
-    : 'class' ID ('extends' ID)? '{' (varDeclaration)* (methodDeclaration)* '}'
+    : 'class' name=ID ('extends' extends_name=ID)? '{' (varDeclaration)* (methodDeclaration)* '}'
     ;
 
 varDeclaration
@@ -39,11 +39,11 @@ methodDeclaration
     ;
 
 type
-    : 'int' '['']'
-    | 'boolean'
-    | 'int'
-    | 'String'
-    | ID
+    : value='int''['']'
+    | value='boolean'
+    | value='int'
+    | value='String'
+    | value=ID
     ;
 
 statement
@@ -62,9 +62,9 @@ expression
     | expression op=(LOGICAL_OP | COMP_OP) expression #BinaryOp
     | value=INTEGER #Integer
     | value=ID #Identifier
-    | expression '[' expression ']' #ArrayAccess
+    | expression '[' index=expression ']' #ArrayAccess
     | expression '.' 'length' #ArrayLength
-    | expression '.' ID '(' ( expression (',' expression)* )? ')' #MethodCall
+    | method=expression '.' ID '(' ( expression (',' expression)* )? ')' #MethodCall
     | 'new' 'int' '[' expression ']' #NewIntArray
     | 'new' ID '(' ')' #NewObject
     | '!'expression #UnaryOp
