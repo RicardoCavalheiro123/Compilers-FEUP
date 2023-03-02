@@ -14,7 +14,6 @@ MULTDIV : '*' | '/';
 PLUSMINUS : '+' | '-';
 PAR_OPEN : '(';
 PAR_CLOSE : ')';
-BOOL: 'true' | 'false';
 
 WS : [ \t\n\r\f]+ -> skip ;
 
@@ -26,7 +25,7 @@ importDeclaration
     : 'import' library=ID ('.'ID)* ';';
 
 classDeclaration
-    : 'class' name=ID ('extends' extends_name=ID)? '{' (varDeclaration)* (methodDeclaration)* '}'
+    : 'class' name=ID ('extends' extend=ID)? '{' (varDeclaration)* (methodDeclaration)* '}'
     ;
 
 varDeclaration
@@ -34,40 +33,41 @@ varDeclaration
     ;
 
 methodDeclaration
-    : ('public')? type ID '(' (type ID (',' type ID)*)? ')' '{' (varDeclaration)* (statement)* 'return' expression ';' '}'
+    : ('public')? return_type=type name=ID '(' (type ID (',' type ID)*)? ')' '{' (varDeclaration)* (statement)* 'return' expression ';' '}'
     | ('public')? 'static' 'void' 'main' '(' 'String' '['']' ID ')' '{' (varDeclaration)* (statement)* '}'
     ;
 
 type
-    : value='int''['']'
-    | value='boolean'
-    | value='int'
-    | value='String'
-    | value=ID
+    : id='int''['']'
+    | id='boolean'
+    | id='int'
+    | id='String'
+    | id=ID
     ;
 
 statement
-    : '{' (statement)* '}'
-    | 'if' '(' expression ')' statement 'else' statement
-    | 'while' '(' expression ')' statement
-    | expression ';'
-    | var=ID '=' expression ';'
-    | var=ID '[' expression ']' '=' expression ';'
+    : '{' (statement)* '}' #Block
+    | 'if' '(' expression ')' statement 'else' statement #IfElse
+    | 'while' '(' expression ')' statement #While
+    | expression ';' #Stmt
+    | id=ID '=' expression ';' #Assign
+    | id=ID '[' expression ']' '=' expression ';' #ArrayAssign
     ;
 
 expression
     : PAR_OPEN expression PAR_CLOSE #Parenthesis
+    | value=('true' | 'false') #Boolean
+    | '!'expression #UnaryOp
     | expression op=MULTDIV expression #BinaryOp
     | expression op=PLUSMINUS expression #BinaryOp
-    | expression op=(LOGICAL_OP | COMP_OP) expression #BinaryOp
+    | expression op=COMP_OP expression #BinaryOp
+    | expression op=LOGICAL_OP expression #BinaryOp
     | value=INTEGER #Integer
-    | value=ID #Identifier
+    | id=ID #Identifier
     | expression '[' index=expression ']' #ArrayAccess
     | expression '.' 'length' #ArrayLength
-    | method=expression '.' ID '(' ( expression (',' expression)* )? ')' #MethodCall
-    | 'new' 'int' '[' expression ']' #NewIntArray
-    | 'new' ID '(' ')' #NewObject
-    | '!'expression #UnaryOp
-    | BOOL #Boolean
+    | expression '.' method=ID '(' ( expression (',' expression)* )? ')' #MethodCall
+    | 'new' 'int' '[' size=expression ']' #NewIntArray
+    | 'new' id=ID '(' ')' #NewObject
     | 'this' #This
     ;
