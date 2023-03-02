@@ -58,6 +58,8 @@ public class SimpleParser implements JmmParser {
 
         } catch (Exception e) {
             // There was an uncaught exception during parsing, create an error JmmParserResult without root node
+            // JmmParser.getNumberOfSyntaxErrors();
+
             return JmmParserResult.newError(Report.newError(Stage.SYNTATIC, -1, -1, "Exception during parsing", e));
         }
     }
