@@ -4,58 +4,30 @@ import pt.up.fe.comp.jmm.analysis.table.Symbol;
 import pt.up.fe.comp.jmm.analysis.table.Type;
 
 import java.lang.reflect.Parameter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class MethodTable implements pt.up.fe.comp.jmm.analysis.table.SymbolTable {
-    List<Parameter> parameters;
+public class MethodTable {
+    List<Symbol> parameters;
     Type returnType;
-    String className;
-    HashMap<String, Boolean> variables = new HashMap<>();
+    HashMap<Symbol, Boolean> variables = new HashMap<>();
 
-    public MethodTable(Type returnType, List<Parameter> parameters, ) {
-        returnType =
-        className =
-        variables = null;
+    public MethodTable(Type returnType, List<Symbol> parameters, HashMap<Symbol, Boolean> variables) {
+        this.returnType = returnType;
+        this.parameters = parameters;
+        this.variables = variables;
     }
 
-    @Override
-    public List<String> getImports() {
-        return null;
-    }
-
-    @Override
-    public String getClassName() {
-        return className;
-    }
-
-    @Override
-    public String getSuper() {
-        return null;
-    }
-
-    @Override
-    public List<Symbol> getFields() {
-        return null;
-    }
-
-    @Override
-    public List<String> getMethods() {
-        return null;
-    }
-
-    @Override
-    public Type getReturnType(String s) {
+    public Type getReturnType() {
         return returnType;
     }
 
-    @Override
-    public List<Symbol> getParameters(String s) {
-        return null;
+    public List<Symbol> getParameters() {
+        return parameters;
     }
 
-    @Override
-    public List<Symbol> getLocalVariables(String s) {
-        return variables;
+    public List<Symbol> getLocalVariables() {
+        return new ArrayList<>(variables.keySet());
     }
 }

@@ -41,16 +41,20 @@ public class SymbolTable implements pt.up.fe.comp.jmm.analysis.table.SymbolTable
 
     @Override
     public Type getReturnType(String s) {
-        return methods.get(s).getReturnType("");
+        return methods.get(s).getReturnType();
     }
 
     @Override
     public List<Symbol> getParameters(String s) {
-        return methods.get(s).getParameters("");
+        return methods.get(s).getParameters();
     }
 
     @Override
     public List<Symbol> getLocalVariables(String s) {
-        return methods.get(s).getLocalVariables("");
+        return methods.get(s).getLocalVariables();
+    }
+
+    public Boolean isAssigned(Symbol symbol){
+        return fields.get(symbol);
     }
 }
