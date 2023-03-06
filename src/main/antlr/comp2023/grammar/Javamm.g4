@@ -15,6 +15,8 @@ PLUSMINUS : '+' | '-';
 PAR_OPEN : '(';
 PAR_CLOSE : ')';
 
+COMMENT : '//' ~[\r\n]* -> channel(HIDDEN) ;
+
 WS : [ \t\n\r\f]+ -> skip ;
 
 program
@@ -34,14 +36,12 @@ varDeclaration
 
 methodDeclaration
     : ('public')? return_type=type name=ID '(' (type ID (',' type ID)*)? ')' '{' (varDeclaration)* (statement)* 'return' expression ';' '}'
-    | ('public')? 'static' 'void' 'main' '(' 'String' '['']' ID ')' '{' (varDeclaration)* (statement)* '}'
+    | ('public')? 'static' 'void' 'main' '(' type '['']' ID ')' '{' (varDeclaration)* (statement)* '}'
     ;
 
-type
-    : id='int''['']'
+type locals[boolean isArray=false]
+    : id='int'('['']' {$isArray=true;})?
     | id='boolean'
-    | id='int'
-    | id='String'
     | id=ID
     ;
 
