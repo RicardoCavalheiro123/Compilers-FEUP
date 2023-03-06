@@ -1,6 +1,7 @@
 import io;
 
 class Fac {
+
     public int computeFac(int num){
         int num_aux;
         if (num < 1)
