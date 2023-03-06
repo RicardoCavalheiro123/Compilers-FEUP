@@ -35,7 +35,7 @@ varDeclaration
     ;
 
 methodDeclaration
-    : ('public')? return_type=type name=ID '(' (type ID (',' type ID)*)? ')' '{' (varDeclaration)* (statement)* 'return' expression ';' '}'
+    : ('public')? type name=ID '(' (type ID (',' type ID)*)? ')' '{' (varDeclaration)* (statement)* 'return' expression ';' '}'
     | ('public')? 'static' 'void' 'main' '(' type '['']' ID ')' '{' (varDeclaration)* (statement)* '}'
     ;
 

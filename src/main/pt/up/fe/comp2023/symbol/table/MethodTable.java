@@ -1,4 +1,4 @@
-package pt.up.fe.comp2023;
+package pt.up.fe.comp2023.symbol.table;
 
 import pt.up.fe.comp.jmm.analysis.table.Symbol;
 import pt.up.fe.comp.jmm.analysis.table.Type;
@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class MethodTable {
-    List<Symbol> parameters;
+    List<Symbol> parameters = new ArrayList<>();
     Type returnType;
     HashMap<Symbol, Boolean> variables = new HashMap<>();
 
