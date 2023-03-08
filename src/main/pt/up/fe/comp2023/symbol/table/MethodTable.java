@@ -5,10 +5,7 @@ import pt.up.fe.comp.jmm.analysis.table.Type;
 import pt.up.fe.comp.jmm.ast.JmmNode;
 
 import java.lang.reflect.Parameter;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class MethodTable {
     List<Symbol> parameters = new ArrayList<>();
@@ -30,24 +27,17 @@ public class MethodTable {
         } else {
 
             List<JmmNode> children = node.getChildren();
+            ArrayList<String> vars = (ArrayList<String>) node.getOptionalObject("vars").get();
 
-            
             JmmNode returnNode = children.get(0);
             returnType = new Type(returnNode.get("id"), returnNode.get("isArray").equals("true"));
-
-
-            String attribute_vars = node.get("vars");
-            attribute_vars = attribute_vars.substring(1, attribute_vars.length()-1).replaceAll(" ", "");
-            String[] vars = attribute_vars.split(",");
-
 
             for (int i=1; i<children.size(); i++) {
                 JmmNode child = children.get(i);
                 if (child.getKind().equals("Type")) {
                     Type type = new Type(child.get("id"), child.get("isArray").equals("true"));
-                    parameters.add(new Symbol(type, vars[i-1]));
+                    parameters.add(new Symbol(type, vars.get(i - 1)));
                 }
-                // Do same for local variables
             }
         }
     }
