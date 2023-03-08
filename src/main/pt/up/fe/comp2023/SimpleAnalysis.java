@@ -8,6 +8,7 @@ import pt.up.fe.comp.jmm.parser.JmmParserResult;
 import pt.up.fe.comp.jmm.report.Report;
 import pt.up.fe.comp2023.symbol.table.SymbolTable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -16,13 +17,13 @@ public class SimpleAnalysis implements JmmAnalysis {
     public JmmSemanticsResult semanticAnalysis(JmmParserResult jmmParserResult) {
         JmmNode root = jmmParserResult.getRootNode();
 
-        PreorderJmmVisitor visitor = new PreorderVisitor();
+        PreorderVisitor visitor = new PreorderVisitor();
 
-        SymbolTable symbolTable = ((PreorderVisitor) visitor.visit(root, null)).symbolTable;
+        SymbolTable symbolTable = new SymbolTable();
+        visitor.visit(root, symbolTable);
 
-        List<Report> reports = null;
-        Map<String, String> config = null;
+        List<Report> reports = new ArrayList<Report>();
 
-        return new JmmSemanticsResult(root, symbolTable, reports, config);
+        return new JmmSemanticsResult(root, symbolTable, reports, jmmParserResult.getConfig());
     }
 }

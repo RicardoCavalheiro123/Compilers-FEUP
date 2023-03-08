@@ -24,7 +24,7 @@ program
     ;
 
 importDeclaration
-    : 'import' library=ID ('.'ID)* ';';
+    : 'import' library+=ID ('.' library+=ID)* ';';
 
 classDeclaration
     : 'class' name=ID ('extends' extend=ID)? '{' (varDeclaration)* (methodDeclaration)* '}'
@@ -35,8 +35,8 @@ varDeclaration
     ;
 
 methodDeclaration
-    : ('public')? type name=ID '(' (type ID (',' type ID)*)? ')' '{' (varDeclaration)* (statement)* 'return' expression ';' '}'
-    | ('public')? 'static' 'void' 'main' '(' type '['']' ID ')' '{' (varDeclaration)* (statement)* '}'
+    : ('public')? type name=ID '(' (type vars+=ID (',' type vars+=ID)*)? ')' '{' (varDeclaration)* (statement)* 'return' expression ';' '}'
+    | ('public')? 'static' 'void' name='main' '(' type '['']' ID ')' '{' (varDeclaration)* (statement)* '}'
     ;
 
 type locals[boolean isArray=false]
