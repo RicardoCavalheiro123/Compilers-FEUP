@@ -16,6 +16,7 @@ public class SymbolTable implements pt.up.fe.comp.jmm.analysis.table.SymbolTable
     public HashMap<Symbol, Boolean> fields = new HashMap<>();
     public HashMap<String, MethodTable> methods = new HashMap<>();
 
+
     @Override
     public List<String> getImports() { return imports; }
 

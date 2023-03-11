@@ -3,6 +3,7 @@ package pt.up.fe.comp2023.symbol.table;
 import pt.up.fe.comp.jmm.analysis.table.Symbol;
 import pt.up.fe.comp.jmm.analysis.table.Type;
 import pt.up.fe.comp.jmm.ast.JmmNode;
+import pt.up.fe.comp.jmm.ast.PreorderJmmVisitor;
 
 import java.lang.reflect.Parameter;
 import java.util.*;
@@ -20,23 +21,29 @@ public class MethodTable {
 
     public MethodTable(JmmNode node) {
         if(node.get("name").equals("main")) {
-
+            // main method
             returnType = new Type("void", false);
             parameters.add(new Symbol(new Type(node.getJmmChild(0).get("id"), true), "args"));
 
         } else {
 
-            List<JmmNode> children = node.getChildren();
-            ArrayList<String> vars = (ArrayList<String>) node.getOptionalObject("vars").get();
+            List<JmmNode> children = node.getChildren(); // return type, parameters, var declarations and statements
+            ArrayList<String> parameters = (ArrayList<String>) node.getOptionalObject("param").get();
 
             JmmNode returnNode = children.get(0);
-            returnType = new Type(returnNode.get("id"), returnNode.get("isArray").equals("true"));
+            this.returnType = new Type(returnNode.get("id"), returnNode.get("isArray").equals("true"));
 
             for (int i=1; i<children.size(); i++) {
                 JmmNode child = children.get(i);
                 if (child.getKind().equals("Type")) {
+
                     Type type = new Type(child.get("id"), child.get("isArray").equals("true"));
-                    parameters.add(new Symbol(type, vars.get(i - 1)));
+                    this.parameters.add(new Symbol(type, parameters.get(i - 1)));
+
+                } else if (child.getKind().equals("VarDeclaration")) {
+                    Type type = new Type(child.getJmmChild(0).get("id"), child.getJmmChild(0).get("isArray").equals("true"));
+                    this.variables.put(new Symbol(type, child.get("var")), false);
+
                 }
             }
         }

@@ -35,7 +35,7 @@ varDeclaration
     ;
 
 methodDeclaration
-    : ('public')? type name=ID '(' (type vars+=ID (',' type vars+=ID)*)? ')' '{' (varDeclaration)* (statement)* 'return' expression ';' '}'
+    : ('public')? type name=ID '(' (type param+=ID (',' type param+=ID)*)? ')' '{' (varDeclaration)* (statement)* 'return' expression ';' '}'
     | ('public')? 'static' 'void' name='main' '(' type '['']' ID ')' '{' (varDeclaration)* (statement)* '}'
     ;
 
