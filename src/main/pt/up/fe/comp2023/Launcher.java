@@ -41,6 +41,8 @@ public class Launcher {
         // Check if there are parsing errors
         TestUtils.noErrors(parserResult.getReports());
 
+        System.out.println(parserResult.getRootNode().toTree());
+
         // Instantiate JmmAnalyzer
         SimpleAnalysis analyzer = new SimpleAnalysis();
 
@@ -49,6 +51,8 @@ public class Launcher {
 
         // Check if there are semantic errors
         TestUtils.noErrors(semanticsResult.getReports());
+
+        System.out.println(semanticsResult.getSymbolTable());
 
         // ... add remaining stages
     }

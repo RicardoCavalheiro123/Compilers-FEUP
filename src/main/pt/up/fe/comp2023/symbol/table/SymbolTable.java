@@ -58,4 +58,9 @@ public class SymbolTable implements pt.up.fe.comp.jmm.analysis.table.SymbolTable
     public Boolean isAssigned(Symbol symbol){
         return fields.get(symbol);
     }
+
+    // Print the symbol table
+    public String toString() {
+        return print();
+    }
 }
