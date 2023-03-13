@@ -5,7 +5,7 @@ grammar Javamm;
 }
 
 INTEGER : [0-9]+ ;
-ID : [a-zA-Z_][a-zA-Z_0-9]* ;
+ID : [$a-zA-Z_][$a-zA-Z_0-9]* ;
 
 LOGICAL_OP : '&&' | '||' ;
 COMP_OP : '==' | '!=' | '<' | '>' | '<=' | '>=';
@@ -15,7 +15,6 @@ PLUSMINUS : '+' | '-';
 PAR_OPEN : '(';
 PAR_CLOSE : ')';
 
-COMMENT : '//' ~[\r\n]* -> channel(HIDDEN) ;
 
 WS : [ \t\n\r\f]+ -> skip ;
 
@@ -34,24 +33,31 @@ varDeclaration
     : type var=ID ';'
     ;
 
+param
+    : type var=ID
+    ;
+
 methodDeclaration
-    : ('public')? type name=ID '(' (type param+=ID (',' type param+=ID)*)? ')' '{' (varDeclaration)* (statement)* 'return' expression ';' '}'
-    | ('public')? 'static' 'void' name='main' '(' type '['']' ID ')' '{' (varDeclaration)* (statement)* '}'
+    : ('public')? type name=ID '(' (param (',' param)*)? ')' '{' (varDeclaration)* (statement)* 'return' expression ';' '}' #Method
+    | ('public')? 'static' 'void' name='main' '(' 'String' '['']' ID ')' '{' (varDeclaration)* (statement)* '}' #MainMethod
     ;
 
 type locals[boolean isArray=false]
-    : id='int'('['']' {$isArray=true;})?
-    | id='boolean'
-    | id=ID
+    : type_='int'('['']' {$isArray=true;})? #IntType
+    | type_='boolean' #BooleanType
+    | type_='void' #VoidType
+    | type_=ID #ObjectType
     ;
 
 statement
     : '{' (statement)* '}' #Block
     | 'if' '(' expression ')' statement 'else' statement #IfElse
     | 'while' '(' expression ')' statement #While
+    | 'return' (expression)? ';' #Return
     | expression ';' #Stmt
     | id=ID '=' expression ';' #Assign
     | id=ID '[' expression ']' '=' expression ';' #ArrayAssign
+    | '//' (ID)* #Comment
     ;
 
 expression

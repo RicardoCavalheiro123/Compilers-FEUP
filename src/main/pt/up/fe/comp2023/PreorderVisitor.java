@@ -7,8 +7,8 @@ import pt.up.fe.comp.jmm.ast.PreorderJmmVisitor;
 import pt.up.fe.comp2023.symbol.table.MethodTable;
 import pt.up.fe.comp2023.symbol.table.SymbolTable;
 
-public class PreorderVisitor extends PreorderJmmVisitor<SymbolTable, Boolean> {
-    SymbolTable symbolTable = new SymbolTable();
+public class PreorderVisitor extends PreorderJmmVisitor<Object, Object> {
+    SymbolTable st = new SymbolTable();
 
     @Override
     protected void buildVisitor() {
@@ -19,19 +19,19 @@ public class PreorderVisitor extends PreorderJmmVisitor<SymbolTable, Boolean> {
         addVisit("VarDeclaration", this::dealWithVarDeclaration);
     }
 
-    private Boolean defaultVisit(JmmNode jmmNode, SymbolTable st) { return null; }
+    private Object defaultVisit(JmmNode jmmNode, Object obj) { return null; }
 
-    private Boolean dealWithMethod(JmmNode jmmNode, SymbolTable st) {
+    private Object dealWithMethod(JmmNode jmmNode, Object obj) {
         st.methods.put(jmmNode.get("name"), new MethodTable(jmmNode));
         return true;
     }
 
-    private Boolean dealWithVarDeclaration(JmmNode jmmNode, SymbolTable st) {
+    private Object dealWithVarDeclaration(JmmNode jmmNode, Object obj) {
         if (jmmNode.getJmmParent().getKind().equals("MethodDeclaration")) { return true; }
 
         JmmNode type = jmmNode.getChildren().get(0);
         st.fields.put(new Symbol(
-                new Type(type.get("id"), type.get("isArray").equals("true")),
+                new Type(type.get("type_"), type.get("isArray").equals("true")),
                 jmmNode.get("var")),
                 false
         );
@@ -39,14 +39,18 @@ public class PreorderVisitor extends PreorderJmmVisitor<SymbolTable, Boolean> {
         return true;
     }
 
-    private Boolean dealWithClass(JmmNode jmmNode, SymbolTable st) {
+    private Object dealWithClass(JmmNode jmmNode, Object obj) {
         st.className = jmmNode.get("name");
         if(jmmNode.hasAttribute("extend")) st.superName = jmmNode.get("extend");
         return true;
     }
 
-    private Boolean defaultImport(JmmNode jmmNode, SymbolTable st) {
+    private Object defaultImport(JmmNode jmmNode, Object obj) {
         st.imports.add(jmmNode.get("library"));
         return true;
+    }
+
+    public SymbolTable getSymbolTable() {
+        return st;
     }
 }

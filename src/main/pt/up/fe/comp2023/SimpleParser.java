@@ -2,9 +2,7 @@ package pt.up.fe.comp2023;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
-import pt.up.fe.comp.jmm.analysis.table.SymbolTable;
 import pt.up.fe.comp.jmm.ast.antlr.AntlrParser;
-import pt.up.fe.comp.jmm.ast.antlr.ThrowingErrorListener;
 import pt.up.fe.comp.jmm.parser.JmmParser;
 import pt.up.fe.comp.jmm.parser.JmmParserResult;
 import pt.up.fe.comp.jmm.report.Report;
@@ -21,7 +19,7 @@ import java.util.Map;
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
  * <p>
- * http://www.apache.org/licenses/LICENSE-2.0
+ * <a href="http://www.apache.org/licenses/LICENSE-2.0">...</a>
  * <p>
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
@@ -53,7 +51,7 @@ public class SimpleParser implements JmmParser {
                     // If there were no errors and a root node was generated, create a JmmParserResult with the node
                     .map(root -> new JmmParserResult(root, Collections.emptyList(), config))
                     // If there were errors, create an error JmmParserResult without root node
-                    .orElseGet(() -> JmmParserResult.newError(new Report(ReportType.WARNING, Stage.SYNTATIC, -1,
+                    .orElseGet(() -> JmmParserResult.newError(new Report(ReportType.ERROR, Stage.SYNTATIC, -1,
                             "There were syntax errors during parsing, terminating")));
 
         } catch (Exception e) {

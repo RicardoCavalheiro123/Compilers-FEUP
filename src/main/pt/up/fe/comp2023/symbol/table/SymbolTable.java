@@ -7,6 +7,7 @@ import pt.up.fe.comp.jmm.analysis.table.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;
+import java.util.Optional;
 
 public class SymbolTable implements pt.up.fe.comp.jmm.analysis.table.SymbolTable {
     public String className = "";

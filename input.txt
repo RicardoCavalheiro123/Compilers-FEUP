@@ -2,8 +2,9 @@ import io.ok;
 
 class Fac {
 
-    public int computeFac(int num){
+    public int computeFac(int num, int[] num2){
         int num_aux;
+
         if (num < 1)
             num_aux = 1;
         else
@@ -11,6 +12,6 @@ class Fac {
         return num_aux;
     }
     public static void main (String[] args){
-        io.println(new Fac().computeFac(10));
+        io.println(new Fac().computeFac(10)); // ok
     }
 }

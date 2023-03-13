@@ -53,13 +53,14 @@ public class SymbolTableTest {
     	var checkBool = 0;
     	var checkObj = 0;
     	System.out.println("FIELDS: "+fields);
-    	for(var f :fields){
-    		switch(f.getType().getName()) {
-    		case "MethodsAndFields": checkObj++; break;
-    		case "boolean": checkBool++; break;
-    		case "int": checkInt++;break;
-    		}
-    	};
+    	for(var f :fields) {
+			switch (f.getType().getName()) {
+				case "MethodsAndFields" -> checkObj++;
+				case "boolean" -> checkBool++;
+				case "int" -> checkInt++;
+			}
+		}
+
     	assertEquals("Field of type int", 1, checkInt);
     	assertEquals("Field of type boolean", 1, checkBool);
     	assertEquals("Field of type object", 1, checkObj);
@@ -79,28 +80,28 @@ public class SymbolTableTest {
     	System.out.println("METHODS: "+methods);
     	for(var m :methods){
     		var ret = st.getReturnType(m);
-    		var numParameters = st.getParameters(m).size();
-    		switch(ret.getName()) {
-	    		case "MethodsAndFields": 
-	    			checkObj++; 
-	    			assertEquals("Method "+m+" parameters",0,numParameters);
-	    			break;
-	    		case "boolean": 
-	    			checkBool++; 
-	    			assertEquals("Method "+m+" parameters",0,numParameters);
-	    			break;
-	    		case "int": 
-	    			if(ret.isArray()){
-	    				checkAll++;
-	    				assertEquals("Method "+m+" parameters",3,numParameters);
-	    			}else {
-	    				checkInt++;
-	    				assertEquals("Method "+m+" parameters",0,numParameters);
-	    			}
-	    			break;
-	    			
-    		}
-    	};
+			var isPresent = st.getParametersTry(m).isPresent();
+    		var numParameters = isPresent ? st.getParametersTry(m).get().size() : 0;
+			switch (ret.getName()) {
+				case "MethodsAndFields" -> {
+					checkObj++;
+					assertEquals("Method " + m + " parameters", 0, numParameters);
+				}
+				case "boolean" -> {
+					checkBool++;
+					assertEquals("Method " + m + " parameters", 0, numParameters);
+				}
+				case "int" -> {
+					if (ret.isArray()) {
+						checkAll++;
+						assertEquals("Method " + m + " parameters", 3, numParameters);
+					} else {
+						checkInt++;
+						assertEquals("Method " + m + " parameters", 0, numParameters);
+					}
+				}
+			}
+    	}
     	assertEquals("Method with return type int", 1, checkInt);
     	assertEquals("Method with return type boolean", 1, checkBool);
     	assertEquals("Method with return type object", 1, checkObj);
