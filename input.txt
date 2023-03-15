@@ -5,7 +5,7 @@ class Fac {
 
     public int computeFac(int num, int[] num2){
         String num_aux;
-        int num;
+        int num = 123;
 
         if (num < 1)
             num_aux = 1;
