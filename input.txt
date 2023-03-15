@@ -4,16 +4,21 @@ class Fac {
     int inteiro = 3;
 
     public int computeFac(int num, int[] num2){
-        int num_aux = 23;
+        String num_aux;
+        int num;
 
         if (num < 1)
             num_aux = 1;
         else
-            num_aux = num * (this.computeFac(num - 1));
+            num_aux = num * (this.computeFac(num -1 ));
         method.call(num_aux[3] * 2);
         return num_aux;
     }
     public static void main (String[] args){
         io.println(new Fac().computeFac(10));
+    }
+
+    int foo(int anInt, int[] anArray, boolean aBool, String aString) {
+        return a;
     }
 }

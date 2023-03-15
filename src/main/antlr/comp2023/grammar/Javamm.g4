@@ -58,6 +58,7 @@ methodDeclaration
 type locals[boolean isArray=false]
     : type_='int'('['']' {$isArray=true;})? #IntType
     | type_='boolean' #BooleanType
+    | type_='String' ('['']' {$isArray=true;})? #StringType
     | type_=ID #ObjectType
     ;
 
@@ -71,19 +72,19 @@ statement
     ;
 
 expression
-    : PAR_OPEN expression PAR_CLOSE #Parenthesis
-    | value=('true' | 'false') #Boolean
-    | '!'expression #UnaryOp
+    : value=('true' | 'false') #Boolean
+    | value=INTEGER #Integer
+    | id=ID #Identifier
+    | 'this' #This
+    | PAR_OPEN expression PAR_CLOSE #Parenthesis
     | expression '[' expression ']' #ArrayAccess
+    | expression '.' method=ID '(' ( expression (',' expression)* )? ')' #MethodCall
     | expression '.' 'length' #ArrayLength
+    | 'new' id=ID '(' ')' #NewObject
+    | 'new' 'int' '[' size=expression ']' #NewIntArray
+    | '!'expression #UnaryOp
     | expression op=MULTDIV expression #BinaryOp
     | expression op=PLUSMINUS expression #BinaryOp
     | expression op=COMP_OP expression #BinaryOp
     | expression op=LOGICAL_OP expression #BinaryOp
-    | value=INTEGER #Integer
-    | id=ID #Identifier
-    | expression '.' method=ID '(' ( expression (',' expression)* )? ')' #MethodCall
-    | 'new' 'int' '[' size=expression ']' #NewIntArray
-    | 'new' id=ID '(' ')' #NewObject
-    | 'this' #This
     ;
