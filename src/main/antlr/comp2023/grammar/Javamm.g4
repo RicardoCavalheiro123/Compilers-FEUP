@@ -35,13 +35,17 @@ varDeclaration
     : type var=ID ';'
     ;
 
-param
+parameter
     : type var=ID
     ;
 
+mainParam
+    : type_='String' '['']' var=ID
+    ;
+
 methodDeclaration
-    : ('public')? type name=ID '(' (param (',' param)*)? ')' '{' (varDeclaration)* (statement)* 'return' expression ';' '}' #Method
-    | ('public')? 'static' 'void' name='main' '(' type '['']' ID ')' '{' (varDeclaration)* (statement)* '}' #MainMethod
+    : ('public')? type name=ID '(' (parameter (',' parameter)*)? ')' '{' (varDeclaration)* (statement)* 'return' expression ';' '}' #Method
+    | ('public')? 'static' 'void' name='main' '(' mainParam ')' '{' (varDeclaration)* (statement)* '}' #MainMethod
     ;
 
 type locals[boolean isArray=false]

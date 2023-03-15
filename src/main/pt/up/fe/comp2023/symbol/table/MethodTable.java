@@ -32,7 +32,7 @@ public class MethodTable {
 
             for (int i=1; i<children.size(); i++) {
                 JmmNode child = children.get(i);
-                if (child.getKind().equals("Param")) {
+                if (child.getKind().equals("Parameter")) {
                     JmmNode typeNode = child.getJmmChild(0);
                     Type type = new Type(typeNode.get("type_"), typeNode.get("isArray").equals("true"));
                     this.parameters.add(new Symbol(type, child.get("var")));
