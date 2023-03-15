@@ -47,7 +47,7 @@ mainParam
 
 methodDeclaration
     : ('public')? type name=ID '(' (parameter (',' parameter)*)? ')' '{' (varDeclaration)* (statement)* 'return' expression ';' '}' #Method
-    | ('public')? 'static' 'void' name='main' '(' mainParam ')' '{' (varDeclaration)* (statement)* '}' #MainMethod
+    | ('public')? 'static' 'void' name='main' '(' 'String' '['']' var=ID ')' '{' (varDeclaration)* (statement)* '}' #MainMethod
     ;
 
 type locals[boolean isArray=false]
