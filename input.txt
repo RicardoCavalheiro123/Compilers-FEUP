@@ -1,6 +1,7 @@
 import io.ok;
 
 class Fac {
+    int x;
 
     public int computeFac(int num, int[] num2){
         int num_aux;

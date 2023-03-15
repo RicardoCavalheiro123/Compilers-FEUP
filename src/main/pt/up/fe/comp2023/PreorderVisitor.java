@@ -27,7 +27,7 @@ public class PreorderVisitor extends PreorderJmmVisitor<Object, Object> {
     }
 
     private Object dealWithVarDeclaration(JmmNode jmmNode, Object obj) {
-        if (jmmNode.getJmmParent().getKind().equals("MethodDeclaration")) { return true; }
+        if (jmmNode.getJmmParent().getKind().equals("Method")) { return true; }
 
         JmmNode type = jmmNode.getChildren().get(0);
         st.fields.put(new Symbol(
