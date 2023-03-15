@@ -25,7 +25,8 @@ program
     ;
 
 importDeclaration
-    : 'import' library+=ID ('.' library+=ID)* ';';
+    : 'import' library+=ID ('.' library+=ID)* ';'
+    ;
 
 classDeclaration
     : 'class' name=ID ('extends' extend=ID)? '{' (varDeclaration)* (methodDeclaration)* '}'
@@ -52,9 +53,7 @@ methodDeclaration
 type locals[boolean isArray=false]
     : type_='int'('['']' {$isArray=true;})? #IntType
     | type_='boolean' #BooleanType
-    | type_='void' #VoidType
     | type_=ID #ObjectType
-    | type_='String' ('['']' {$isArray=true;}) #StringType
     ;
 
 statement
@@ -76,7 +75,7 @@ expression
     | expression op=LOGICAL_OP expression #BinaryOp
     | value=INTEGER #Integer
     | id=ID #Identifier
-    | expression '[' index=expression ']' #ArrayAccess
+    | expression '[' expression ']' #ArrayAccess
     | expression '.' 'length' #ArrayLength
     | expression '.' method=ID '(' ( expression (',' expression)* )? ')' #MethodCall
     | 'new' 'int' '[' size=expression ']' #NewIntArray
