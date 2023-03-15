@@ -33,6 +33,7 @@ classDeclaration
 
 varDeclaration
     : type var=ID ';'
+    | type var=ID '=' expression ';'
     ;
 
 parameter
@@ -53,6 +54,7 @@ type locals[boolean isArray=false]
     | type_='boolean' #BooleanType
     | type_='void' #VoidType
     | type_=ID #ObjectType
+    | type_='String' ('['']' {$isArray=true;}) #StringType
     ;
 
 statement

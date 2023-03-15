@@ -1,10 +1,10 @@
 import io.ok;
 
 class Fac {
-    int x;
+    int inteiro = 3;
 
     public int computeFac(int num, int[] num2){
-        int num_aux;
+        int num_aux = 2;
 
         if (num < 1)
             num_aux = 1;
