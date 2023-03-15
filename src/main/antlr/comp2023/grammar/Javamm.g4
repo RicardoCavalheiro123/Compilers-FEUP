@@ -17,6 +17,8 @@ PAR_CLOSE : ')';
 
 
 WS : [ \t\n\r\f]+ -> skip ;
+COMMENT : '/*' (COMMENT|.)*? '*/' -> skip ;
+LINE_COMMENT  : '//' .*? '\n' -> skip ;
 
 program
     : (importDeclaration)* classDeclaration EOF
@@ -53,11 +55,9 @@ statement
     : '{' (statement)* '}' #Block
     | 'if' '(' expression ')' statement 'else' statement #IfElse
     | 'while' '(' expression ')' statement #While
-    | 'return' (expression)? ';' #Return
     | expression ';' #Stmt
     | id=ID '=' expression ';' #Assign
     | id=ID '[' expression ']' '=' expression ';' #ArrayAssign
-    | '//' (ID)* #Comment
     ;
 
 expression

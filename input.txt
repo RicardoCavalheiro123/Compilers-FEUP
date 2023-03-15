@@ -12,6 +12,6 @@ class Fac {
         return num_aux;
     }
     public static void main (String[] args){
-        io.println(new Fac().computeFac(10)); // ok
+        io.println(new Fac().computeFac(10));
     }
 }
