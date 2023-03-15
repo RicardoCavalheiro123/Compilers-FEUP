@@ -21,7 +21,7 @@ public class MethodTable {
         if(node.get("name").equals("main")) {
             // main method
             returnType = new Type("void", false);
-            parameters.add(new Symbol(new Type("String", true), "args"));
+            parameters.add(new Symbol(new Type(node.getJmmChild(0).get("type_"), true), "args"));
 
         } else {
 
