@@ -45,8 +45,13 @@ mainParam
     : type_='String' '['']' var=ID
     ;
 
+ret
+    : 'return' expression ';'
+    | 'return' ';'
+    ;
+
 methodDeclaration
-    : ('public')? type name=ID '(' (parameter (',' parameter)*)? ')' '{' (varDeclaration)* (statement)* 'return' expression ';' '}' #Method
+    : ('public')? type name=ID '(' (parameter (',' parameter)*)? ')' '{' (varDeclaration)* (statement)* ret '}' #Method
     | ('public')? 'static' 'void' name='main' '(' mainParam ')' '{' (varDeclaration)* (statement)* '}' #MainMethod
     ;
 
@@ -69,14 +74,14 @@ expression
     : PAR_OPEN expression PAR_CLOSE #Parenthesis
     | value=('true' | 'false') #Boolean
     | '!'expression #UnaryOp
+    | expression '[' expression ']' #ArrayAccess
+    | expression '.' 'length' #ArrayLength
     | expression op=MULTDIV expression #BinaryOp
     | expression op=PLUSMINUS expression #BinaryOp
     | expression op=COMP_OP expression #BinaryOp
     | expression op=LOGICAL_OP expression #BinaryOp
     | value=INTEGER #Integer
     | id=ID #Identifier
-    | expression '[' expression ']' #ArrayAccess
-    | expression '.' 'length' #ArrayLength
     | expression '.' method=ID '(' ( expression (',' expression)* )? ')' #MethodCall
     | 'new' 'int' '[' size=expression ']' #NewIntArray
     | 'new' id=ID '(' ')' #NewObject
