@@ -34,8 +34,7 @@ classDeclaration
     ;
 
 varDeclaration
-    : type var=ID ';'
-    | type var=ID '=' expression ';'
+    : type var=ID ('=' expression)? ';'
     ;
 
 parameter

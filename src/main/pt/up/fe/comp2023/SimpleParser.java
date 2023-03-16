@@ -59,7 +59,7 @@ public class SimpleParser implements JmmParser {
             // There was a syntax error during parsing, create an error JmmParserResult without root node
             int line = e.getOffendingToken().getLine();
             int column = e.getOffendingToken().getCharPositionInLine();
-            
+
             return JmmParserResult.newError(new Report(ReportType.ERROR, Stage.SYNTATIC, line, column, String.format("Syntax error during parsing", e)));
 
         } catch (Exception e) {
