@@ -2,6 +2,7 @@ package pt.up.fe.comp2023;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.RecognitionException;
 import pt.up.fe.comp.jmm.ast.antlr.AntlrParser;
 import pt.up.fe.comp.jmm.parser.JmmParser;
 import pt.up.fe.comp.jmm.parser.JmmParserResult;
@@ -51,14 +52,21 @@ public class SimpleParser implements JmmParser {
                     // If there were no errors and a root node was generated, create a JmmParserResult with the node
                     .map(root -> new JmmParserResult(root, Collections.emptyList(), config))
                     // If there were errors, create an error JmmParserResult without root node
-                    .orElseGet(() -> JmmParserResult.newError(new Report(ReportType.ERROR, Stage.SYNTATIC, -1,
+                    .orElseGet(() -> JmmParserResult.newError(new Report(ReportType.ERROR, Stage.SYNTATIC, -1, -1,
                             String.format("There were %d syntax errors during parsing, terminating", parser.getNumberOfSyntaxErrors()))));
 
-        } catch (Exception e) {
-            // There was an uncaught exception during parsing, create an error JmmParserResult without root node
-            // JmmParser.getNumberOfSyntaxErrors();
+        } catch (RecognitionException e){
+            // There was a syntax error during parsing, create an error JmmParserResult without root node
+            int line = e.getOffendingToken().getLine();
+            int column = e.getOffendingToken().getCharPositionInLine();
+            
+            return JmmParserResult.newError(new Report(ReportType.ERROR, Stage.SYNTATIC, line, column, String.format("Syntax error during parsing", e)));
 
-            return JmmParserResult.newError(Report.newError(Stage.SYNTATIC, -1, -1, "Exception during parsing", e));
+        } catch (Exception e) {
+                // There was an uncaught exception during parsing, create an error JmmParserResult without root node
+                // JmmParser.getNumberOfSyntaxErrors();
+
+                return JmmParserResult.newError(Report.newError(Stage.SYNTATIC, -1, -1, "Exception during parsing", e));
         }
     }
 }

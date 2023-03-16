@@ -7,7 +7,8 @@ grammar Javamm;
 INTEGER : '0' | [1-9][0-9]* ;
 ID : [$a-zA-Z_][$a-zA-Z_0-9]* ;
 
-LOGICAL_OP : '&&' | '||' ;
+AND_OP : '&&' ;
+OR_OP : '||' ;
 COMP_OP : '==' | '!=' | '<' | '>' | '<=' | '>=';
 
 MULTDIV : '*' | '/';
@@ -51,7 +52,7 @@ ret
     ;
 
 methodDeclaration
-    : ('public')? type name=ID '(' (parameter (',' parameter)*)? ')' '{' (varDeclaration)* (statement)* ret '}' #Method
+    : ('public' | 'private' | 'protected' | 'default')? type name=ID '(' (parameter (',' parameter)*)? ')' '{' (varDeclaration)* (statement)* ret '}' #Method
     | ('public')? 'static' 'void' name='main' '(' mainParam ')' '{' (varDeclaration)* (statement)* '}' #MainMethod
     ;
 
@@ -64,7 +65,7 @@ type locals[boolean isArray=false]
 
 statement
     : '{' (statement)* '}' #Block
-    | 'if' '(' expression ')' statement 'else' statement #IfElse
+    | 'if' '(' expression ')' statement ('else' statement)? #IfElse
     | 'while' '(' expression ')' statement #While
     | expression ';' #Stmt
     | id=ID '=' expression ';' #Assign
@@ -86,5 +87,6 @@ expression
     | expression op=MULTDIV expression #BinaryOp
     | expression op=PLUSMINUS expression #BinaryOp
     | expression op=COMP_OP expression #BinaryOp
-    | expression op=LOGICAL_OP expression #BinaryOp
+    | expression op=AND_OP expression #BinaryOp
+    | expression op=OR_OP expression #BinaryOp
     ;
