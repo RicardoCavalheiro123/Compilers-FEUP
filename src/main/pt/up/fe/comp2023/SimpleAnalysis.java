@@ -23,6 +23,8 @@ public class SimpleAnalysis implements JmmAnalysis {
             SymbolTable symbolTable = visitor.getSymbolTable();
             List<Report> reports = new ArrayList<>();
 
+            
+
             return new JmmSemanticsResult(root, symbolTable, reports, jmmParserResult.getConfig());
 
         } catch (Exception e) {
