@@ -18,8 +18,11 @@ import org.junit.Test;
 
 import pt.up.fe.comp.TestUtils;
 import pt.up.fe.comp.jmm.jasmin.JasminResult;
+import pt.up.fe.comp.jmm.ollir.OllirResult;
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsStrings;
+
+import java.util.HashMap;
 
 public class BackendTest {
 
@@ -37,6 +40,29 @@ public class BackendTest {
         String jasminCode = SpecsIo.getResource("pt/up/fe/comp/jasmin/HelloWorld.j");
         var output = TestUtils.runJasmin(jasminCode);
         assertEquals("Hello World!\nHello World Again!\n", SpecsStrings.normalizeFileContents(output));
+    }
+
+    @Test
+    public void testJasmin() {
+
+        TestUtils.backend(new OllirResult("myClass {\n" +
+                "\t.construct myClass().V {\n" +
+                "\t\tinvokespecial(this, \"<init>\").V;\n" +
+                "\t}\n" +
+                "\t\n" +
+                "\t.method public check(A.array.classArray, b.Foo).bool {\n" +
+                "\t\tall.bool :=.bool 0.bool;\n" +
+                "\t\t\n" +
+                "\t\tc.Foo :=.Foo $2.b.Foo;\n" +
+                "\t\tinvokevirtual(c.Foo,\"test\",$1.A.array.classArray).V;\n" +
+                "\n" +
+                "\t\tb.bool :=.bool !.bool true.bool;\n" +
+                "\n" +
+                "\n" +
+                "\t\tret.bool all.bool;\n" +
+                "\t}\n" +
+                "}", new HashMap<>())).run();
+
     }
 
 
