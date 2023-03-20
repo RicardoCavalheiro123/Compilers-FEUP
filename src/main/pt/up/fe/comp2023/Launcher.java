@@ -51,7 +51,7 @@ public class Launcher {
         JmmSemanticsResult semanticsResult = analyzer.semanticAnalysis(parserResult);
 
         // Check if there are semantic errors
-        TestUtils.noErrors(semanticsResult.getReports());
+        TestUtils.noErrors(semanticsResult);
 
         System.out.println(semanticsResult.getSymbolTable());
 
