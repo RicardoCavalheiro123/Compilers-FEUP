@@ -25,7 +25,7 @@ public class SimpleJasmin implements JasminBackend {
     private String getJasminString(ClassUnit classUnit) {
         String jasminCode = "";
 
-        jasminCode += ".class public " + classUnit.getClassName() + "\n.super" + classUnit.getSuperClass() + "";
+        jasminCode += ".class public " + classUnit.getClassName() + "\n.super" + classUnit.getSuperClass() + "\n\n;";
 
 
         return jasminCode;
