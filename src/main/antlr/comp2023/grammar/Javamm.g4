@@ -42,7 +42,7 @@ parameter
     ;
 
 mainParam
-    : type_='String' '['']' var=ID
+    : typeName='String' '['']' var=ID
     ;
 
 ret
@@ -56,10 +56,10 @@ methodDeclaration
     ;
 
 type locals[boolean isArray=false]
-    : type_='int'('['']' {$isArray=true;})? #IntType
-    | type_='boolean' #BooleanType
-    | type_='String' ('['']' {$isArray=true;})? #StringType
-    | type_=ID #ObjectType
+    : typeName='int'('['']' {$isArray=true;})? #IntType
+    | typeName='boolean' #BooleanType
+    | typeName='String' ('['']' {$isArray=true;})? #StringType
+    | typeName=ID #ObjectType
     ;
 
 statement
