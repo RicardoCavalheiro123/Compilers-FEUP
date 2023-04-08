@@ -1,4 +1,6 @@
-package pt.up.fe.comp2023.analisys.analysers;
+package pt.up.fe.comp2023.analysers;
 
-public class MethodExistsAnalyser extends PreOrderSeman{
+import pt.up.fe.comp2023.PreorderVisitor;
+
+public class MethodExistsAnalyser extends PreorderVisitor {
 }
