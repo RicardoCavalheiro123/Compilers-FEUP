@@ -72,7 +72,7 @@ public class Launcher {
         //TestUtils.backend(jasminResult.getJasminCode());
         //TestUtils.backend(new OllirResult());
 
-        TestUtils.backend(semanticsResult);
+        //TestUtils.backend(semanticsResult);
 
         //jasminResult.run();
         //System.out.println(jasminResult.getJasminCode());
