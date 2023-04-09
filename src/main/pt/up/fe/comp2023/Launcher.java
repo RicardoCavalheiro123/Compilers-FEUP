@@ -61,21 +61,21 @@ public class Launcher {
         // ... add remaining stages
 
 
-        /*
+
         // Instantiate JasminGenerator
         SimpleJasmin jasminGenerator = new SimpleJasmin();
 
         // Generate Jasmin code stage
-        JasminResult jasminResult = jasminGenerator.toJasmin(ollirResult);
+        //JasminResult jasminResult = jasminGenerator.toJasmin(ollirResult);
 
         // Check if there are semantic errors
-        // TestUtils.backend(jasminResult.getJasminCode());
-        TestUtils.backend(new OllirResult());
+        //TestUtils.backend(jasminResult.getJasminCode());
+        //TestUtils.backend(new OllirResult());
 
-        jasminResult.run();
-        System.out.println(jasminResult.getJasminCode());
-        */
+        TestUtils.backend(semanticsResult);
 
+        //jasminResult.run();
+        //System.out.println(jasminResult.getJasminCode());
     }
 
     private static Map<String, String> parseArgs(String[] args) {
