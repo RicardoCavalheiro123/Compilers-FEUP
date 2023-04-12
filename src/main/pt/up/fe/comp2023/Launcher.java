@@ -7,7 +7,9 @@ import java.util.Map;
 
 import pt.up.fe.comp.TestUtils;
 import pt.up.fe.comp.jmm.analysis.JmmSemanticsResult;
+import pt.up.fe.comp.jmm.ollir.OllirResult;
 import pt.up.fe.comp.jmm.parser.JmmParserResult;
+import pt.up.fe.comp2023.Ollir.SimpleOllir;
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.SpecsSystem;
@@ -54,6 +56,23 @@ public class Launcher {
         TestUtils.noErrors(semanticsResult.getReports());
 
         System.out.println(semanticsResult.getSymbolTable());
+
+
+
+        // Instantiate JmmOptimizer
+        SimpleOllir ollir = new SimpleOllir();
+
+        // Ollir stage
+        OllirResult ollirResult = ollir.toOllir(semanticsResult);
+
+        // Check if there are ollir errors
+
+        //TestUtils.noErrors(ollirResult.getReports());
+
+        // Receives String JmmCode and returns OllirResult
+        //OllirResult ollirR = TestUtils.optimize(semanticsResult);
+
+//        System.out.println(ollirResult.getOllirCode());
 
         // ... add remaining stages
     }
