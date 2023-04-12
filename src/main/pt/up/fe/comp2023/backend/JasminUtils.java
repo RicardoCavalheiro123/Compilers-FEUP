@@ -90,7 +90,6 @@ public class JasminUtils {
             case STRING -> jasminCodeBuilder.append("Ljava/lang/String;");
             case VOID -> jasminCodeBuilder.append("V");
             case OBJECTREF -> jasminCodeBuilder.append("L").append(typeOfElement.getClass().getName()).append(";");
-            case ARRAYREF -> jasminCodeBuilder.append(typeOfElement);
             default -> jasminCodeBuilder.append("; getTypeCode not implemented for ").append(type).append(".");
         }
 
