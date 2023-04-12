@@ -6,6 +6,6 @@ import org.specs.comp.ollir.Method;
 public class NewInstruction implements InstructionCall {
     @Override
     public String toJasmin(Method method, CallInstruction instruction) {
-        return null;
+        return "";
     }
 }

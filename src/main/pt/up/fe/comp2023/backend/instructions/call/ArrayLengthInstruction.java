@@ -6,7 +6,6 @@ import org.specs.comp.ollir.Method;
 public class ArrayLengthInstruction implements InstructionCall {
     @Override
     public String toJasmin(Method method, CallInstruction instruction) {
-
-        return null;
+        return "";
     }
 }

@@ -7,6 +7,6 @@ import pt.up.fe.comp2023.backend.instructions.call.InstructionCall;
 public class InvokeVirtualInstruction implements InstructionCall {
     @Override
     public String toJasmin(Method method, CallInstruction instruction) {
-        return null;
+        return "";
     }
 }
