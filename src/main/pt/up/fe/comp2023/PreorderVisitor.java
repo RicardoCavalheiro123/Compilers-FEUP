@@ -204,7 +204,7 @@ public class PreorderVisitor extends PreorderJmmVisitor<Object, Object> {
 
         JmmNode type = jmmNode.getChildren().get(0);
         st.fields.put(new Symbol(
-                new Type(type.get("type_"), type.get("isArray").equals("true")),
+                new Type(type.get("typeName"), type.get("isArray").equals("true")),
                 jmmNode.get("var")),
                 false
         );
