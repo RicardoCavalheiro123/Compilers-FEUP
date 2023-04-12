@@ -11,11 +11,15 @@ public class SimpleOllir implements JmmOptimization {
     public OllirResult toOllir(JmmSemanticsResult jmmSemanticsResult) {
         System.out.println("Ollir stage");
 
-        OllirGenerator visitor = new OllirGenerator((SymbolTable) jmmSemanticsResult.getSymbolTable());
+        StringBuilder ollir = new StringBuilder();
+
+        SymbolTable s = (SymbolTable) jmmSemanticsResult.getSymbolTable();
+        OllirGenerator visitor = new OllirGenerator((SymbolTable) jmmSemanticsResult.getSymbolTable(), ollir);
 
         JmmNode root = jmmSemanticsResult.getRootNode();
 
-        StringBuilder ollir = new StringBuilder();
-        return null;
+        visitor.visit(root, new StringBuilder(""));
+
+        return new OllirResult(jmmSemanticsResult, visitor.getOllirCode(),jmmSemanticsResult.getReports());
     }
 }
