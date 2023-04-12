@@ -21,27 +21,26 @@ public class MethodTable {
         if(node.get("name").equals("main")) {
             // main method
             returnType = new Type("void", false);
-            parameters.add(new Symbol(new Type(node.getJmmChild(0).get("type_"), true), "args"));
+            parameters.add(new Symbol(new Type(node.getJmmChild(0).get("typeName"), true), "args"));
+            return;
+        }
 
-        } else {
+        List<JmmNode> children = node.getChildren(); // return type, parameters, var declarations and statements
 
-            List<JmmNode> children = node.getChildren(); // return type, parameters, var declarations and statements
+        JmmNode returnNode = children.get(0);
+        this.returnType = new Type(returnNode.get("typeName"), returnNode.get("isArray").equals("true"));
 
-            JmmNode returnNode = children.get(0);
-            this.returnType = new Type(returnNode.get("type_"), returnNode.get("isArray").equals("true"));
+        for (int i=1; i<children.size(); i++) {
+            JmmNode child = children.get(i);
+            if (child.getKind().equals("Parameter")) {
+                JmmNode typeNode = child.getJmmChild(0);
+                Type type = new Type(typeNode.get("typeName"), typeNode.get("isArray").equals("true"));
+                this.parameters.add(new Symbol(type, child.get("var")));
 
-            for (int i=1; i<children.size(); i++) {
-                JmmNode child = children.get(i);
-                if (child.getKind().equals("Parameter")) {
-                    JmmNode typeNode = child.getJmmChild(0);
-                    Type type = new Type(typeNode.get("type_"), typeNode.get("isArray").equals("true"));
-                    this.parameters.add(new Symbol(type, child.get("var")));
+            } else if (child.getKind().equals("VarDeclaration")) {
+                Type type = new Type(child.getJmmChild(0).get("typeName"), child.getJmmChild(0).get("isArray").equals("true"));
+                this.variables.put(new Symbol(type, child.get("var")), false);
 
-                } else if (child.getKind().equals("VarDeclaration")) {
-                    Type type = new Type(child.getJmmChild(0).get("type_"), child.getJmmChild(0).get("isArray").equals("true"));
-                    this.variables.put(new Symbol(type, child.get("var")), false);
-
-                }
             }
         }
     }
