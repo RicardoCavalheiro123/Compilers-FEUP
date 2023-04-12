@@ -79,9 +79,9 @@ public class JasminUtils {
         StringBuilder jasminCodeBuilder = new StringBuilder();
         ElementType typeOfElement = type.getTypeOfElement();
 
-        if (typeOfElement == ElementType.ARRAYREF) {
+        while (typeOfElement == ElementType.ARRAYREF) {
             jasminCodeBuilder.append("[");
-            typeOfElement = ((ArrayType) type).getTypeOfElement(); //TODO: check if this is correct
+            typeOfElement = ((ArrayType) type).getArrayType();
         }
 
         switch (typeOfElement) {
