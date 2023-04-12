@@ -60,6 +60,10 @@ public class SymbolTable implements pt.up.fe.comp.jmm.analysis.table.SymbolTable
         return fields.get(symbol);
     }
 
+    public MethodTable findMethod(String methodName) {
+        return methods.get(methodName);
+    }
+
     // Print the symbol table
     public String toString() {
         return print();
