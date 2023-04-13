@@ -132,6 +132,8 @@ public class SimpleJasmin implements JasminBackend {
     private String getAssignJasminString(Method method, AssignInstruction instruction) {
         StringBuilder jasminCodeBuilder = new StringBuilder();
 
+        // TODO
+
         return jasminCodeBuilder.toString();
     }
 
@@ -158,6 +160,7 @@ public class SimpleJasmin implements JasminBackend {
     private String getBranchJasminString(Method method, CondBranchInstruction instruction) {
         StringBuilder jasminCodeBuilder = new StringBuilder();
 
+        // TODO
 
         return jasminCodeBuilder.toString();
     }
@@ -248,6 +251,7 @@ public class SimpleJasmin implements JasminBackend {
     private String getNOperJasminString(Method method, SingleOpInstruction instruction) {
         StringBuilder jasminCodeBuilder = new StringBuilder();
 
+        // TODO
 
         return jasminCodeBuilder.toString();
     }

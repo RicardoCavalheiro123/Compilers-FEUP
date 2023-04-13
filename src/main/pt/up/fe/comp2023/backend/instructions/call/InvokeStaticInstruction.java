@@ -6,6 +6,10 @@ import org.specs.comp.ollir.Method;
 public class InvokeStaticInstruction implements InstructionCall {
     @Override
     public String toJasmin(Method method, CallInstruction instruction) {
-        return null;
+        StringBuilder jasminCodeBuilder = new StringBuilder();
+
+        // TODO
+
+        return jasminCodeBuilder.toString();
     }
 }
