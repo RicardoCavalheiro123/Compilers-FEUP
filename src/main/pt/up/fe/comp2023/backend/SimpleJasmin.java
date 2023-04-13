@@ -24,6 +24,8 @@ public class SimpleJasmin implements JasminBackend {
         try {
             String jasminCode = getJasminString(resultOllirClass);
 
+            System.out.println(jasminCode);
+
             return new JasminResult(ollirResult, jasminCode, this.reports);
         } catch (Exception e) {
             return new JasminResult(resultOllirClass.getClassName(), null, List.of(Report.newError(Stage.GENERATION, -1, -1, "Error while generating Jasmin code", e)));
@@ -42,7 +44,7 @@ public class SimpleJasmin implements JasminBackend {
     private String getClassJasminString(ClassUnit resultOllirClass) {
         return ".class public " + resultOllirClass.getClassName() + "\n" +
                 ".super " + superClassName + "\n\n" +
-                getFieldsJasminString(resultOllirClass);
+                getFieldsJasminString(resultOllirClass) + "\n";
     }
 
     private String getFieldsJasminString(ClassUnit resultOllirClass) {
@@ -72,10 +74,7 @@ public class SimpleJasmin implements JasminBackend {
 
         for (Method method : resultOllirClass.getMethods()) {
             if (method.getMethodAccessModifier() == AccessModifiers.DEFAULT) {
-                jasminCodeBuilder.append(".method public ").append("<init>").append("()V")
-                    .append("\n\t").append("aload_0").append("\n\n\t")
-                    .append("invokenonvirtual ")
-                    .append(superClassName).append("/<init>()V\n").append("\treturn\n").append(".end method\n\n");
+                jasminCodeBuilder.append(".method public ").append("<init>").append("(");
 
             } else {
 
@@ -87,25 +86,29 @@ public class SimpleJasmin implements JasminBackend {
                 if (method.isFinalMethod()) jasminCodeBuilder.append("final ");
 
                 jasminCodeBuilder.append(method.getMethodName()).append("(");
-
-                for (Element param : method.getParams()) {
-                    jasminCodeBuilder.append(JasminUtils.typeCode(param.getType()));
-                }
-                jasminCodeBuilder.append(")").append(JasminUtils.typeCode(method.getReturnType())).append("\n");
-
-                StringBuilder instructions = new StringBuilder();
-                for (Instruction instruction : method.getInstructions()) {
-                    instructions.append("\t").append(getInstructionJasminString(method, instruction)).append("\n");
-                }
-
-                jasminCodeBuilder.append("\t.limit stack ").append("99").append("\n");
-                jasminCodeBuilder.append("\t.limit locals ").append("99").append("\n\n");
-
-                jasminCodeBuilder.append(instructions);
-
-                jasminCodeBuilder.append(".end method\n\n");
             }
+
+            for (Element param : method.getParams()) {
+                jasminCodeBuilder.append(JasminUtils.typeCode(param.getType()));
+            }
+            jasminCodeBuilder.append(")").append(JasminUtils.typeCode(method.getReturnType())).append("\n");
+
+            StringBuilder instructions = new StringBuilder();
+            for (Instruction instruction : method.getInstructions()) {
+                instructions.append("\t").append(getInstructionJasminString(method, instruction)).append("\n");
+            }
+
+            if (method.getMethodAccessModifier() != AccessModifiers.DEFAULT) {
+                jasminCodeBuilder.append("\t.limit stack ").append("99").append("\n");
+                jasminCodeBuilder.append("\t.limit locals ").append("99").append("\n");
+                jasminCodeBuilder.append("\t\n");
+            }
+
+            jasminCodeBuilder.append(instructions);
+
+            jasminCodeBuilder.append(".end method\n\n");
         }
+
 
         return jasminCodeBuilder.toString();
     }
@@ -143,7 +146,7 @@ public class SimpleJasmin implements JasminBackend {
         switch (instruction.getInvocationType()) {
             case invokevirtual -> callInstruction = new InvokeVirtualInstruction();
             case invokeinterface -> callInstruction = new InvokeInterfaceInstruction();
-            case invokespecial -> callInstruction = new InvokeSpecialInstruction();
+            case invokespecial -> callInstruction = new InvokeSpecialInstruction(superClassName);
             case invokestatic -> callInstruction = new InvokeStaticInstruction();
             case NEW -> callInstruction = new NewInstruction();
             case arraylength -> callInstruction = new ArrayLengthInstruction();
@@ -198,7 +201,7 @@ public class SimpleJasmin implements JasminBackend {
 
         jasminCodeBuilder.append("putfield ");
         jasminCodeBuilder.append(instruction.getFirstOperand().getClass().getName()).append("/");
-        jasminCodeBuilder.append(instruction.getSecondOperand().toString()).append(" ");
+        jasminCodeBuilder.append(((Operand) instruction.getSecondOperand()).getName()).append(" ");
         jasminCodeBuilder.append(JasminUtils.typeCode(instruction.getSecondOperand().getType()));
 
         return jasminCodeBuilder.toString();

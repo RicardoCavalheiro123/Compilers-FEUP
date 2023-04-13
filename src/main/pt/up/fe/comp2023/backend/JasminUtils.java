@@ -41,12 +41,12 @@ public class JasminUtils {
 
             if (op.getType().getTypeOfElement() == ElementType.INT32 ||
                     op.getType().getTypeOfElement() == ElementType.BOOLEAN) {
-                jasminCodeBuilder.append("iload ").append(method.getVarTable().get(op.getName()).getVirtualReg());
+                jasminCodeBuilder.append("iload").append(regCode(method.getVarTable().get(op.getName()).getVirtualReg()));
             } else if (op.getType().getTypeOfElement() == ElementType.STRING ||
                     op.getType().getTypeOfElement() == ElementType.OBJECTREF ||
                     op.getType().getTypeOfElement() == ElementType.ARRAYREF ||
                     op.getType().getTypeOfElement() == ElementType.THIS) {
-                jasminCodeBuilder.append("aload ").append(method.getVarTable().get(op.getName()).getVirtualReg());
+                jasminCodeBuilder.append("aload").append(regCode(method.getVarTable().get(op.getName()).getVirtualReg()));
             } else {
                 jasminCodeBuilder.append("; loadElement not implemented for Operand ").append(element.getClass().toString()).append(".");
             }
@@ -55,6 +55,14 @@ public class JasminUtils {
         }
 
         return jasminCodeBuilder.toString();
+    }
+
+    private static String regCode(int virtualReg) {
+        if (virtualReg >= 0 && virtualReg <= 3) {
+            return "_" + virtualReg;
+        } else {
+            return " " + virtualReg;
+        }
     }
 
     public static String operationCode(Operation operation) {
