@@ -1,22 +1,26 @@
-import io.ok;
+import io;
+import Quicksort;
 
-class Fac {
-    int inteiro = 3;
+class OllirToJasminBasic extends Quicksort {
 
-    public int computeFac(int num, int[] num2){
-        String num_aux;
-        int num = 123;
+    int intField;
+    boolean boolField;
 
-        if (num < 1)
-            num_aux = 1;
-        method.call(num_aux[3] * 2);
-        return num_aux;
+    public int method1() {
+        int intLocal1;
+        boolean boolLocal1;
+
+        intLocal1 = 0;
+        boolLocal1 = true;
+
+        return 0;
     }
-    public static void main (String[] args){
-        io.println(new Fac().computeFac(10));
+
+    public boolean method2(int intParam1, boolean boolParam1) {
+        return boolParam1;
     }
 
-    int foo(int anInt, int[] anArray, boolean aBool, String aString) {
-        return a;
+
+    public static void main(String[] args) {
     }
 }

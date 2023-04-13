@@ -20,6 +20,8 @@ public class SimpleOllir implements JmmOptimization {
 
         visitor.visit(root, new StringBuilder(""));
 
+        System.out.println(visitor.getOllirCode());
+
         return new OllirResult(jmmSemanticsResult, visitor.getOllirCode(),jmmSemanticsResult.getReports());
     }
 }

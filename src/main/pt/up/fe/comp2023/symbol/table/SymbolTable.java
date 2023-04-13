@@ -15,6 +15,11 @@ public class SymbolTable implements pt.up.fe.comp.jmm.analysis.table.SymbolTable
 
     public List<String> imports = new ArrayList<>();
     public HashMap<Symbol, Boolean> fields = new HashMap<>();
+
+    public MethodTable getMethod(String method) {
+        return methods.get(method);
+    }
+
     public HashMap<String, MethodTable> methods = new HashMap<>();
 
 
@@ -64,4 +69,6 @@ public class SymbolTable implements pt.up.fe.comp.jmm.analysis.table.SymbolTable
     public String toString() {
         return print();
     }
+
+
 }
