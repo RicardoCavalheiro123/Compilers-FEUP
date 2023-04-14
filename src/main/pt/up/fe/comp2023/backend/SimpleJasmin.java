@@ -42,9 +42,6 @@ public class SimpleJasmin implements JasminBackend {
     }
 
     private String getClassJasminString(ClassUnit resultOllirClass) {
-
-        // TODO: add imports
-
         return ".class public " + resultOllirClass.getClassName() + "\n" +
                 ".super " + superClassName + "\n\t\n" +
                 getFieldsJasminString(resultOllirClass) + "\t\n";
@@ -201,8 +198,8 @@ public class SimpleJasmin implements JasminBackend {
 
         jasminCodeBuilder.append(callInstruction.toJasmin(method, instruction));
 
-        if(!method.isConstructMethod() && (instruction.getReturnType().getTypeOfElement() != ElementType.VOID || instruction.getInvocationType() == CallType.invokespecial)) {
-            //jasminCodeBuilder.append("\n\tpop");
+        if(!method.isConstructMethod() && (instruction.getReturnType().getTypeOfElement() != ElementType.VOID || instruction.getInvocationType() != CallType.invokespecial)) {
+            jasminCodeBuilder.append("\n\tpop");
         }
 
         return jasminCodeBuilder.toString();
