@@ -6,6 +6,7 @@ import pt.up.fe.comp.jmm.ast.JmmNode;
 import pt.up.fe.comp.jmm.parser.JmmParserResult;
 import pt.up.fe.comp.jmm.report.Report;
 import pt.up.fe.comp2023.analysers.typeVerification.ArrayAccessAnalyzer;
+import pt.up.fe.comp2023.analysers.typeVerification.OperandsTypeCompatibilityAnalyzer;
 import pt.up.fe.comp2023.symbol.table.SymbolTable;
 
 import java.util.ArrayList;
@@ -23,20 +24,22 @@ public class SimpleAnalysis implements JmmAnalysis {
             visitor.visit(root, null);
 
             SymbolTable symbolTable = visitor.getSymbolTable();
+
             List<Report> reports = new ArrayList<>(visitor.getReports());
 
-            List<PreorderVisitor> semantic_analyzers = Arrays.asList(
-               new ArrayAccessAnalyzer()
+            List<SemanticVisitor> semantic_analyzers = Arrays.asList(
+                new ArrayAccessAnalyzer(),
+                new OperandsTypeCompatibilityAnalyzer()
             );
 
             System.out.println("Performing semantic analysis...");
 
-            for(var analyzer: semantic_analyzers) {
+            for(SemanticVisitor analyzer: semantic_analyzers) {
                 analyzer.visit(root, symbolTable);
                 reports.addAll(analyzer.getReports());
             }
 
-            return new JmmSemanticsResult(root, symbolTable, reports, jmmParserResult.getConfig());
+            return new JmmSemanticsResult(jmmParserResult, symbolTable, reports);
 
         } catch (Exception e) {
             e.printStackTrace();
