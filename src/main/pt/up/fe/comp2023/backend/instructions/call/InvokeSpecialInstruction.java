@@ -12,31 +12,31 @@ public class InvokeSpecialInstruction implements InstructionCall {
     }
     @Override
     public String toJasmin(Method method, CallInstruction instruction) {
-        String jasminCode = "";
+        StringBuilder jasminCodeBuilder = new StringBuilder();
 
-        jasminCode += JasminUtils.loadElement(method, instruction.getFirstArg());
-        jasminCode += "\n\t";
+        jasminCodeBuilder.append(JasminUtils.loadElement(method, instruction.getFirstArg()));
+        jasminCodeBuilder.append("\n\t");
 
         if (method.isConstructMethod()  && instruction.getFirstArg().getType().getTypeOfElement() == ElementType.THIS) {
-            jasminCode += "invokenonvirtual ";
+            jasminCodeBuilder.append("invokenonvirtual ");
         } else {
-            jasminCode += "invokespecial ";
+            jasminCodeBuilder.append("invokespecial ");
         }
 
         if (instruction.getFirstArg().getType().getTypeOfElement() == ElementType.THIS) {
-            jasminCode += superClassName;
+            jasminCodeBuilder.append(superClassName);
         } else {
-            jasminCode += ((ClassType) instruction.getFirstArg().getType()).getName().replace(".", "/");
+            jasminCodeBuilder.append(((ClassType) instruction.getFirstArg().getType()).getName().replace(".", "/"));
         }
 
-        jasminCode += "/<init>(";
+        jasminCodeBuilder.append("/<init>(");
 
         for (Element e: instruction.getListOfOperands()) {
-            jasminCode += JasminUtils.typeCode(e.getType());
+            jasminCodeBuilder.append(JasminUtils.typeCode(e.getType()));
         }
 
-        jasminCode += ")" + JasminUtils.typeCode(instruction.getReturnType());
+        jasminCodeBuilder.append(")" + JasminUtils.typeCode(instruction.getReturnType()));
 
-        return jasminCode;
+        return jasminCodeBuilder.toString();
     }
 }

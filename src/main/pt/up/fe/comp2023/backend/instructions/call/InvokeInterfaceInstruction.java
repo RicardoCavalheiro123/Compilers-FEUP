@@ -7,9 +7,6 @@ public class InvokeInterfaceInstruction implements InstructionCall {
     @Override
     public String toJasmin(Method method, CallInstruction instruction) {
         StringBuilder jasminCodeBuilder = new StringBuilder();
-
-        // TODO
-
         return "";
     }
 }
