@@ -42,9 +42,12 @@ public class SimpleJasmin implements JasminBackend {
     }
 
     private String getClassJasminString(ClassUnit resultOllirClass) {
+
+        // TODO: add imports
+
         return ".class public " + resultOllirClass.getClassName() + "\n" +
-                ".super " + superClassName + "\n\n" +
-                getFieldsJasminString(resultOllirClass) + "\n";
+                ".super " + superClassName + "\n\t\n" +
+                getFieldsJasminString(resultOllirClass) + "\t\n";
     }
 
     private String getFieldsJasminString(ClassUnit resultOllirClass) {
@@ -106,7 +109,11 @@ public class SimpleJasmin implements JasminBackend {
 
             jasminCodeBuilder.append(instructions);
 
-            jasminCodeBuilder.append(".end method\n\n");
+            if (method.getMethodAccessModifier() == AccessModifiers.DEFAULT) {
+                jasminCodeBuilder.append("\treturn\n");
+            }
+
+            jasminCodeBuilder.append(".end method\n\t\n");
         }
 
 
@@ -136,12 +143,51 @@ public class SimpleJasmin implements JasminBackend {
         StringBuilder jasminCodeBuilder = new StringBuilder();
 
         // TODO
+        Element dest = instruction.getDest();
+
+        if(dest.getType().getTypeOfElement() == ElementType.ARRAYREF) {
+            ArrayOperand op = (ArrayOperand) dest;
+            JasminUtils.loadElement(method, op);
+            JasminUtils.loadElement(method, op.getIndexOperands().get(0));
+        } else {
+            if (instruction.getRhs().getInstType() == InstructionType.BINARYOPER) {
+                BinaryOpInstruction binaryOpInstruction = (BinaryOpInstruction) instruction.getRhs();
+
+                if (binaryOpInstruction.getOperation().getOpType() == OperationType.ADD) {
+                    boolean ll = binaryOpInstruction.getLeftOperand().isLiteral();
+                    boolean rl = binaryOpInstruction.getRightOperand().isLiteral();
+                    LiteralElement literalElement = null;
+                    Operand operand = null;
+
+                    if (ll && !rl) {
+                        literalElement = (LiteralElement) binaryOpInstruction.getLeftOperand();
+                        operand = (Operand) binaryOpInstruction.getRightOperand();
+                    } else if (!ll && rl) {
+                        literalElement = (LiteralElement) binaryOpInstruction.getRightOperand();
+                        operand = (Operand) binaryOpInstruction.getLeftOperand();
+                    }
+
+                    if (literalElement != null && operand != null) {
+                         if (operand.getName().equals(dest.toString())) {
+                             int value = Integer.parseInt(literalElement.getLiteral());
+
+                             return "\tiinc " + JasminUtils.regCode(method.getVarTable().get(operand.getName()).getVirtualReg()) + " " + value + "\n";
+                        }
+                    }
+                }
+            }
+        }
+
+        jasminCodeBuilder.append(getInstructionJasminString(method, instruction.getRhs()));
+        jasminCodeBuilder.append("\n\t");
+        jasminCodeBuilder.append(JasminUtils.storeElement(method, dest));
 
         return jasminCodeBuilder.toString();
     }
 
     private String getCallJasminString(Method method, CallInstruction instruction) {
         InstructionCall callInstruction = null;
+        StringBuilder jasminCodeBuilder = new StringBuilder();
 
         switch (instruction.getInvocationType()) {
             case invokevirtual -> callInstruction = new InvokeVirtualInstruction();
@@ -153,7 +199,13 @@ public class SimpleJasmin implements JasminBackend {
             case ldc -> callInstruction = new LdcInstruction();
         }
 
-        return callInstruction.toJasmin(method, instruction);
+        jasminCodeBuilder.append(callInstruction.toJasmin(method, instruction));
+
+        if(!method.isConstructMethod() && (instruction.getReturnType().getTypeOfElement() != ElementType.VOID || instruction.getInvocationType() == CallType.invokespecial)) {
+            //jasminCodeBuilder.append("\n\tpop");
+        }
+
+        return jasminCodeBuilder.toString();
     }
 
     private String getGotoJasminString(Method method, GotoInstruction instruction) {
@@ -200,7 +252,7 @@ public class SimpleJasmin implements JasminBackend {
         jasminCodeBuilder.append("\n\t");
 
         jasminCodeBuilder.append("putfield ");
-        jasminCodeBuilder.append(instruction.getFirstOperand().getClass().getName()).append("/");
+        jasminCodeBuilder.append(((ClassType) instruction.getFirstOperand().getType()).getName()).append("/"); // TODO
         jasminCodeBuilder.append(((Operand) instruction.getSecondOperand()).getName()).append(" ");
         jasminCodeBuilder.append(JasminUtils.typeCode(instruction.getSecondOperand().getType()));
 
@@ -215,8 +267,8 @@ public class SimpleJasmin implements JasminBackend {
         jasminCodeBuilder.append("\n\t");
 
         jasminCodeBuilder.append("getfield ");
-        jasminCodeBuilder.append(instruction.getFirstOperand().getClass().getName()).append("/");
-        jasminCodeBuilder.append(instruction.getSecondOperand().toString()).append(" ");
+        jasminCodeBuilder.append(((ClassType) instruction.getFirstOperand().getType()).getName()).append("/"); // TODO
+        jasminCodeBuilder.append(((Operand) instruction.getSecondOperand()).getName()).append(" ");
         jasminCodeBuilder.append(JasminUtils.typeCode(instruction.getSecondOperand().getType()));
 
         return jasminCodeBuilder.toString();
@@ -247,6 +299,9 @@ public class SimpleJasmin implements JasminBackend {
         jasminCodeBuilder.append(JasminUtils.loadElement(method, left));
         jasminCodeBuilder.append("\n\t");
         jasminCodeBuilder.append(JasminUtils.loadElement(method, right));
+        jasminCodeBuilder.append("\n\t");
+        jasminCodeBuilder.append(JasminUtils.operationCode(instruction.getOperation()));
+        jasminCodeBuilder.append("\n\t");
 
         return jasminCodeBuilder.toString();
     }
@@ -254,7 +309,7 @@ public class SimpleJasmin implements JasminBackend {
     private String getNOperJasminString(Method method, SingleOpInstruction instruction) {
         StringBuilder jasminCodeBuilder = new StringBuilder();
 
-        // TODO
+        jasminCodeBuilder.append(JasminUtils.loadElement(method, instruction.getSingleOperand()));
 
         return jasminCodeBuilder.toString();
     }

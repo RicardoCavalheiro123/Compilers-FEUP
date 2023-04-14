@@ -57,7 +57,27 @@ public class JasminUtils {
         return jasminCodeBuilder.toString();
     }
 
-    private static String regCode(int virtualReg) {
+    public static String storeElement(Method method, Element element) {
+        StringBuilder jasminCodeBuilder = new StringBuilder();
+
+        Operand op = (Operand) element;
+
+        if (op.getType().getTypeOfElement() == ElementType.INT32 ||
+                op.getType().getTypeOfElement() == ElementType.BOOLEAN) {
+            jasminCodeBuilder.append("istore").append(regCode(method.getVarTable().get(op.getName()).getVirtualReg()));
+        } else if (op.getType().getTypeOfElement() == ElementType.STRING ||
+                op.getType().getTypeOfElement() == ElementType.OBJECTREF ||
+                op.getType().getTypeOfElement() == ElementType.ARRAYREF ||
+                op.getType().getTypeOfElement() == ElementType.THIS) {
+            jasminCodeBuilder.append("astore").append(regCode(method.getVarTable().get(op.getName()).getVirtualReg()));
+        } else {
+            jasminCodeBuilder.append("; storeElement not implemented for Operand ").append(element.getClass().toString()).append(".");
+        }
+
+        return jasminCodeBuilder.toString();
+    }
+
+    public static String regCode(int virtualReg) {
         if (virtualReg >= 0 && virtualReg <= 3) {
             return "_" + virtualReg;
         } else {

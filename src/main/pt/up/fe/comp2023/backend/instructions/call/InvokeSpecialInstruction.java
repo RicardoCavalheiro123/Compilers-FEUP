@@ -1,9 +1,6 @@
 package pt.up.fe.comp2023.backend.instructions.call;
 
-import org.specs.comp.ollir.CallInstruction;
-import org.specs.comp.ollir.Element;
-import org.specs.comp.ollir.ElementType;
-import org.specs.comp.ollir.Method;
+import org.specs.comp.ollir.*;
 import pt.up.fe.comp2023.backend.JasminUtils;
 
 
@@ -29,8 +26,7 @@ public class InvokeSpecialInstruction implements InstructionCall {
         if (instruction.getFirstArg().getType().getTypeOfElement() == ElementType.THIS) {
             jasminCode += superClassName;
         } else {
-            jasminCode += instruction.getFirstArg().getClass().getName().replace(".", "/") +
-                    "/" + instruction.getFirstArg();
+            jasminCode += ((ClassType) instruction.getFirstArg().getType()).getName().replace(".", "/");
         }
 
         jasminCode += "/<init>(";
