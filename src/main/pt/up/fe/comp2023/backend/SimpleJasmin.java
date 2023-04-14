@@ -139,7 +139,6 @@ public class SimpleJasmin implements JasminBackend {
     private String getAssignJasminString(Method method, AssignInstruction instruction) {
         StringBuilder jasminCodeBuilder = new StringBuilder();
 
-        // TODO
         Element dest = instruction.getDest();
 
         if(dest.getType().getTypeOfElement() == ElementType.ARRAYREF) {
@@ -212,7 +211,11 @@ public class SimpleJasmin implements JasminBackend {
     private String getBranchJasminString(Method method, CondBranchInstruction instruction) {
         StringBuilder jasminCodeBuilder = new StringBuilder();
 
-        // TODO
+        jasminCodeBuilder.append(JasminUtils.loadElement(method, instruction.getOperands().get(0)));
+
+        jasminCodeBuilder.append("\n\t");
+
+        jasminCodeBuilder.append("ifne ").append(instruction.getLabel());
 
         return jasminCodeBuilder.toString();
     }
@@ -249,7 +252,7 @@ public class SimpleJasmin implements JasminBackend {
         jasminCodeBuilder.append("\n\t");
 
         jasminCodeBuilder.append("putfield ");
-        jasminCodeBuilder.append(((ClassType) instruction.getFirstOperand().getType()).getName()).append("/"); // TODO
+        jasminCodeBuilder.append(((ClassType) instruction.getFirstOperand().getType()).getName()).append("/");
         jasminCodeBuilder.append(((Operand) instruction.getSecondOperand()).getName()).append(" ");
         jasminCodeBuilder.append(JasminUtils.typeCode(instruction.getSecondOperand().getType()));
 
@@ -264,7 +267,7 @@ public class SimpleJasmin implements JasminBackend {
         jasminCodeBuilder.append("\n\t");
 
         jasminCodeBuilder.append("getfield ");
-        jasminCodeBuilder.append(((ClassType) instruction.getFirstOperand().getType()).getName()).append("/"); // TODO
+        jasminCodeBuilder.append(((ClassType) instruction.getFirstOperand().getType()).getName()).append("/");
         jasminCodeBuilder.append(((Operand) instruction.getSecondOperand()).getName()).append(" ");
         jasminCodeBuilder.append(JasminUtils.typeCode(instruction.getSecondOperand().getType()));
 

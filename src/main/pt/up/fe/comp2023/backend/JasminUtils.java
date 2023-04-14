@@ -89,13 +89,19 @@ public class JasminUtils {
         StringBuilder jasminCodeBuilder = new StringBuilder();
 
         switch (operation.getOpType()) {
-            case LTH -> jasminCodeBuilder.append("if_icmplt");
-            case ANDB -> jasminCodeBuilder.append("iand");
-            case NOTB -> jasminCodeBuilder.append("ixor");
             case ADD -> jasminCodeBuilder.append("iadd");
             case SUB -> jasminCodeBuilder.append("isub");
             case MUL -> jasminCodeBuilder.append("imul");
             case DIV -> jasminCodeBuilder.append("idiv");
+
+
+            case ANDB -> jasminCodeBuilder.append("ifeq");
+            case NOTB -> jasminCodeBuilder.append("ifne");
+            case ORB -> jasminCodeBuilder.append("if_icmpor");
+            case LTH -> jasminCodeBuilder.append("if_icmplt");
+            case GTH -> jasminCodeBuilder.append("if_icmpgt");
+            case LTE -> jasminCodeBuilder.append("if_icmple");
+            case GTE -> jasminCodeBuilder.append("if_icmpge");
 
             default -> jasminCodeBuilder.append("; operationCode not implemented for ").append(operation.getOpType().toString()).append(".");
         }
@@ -117,7 +123,7 @@ public class JasminUtils {
             case BOOLEAN -> jasminCodeBuilder.append("Z");
             case STRING -> jasminCodeBuilder.append("Ljava/lang/String;");
             case VOID -> jasminCodeBuilder.append("V");
-            case OBJECTREF -> jasminCodeBuilder.append("L").append(typeOfElement.getClass().getName()).append(";");
+            case OBJECTREF -> jasminCodeBuilder.append("L").append(((ClassType) type).getName().replace(".", "/")).append(";");
             default -> jasminCodeBuilder.append("; getTypeCode not implemented for ").append(type).append(".");
         }
 
