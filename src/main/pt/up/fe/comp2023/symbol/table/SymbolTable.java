@@ -58,6 +58,7 @@ public class SymbolTable implements pt.up.fe.comp.jmm.analysis.table.SymbolTable
 
     @Override
     public List<Symbol> getLocalVariables(String s) {
+
         return methods.get(s).getLocalVariables();
     }
 
@@ -70,5 +71,31 @@ public class SymbolTable implements pt.up.fe.comp.jmm.analysis.table.SymbolTable
         return print();
     }
 
+    //Check if it is a parameter
+    public Boolean isParameter(String method, String id){
+        if(!methods.containsKey(method))
+            return false;
+        if(methods.get(method).getParameters() == null)
+            return false;
+        return methods.get(method).getParameters().stream().anyMatch(symbol -> symbol.getName().equals(id));
+    }
 
+    //Get the parameter
+    public Symbol getParameter(String method, String id){
+        return methods.get(method).getParameters().stream().filter(symbol -> symbol.getName().equals(id)).findFirst().get();
+    }
+
+
+    public boolean isField(String method, String id) {
+        if(!methods.containsKey(method))
+            return false;
+        if(methods.get(method).getVariables() == null)
+            return false;
+        return methods.get(method).getVariables().keySet().stream().anyMatch(symbol -> symbol.getName().equals(id));
+
+    }
+
+    public Symbol getField(String currentMethod, String id) {
+        return methods.get(currentMethod).getLocalVariables().stream().filter(symbol -> symbol.getName().equals(id)).findFirst().get();
+    }
 }
