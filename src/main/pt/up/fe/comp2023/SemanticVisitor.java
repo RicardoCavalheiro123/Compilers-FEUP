@@ -25,7 +25,7 @@ public abstract class SemanticVisitor extends PreorderJmmVisitor<SymbolTable, In
         this.reports.add(report);
     }
 
-    protected Type getIdType(JmmNode node, SymbolTable symbolTable) {
+    public Type getIdType(JmmNode node, SymbolTable symbolTable) {
         String id = node.get("id");
         var method = node.getAncestor("Method");
         var method_name = method.get().get("name");
@@ -61,7 +61,7 @@ public abstract class SemanticVisitor extends PreorderJmmVisitor<SymbolTable, In
     }
 
     public Boolean literal(String str, SymbolTable symbolTable) {
-        return (str.equals("int") || str.equals("boolean") || str.equals("array"));
+        return (str.equals("int") || str.equals("Boolean") || str.equals("array"));
     }
 
     //Check if imported
@@ -70,6 +70,27 @@ public abstract class SemanticVisitor extends PreorderJmmVisitor<SymbolTable, In
             var imports_split = Arrays.asList(impt.trim().split("\\."));
 
             if(Objects.equals(str, imports_split.get(imports_split.size() - 1))) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public boolean compatibleType(Type t1, Type t2, SymbolTable symbolTable) {
+        Type type_super = new Type(symbolTable.getSuper(), false);
+        Type type_class = new Type(symbolTable.getClassName(), false);
+
+        if(Objects.equals(t1, t2)) {
+            return true;
+        }
+        else if(Objects.equals(t1, type_super)) {
+            if(Objects.equals(t2, type_class) || this.imported(t2.getName(), symbolTable)) {
+                return true;
+            }
+        }
+        else if (this.imported(t1.getName(), symbolTable)) {
+            if(this.imported(t2.getName(), symbolTable)) {
                 return true;
             }
         }

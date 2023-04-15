@@ -13,32 +13,32 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class IdentifierAnalyzer extends SemanticVisitor {
-    private List<Report> reportsArrayAccess;
+    private List<Report> reportsIdentifier;
 
     @Override
     protected void buildVisitor() {
         setDefaultVisit(this::defaultVisit);
-        addVisit("ArrayAccess", this::visitA);
+        addVisit("Identifier", this::visitIdentifier);
     }
 
     public IdentifierAnalyzer() {
-        this.reportsArrayAccess = new ArrayList<>();
+        this.reportsIdentifier = new ArrayList<>();
     }
 
     private Integer defaultVisit(JmmNode jmmNode, SymbolTable symbolTable) { return null; }
 
-    public List<Report> getReports() { return this.reportsArrayAccess; }
+    public List<Report> getReports() { return this.reportsIdentifier; }
 
-    public Integer visitA(JmmNode node, SymbolTable symbolTable) {
-        if(!imported(node.get("name"), symbolTable) &&
+    public Integer visitIdentifier(JmmNode node, SymbolTable symbolTable) {
+        if(!imported(node.get("id"), symbolTable) &&
            getIdType(node, symbolTable).equals(new Type("invalid", false)))
         {
-        addReport(new Report(
+        reportsIdentifier.add(new Report(
             ReportType.ERROR,
             Stage.SEMANTIC,
-            Integer.parseInt(node.get("line")),
-            Integer.parseInt(node.get("col")),
-            "Identifier " + node.get("name") + "does not have corresponding declaration!"
+            Integer.parseInt(node.get("lineStart")),
+            Integer.parseInt(node.get("colStart")),
+            "Identifier " + node.get("id") + "does not have corresponding declaration!"
         ));
         }
 
