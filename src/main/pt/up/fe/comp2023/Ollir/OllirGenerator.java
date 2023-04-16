@@ -99,17 +99,17 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
         visit(jmmNode.getChildren().get(1), ollir);
         return null;*/
         String type = getVariableType(symbol.getType(), ollir);
-        var right = visit(jmmNode.getChildren().get(1), ollir) + type;
-        var left = visit(jmmNode.getChildren().get(0), ollir) + type;
+        var right = visit(jmmNode.getChildren().get(1), ollir);
+        var left = visit(jmmNode.getChildren().get(0), ollir);
         if(jmmNode.getJmmParent().getKind().equals("Assign")){
-            return left + " " + jmmNode.get("op") + type + " " + right + "\n";
+            return left + " " + jmmNode.get("op") + type + " " + right;
         }
 
         this.ollirCode.append("temp" + tempcounter + type + " :=" + type + " " + left + " " + jmmNode.get("op") + type + " " + right + ";\n");
         tempcounter++;
 
 
-        return "temp" + (tempcounter - 1);
+        return "temp" + (tempcounter - 1) + type;
     }
 
     private String dealWithAssign(JmmNode jmmNode, StringBuilder ollir) {

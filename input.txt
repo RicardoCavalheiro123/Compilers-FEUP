@@ -9,8 +9,9 @@ class CompileAssignment {
         int b;
 
         b = 2;
+        a = b + 1;
 
-        a = b;
+        a = b + 2 * b;
 
         return 0;
     }
