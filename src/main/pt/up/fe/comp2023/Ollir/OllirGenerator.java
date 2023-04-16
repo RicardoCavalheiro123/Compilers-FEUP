@@ -70,12 +70,17 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
             dealWithArgumentOfMethod(child);
         }*/
 
+        if(jmmNode.getChildren().get(0).getKind().equals("This")){
+            this.ollirCode.append("invokevirtual(" + jmmNode.getJmmParent().get("id") + ", \"" + jmmNode.get("method") + "\"");}
 
-        this.ollirCode.append("invokestatic(" + jmmNode.getChildren().get(0).get("id") + ", \"" + jmmNode.get("method") + "\", ");
+        this.ollirCode.append("invokestatic(" + jmmNode.getChildren().get(0).get("id") + ", \"" + jmmNode.get("method") + "\"");
 
-        visit(jmmNode.getChildren().get(1), ollir);
+        for (int idx = 1; idx < jmmNode.getChildren().size(); idx++) {
+            this.ollirCode.append(", ");
+            visit(jmmNode.getChildren().get(idx), ollir);
+        }
 
-        this.ollirCode.append(").V\n");
+        this.ollirCode.append(").V");
 
         return null;
     }
