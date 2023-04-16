@@ -17,7 +17,9 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
     private final SymbolTable symbolTable;
     private StringBuilder ollirCode;
     private String currentMethod = "";
-    private Integer tempcounter = 0;
+    private Integer tempcounter = 1;
+    private Boolean assign = false;
+    private Symbol symbol = null;
     public String getOllirCode() {
         return ollirCode.toString();
     }
@@ -87,6 +89,7 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
     }
 
     private String dealWithBinaryOp(JmmNode jmmNode, StringBuilder ollir) {
+        /*
         visit(jmmNode.getChildren().get(0), ollir);
         if(jmmNode.get("op").equals("&&") || jmmNode.get("op").equals("||"))
             this.ollirCode.append(" " + jmmNode.get("op") + ".bool ");
@@ -94,52 +97,62 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
             this.ollirCode.append(" " + jmmNode.get("op") + ".i32 ");
 
         visit(jmmNode.getChildren().get(1), ollir);
-        return null;
+        return null;*/
+        String type = getVariableType(symbol.getType(), ollir);
+        var right = visit(jmmNode.getChildren().get(1), ollir) + type;
+        var left = visit(jmmNode.getChildren().get(0), ollir) + type;
+        if(jmmNode.getJmmParent().getKind().equals("Assign")){
+            return type + " " + left + " " + jmmNode.get("op") + type + " " + right + "\n";
+        }
+
+        this.ollirCode.append("temp" + tempcounter + type + " :=" + type + " " + left + " " + jmmNode.get("op") + type + " " + right + ";\n");
+        tempcounter++;
+
+
+        return "temp" + (tempcounter - 1);
     }
 
     private String dealWithAssign(JmmNode jmmNode, StringBuilder ollir) {
-        Symbol symbol = null;
+
         //Check if is a parameter
+        assign = true;
+        this.tempcounter = 1;
         if(this.symbolTable.isParameter(this.currentMethod, jmmNode.get("id"))){
-            symbol = this.symbolTable.getParameter(this.currentMethod, jmmNode.get("id"));
+            this.symbol = this.symbolTable.getParameter(this.currentMethod, jmmNode.get("id"));
 
         }
 
         //Check if it is a field
         else if(this.symbolTable.isField(this.currentMethod,jmmNode.get("id"))){
-            symbol = this.symbolTable.getField(this.currentMethod, jmmNode.get("id"));
+            this.symbol = this.symbolTable.getField(this.currentMethod, jmmNode.get("id"));
 
 
         }
+
         if(jmmNode.getChildren().get(0).getKind().equals("NewObject")){
             String type = jmmNode.getChildren().get(0).get("id");
             this.ollirCode.append(jmmNode.get("id") + '.' + type + " :=." + type + " ");
+            for (JmmNode child : jmmNode.getChildren()) {
+                visit(child, ollirCode);
+
+            }
+            this.ollirCode.append(";\n");
+            return null;
         }
         else{
-            String type = getVariableType(symbol.getType(), ollir);
-            this.ollirCode.append(jmmNode.get("id") + type + " :=" + type + " ");
+            String temp = "";
 
-        }
-
-        for (JmmNode child : jmmNode.getChildren()) {
-            visit(child, ollirCode);class CompileArithmetic {
-
-                public static void main(String[] args) {
-
-                }
-
-                public int foo() {
-                    int a;
-                    int b;
-
-                    a = 1;
-                    b = 2;
-
-                    return a + b;
-                }
+            for (JmmNode child : jmmNode.getChildren()) {
+                temp = visit(child, ollirCode);
             }
+
+            String type = getVariableType(symbol.getType(), ollir);
+            this.ollirCode.append(jmmNode.get("id") + type + " :=" + type + " " + temp + ";\n");
+
         }
-        this.ollirCode.append(";\n");
+
+
+        assign = false;
         return null;
     }
     private String dealWithIdentifier(JmmNode jmmNode, StringBuilder ollir) {
@@ -155,6 +168,9 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
             symbol = this.symbolTable.getField(this.currentMethod, jmmNode.get("id"));
 
         }
+        if(assign){
+            return jmmNode.get("id") + getVariableType(symbol.getType(), ollir);
+        }
         this.ollirCode.append(jmmNode.get("id") + getVariableType(symbol.getType(), ollir));
 
 
@@ -168,6 +184,9 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
     }
 
     private String dealWithInteger(JmmNode jmmNode, StringBuilder ollir) {
+        if(assign){
+            return jmmNode.get("value") + getVariableType(symbol.getType(), ollir);
+        }
         this.ollirCode.append(jmmNode.get("value"));
         dealWithSimpleExpression(jmmNode, ollir);
         return null;
@@ -293,9 +312,15 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
     private String dealWithSimpleExpression(JmmNode node, StringBuilder ollir) {
         switch (node.getKind()){
             case "Integer":
+                if(assign){
+                    return ".i32";
+                }
                 this.ollirCode.append(".i32");
                 break;
             case "Boolean":
+                if(assign){
+                    return ".bool";
+                }
                 this.ollirCode.append(".bool");
                 break;
         }
