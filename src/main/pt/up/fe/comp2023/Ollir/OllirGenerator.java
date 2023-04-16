@@ -102,7 +102,7 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
         var right = visit(jmmNode.getChildren().get(1), ollir) + type;
         var left = visit(jmmNode.getChildren().get(0), ollir) + type;
         if(jmmNode.getJmmParent().getKind().equals("Assign")){
-            return type + " " + left + " " + jmmNode.get("op") + type + " " + right + "\n";
+            return left + " " + jmmNode.get("op") + type + " " + right + "\n";
         }
 
         this.ollirCode.append("temp" + tempcounter + type + " :=" + type + " " + left + " " + jmmNode.get("op") + type + " " + right + ";\n");
@@ -178,6 +178,9 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
     }
 
     private String dealWithBoolean(JmmNode jmmNode, StringBuilder ollir) {
+        if(assign){
+            return jmmNode.get("value") + getVariableType(symbol.getType(), ollir);
+        }
         this.ollirCode.append(jmmNode.get("value"));
         dealWithSimpleExpression(jmmNode, ollir);
         return null;
@@ -194,16 +197,16 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
 
 
     private String dealWithReturn(JmmNode jmmNode, StringBuilder ollir) {
+        Type returnType = this.symbolTable.getMethod(jmmNode.getJmmParent().get("name")).getReturnType();
         if(jmmNode.getChildren().get(0).getKind().equals("BinaryOp")){
-
-            this.ollirCode.append("temp" + tempcounter);
-            dealWithType(jmmNode.getChildren().get(0).getChildren().get(0), ollir);
-            this.ollirCode.append("temp1.i32 :=.i32 a.i32 +.i32 b.i32;\n");
-            this.ollirCode.append("ret.i32 temp1.i32;\n");
+            String type = getVariableType(returnType, ollir);
+            this.ollirCode.append("temp" + tempcounter + type + ":=" + type +" ");
+            this.ollirCode.append(jmmNode.getChildren().get(0).getChildren().get(0).get("id") + type + " " + jmmNode.getChildren().get(0).get("op") + type + " " + jmmNode.getChildren().get(0).getChildren().get(1).get("id") + type + ";\n");
+            this.ollirCode.append("ret" + type + " temp" + tempcounter + type + ";\n");
             return null;
         }
         this.ollirCode.append("ret");
-        Type returnType = this.symbolTable.getMethod(jmmNode.getJmmParent().get("name")).getReturnType();
+
         this.ollirCode.append(getVariableType(returnType, ollir) + " ");
         for (JmmNode child : jmmNode.getChildren()) {
             visit(child, ollirCode);
