@@ -90,9 +90,9 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
         }
         String result = String.join("",args);
 
-        if(is_Static(jmmNode.getChildren().get(0).get("id"))){
+        //if(is_Static(jmmNode.getChildren().get(0).get("id"))){
             this.ollirCode.append("invokestatic(" + jmmNode.getChildren().get(0).get("id") +"," + "\"" + jmmNode.get("method")+ "\"" +result+ ").V");
-        }
+        //}
 
 
 
