@@ -132,8 +132,4 @@ public class JasminUtils {
 
         return jasminCodeBuilder.toString();
     }
-
-    public static String className(Method method, String name) {
-        return name.replace(".", "/");
-    }
 }
