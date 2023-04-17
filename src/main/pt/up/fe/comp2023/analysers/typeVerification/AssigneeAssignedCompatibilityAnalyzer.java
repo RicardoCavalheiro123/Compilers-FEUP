@@ -1,5 +1,6 @@
 package pt.up.fe.comp2023.analysers.typeVerification;
 
+import pt.up.fe.comp.jmm.analysis.table.Type;
 import pt.up.fe.comp.jmm.ast.JmmNode;
 import pt.up.fe.comp.jmm.report.Report;
 import pt.up.fe.comp.jmm.report.ReportType;
@@ -33,6 +34,23 @@ public class AssigneeAssignedCompatibilityAnalyzer extends SemanticVisitor {
     public Integer visitAssigneeAssigned(JmmNode node, SymbolTable symbolTable) {
         var assigned = this.getJmmNodeType(node.getJmmChild(0), symbolTable);
         var type = this.getIdType(node, symbolTable);
+
+        if(Objects.equals(node.getJmmChild(0).getKind(), "NewObject")) {
+            var t = new Type(node.getJmmChild(0).get("id"), false);
+
+            if(!compatibleType(t, type, symbolTable)) {
+                reportsAssigneeAssigned.add(
+                    new Report(
+                            ReportType.ERROR,
+                            Stage.SEMANTIC,
+                            Integer.parseInt(node.get("lineStart")),
+                            Integer.parseInt(node.get("colStart")),
+                            "Assignee is not of assigned type!"
+                    ));
+            }
+
+            return 0;
+        }
 
         if(!this.compatibleType(assigned, type, symbolTable)) {
             reportsAssigneeAssigned.add(

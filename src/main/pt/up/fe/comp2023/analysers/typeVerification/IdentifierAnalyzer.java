@@ -33,13 +33,13 @@ public class IdentifierAnalyzer extends SemanticVisitor {
         if(!imported(node.get("id"), symbolTable) &&
            getIdType(node, symbolTable).equals(new Type("invalid", false)))
         {
-        reportsIdentifier.add(new Report(
-            ReportType.ERROR,
-            Stage.SEMANTIC,
-            Integer.parseInt(node.get("lineStart")),
-            Integer.parseInt(node.get("colStart")),
-            "Identifier " + node.get("id") + "does not have corresponding declaration!"
-        ));
+            reportsIdentifier.add(new Report(
+                ReportType.ERROR,
+                Stage.SEMANTIC,
+                Integer.parseInt(node.get("lineStart")),
+                Integer.parseInt(node.get("colStart")),
+                "Identifier " + node.get("id") + " does not have corresponding declaration!"
+            ));
         }
 
         return 0;

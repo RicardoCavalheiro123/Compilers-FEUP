@@ -68,8 +68,9 @@ public abstract class SemanticVisitor extends PreorderJmmVisitor<SymbolTable, In
     public Boolean imported(String str, SymbolTable symbolTable) {
         for(String impt: symbolTable.getImports()) {
             var imports_split = Arrays.asList(impt.trim().split("\\."));
+            var imports = String.valueOf(imports_split.get(imports_split.size() - 1).charAt(1));
 
-            if(Objects.equals(str, imports_split.get(imports_split.size() - 1))) {
+            if(Objects.equals(str, imports)) {
                 return true;
             }
         }
