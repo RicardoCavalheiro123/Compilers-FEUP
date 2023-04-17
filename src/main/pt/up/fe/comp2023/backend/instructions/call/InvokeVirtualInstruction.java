@@ -14,15 +14,6 @@ public class InvokeVirtualInstruction implements InstructionCall {
         jasminCodeBuilder.append("\n\t");
         jasminCodeBuilder.append("invokevirtual ");
 
-        jasminCodeBuilder.append(((ClassType) instruction.getFirstArg().getType()).getName().replace(".", "/"));
-        jasminCodeBuilder.append("/" + ((LiteralElement) instruction.getSecondArg()).getLiteral().replace("\\", "")).append("(");
-
-        for (Element e: instruction.getListOfOperands()) {
-            jasminCodeBuilder.append(JasminUtils.typeCode(e.getType()));
-        }
-
-        jasminCodeBuilder.append(")" + JasminUtils.typeCode(instruction.getReturnType()));
-
-        return jasminCodeBuilder.toString();
+        return JasminUtils.invokes(instruction, jasminCodeBuilder);
     }
 }

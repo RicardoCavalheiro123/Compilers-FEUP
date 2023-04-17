@@ -36,6 +36,11 @@ public class Backend2Test {
         testOllirToJasmin("pt/up/fe/comp/cp2/fixtures2/public/ollir/Fac.ollir");
     }
 
+    @Test
+    public void testInvokeVirtual() {
+        testOllirToJasmin("pt/up/fe/comp/cp2/myjasmin/OllirToJasminInvokeStatic.ollir");
+    }
+
     public static void testOllirToJasmin(String resource, String expectedOutput) {
         SpecsCheck.checkArgument(resource.endsWith(".ollir"), () -> "Expected resource to end with .ollir: " + resource);
 

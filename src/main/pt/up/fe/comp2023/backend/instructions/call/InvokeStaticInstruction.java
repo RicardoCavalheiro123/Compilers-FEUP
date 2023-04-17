@@ -9,20 +9,11 @@ public class InvokeStaticInstruction implements InstructionCall {
         StringBuilder jasminCodeBuilder = new StringBuilder();
 
         for (Element e: instruction.getListOfOperands()) {
-            jasminCodeBuilder.append(JasminUtils.loadElement(method, e));
+            jasminCodeBuilder.append(JasminUtils.loadElement(method, e)).append("\n\t");
         }
 
         jasminCodeBuilder.append("invokestatic ");
 
-        jasminCodeBuilder.append(((ClassType) instruction.getFirstArg().getType()).getName().replace(".", "/"));
-        jasminCodeBuilder.append("/" + ((LiteralElement) instruction.getSecondArg()).getLiteral().replace("\\", "")).append("(");
-
-        for (Element e: instruction.getListOfOperands()) {
-            jasminCodeBuilder.append(JasminUtils.typeCode(e.getType()));
-        }
-
-        jasminCodeBuilder.append(")" + JasminUtils.typeCode(instruction.getReturnType()));
-
-        return jasminCodeBuilder.toString();
+        return JasminUtils.invokes(instruction, jasminCodeBuilder);
     }
 }

@@ -17,7 +17,7 @@ public class NewInstruction implements InstructionCall {
         } else if (newType == ElementType.OBJECTREF) {
 
             for (Element e : instruction.getListOfOperands()) {
-                jasminCodeBuilder.append(JasminUtils.loadElement(method, e));
+                jasminCodeBuilder.append(JasminUtils.loadElement(method, e)).append("\n\t");
             }
 
             jasminCodeBuilder.append("new ")
