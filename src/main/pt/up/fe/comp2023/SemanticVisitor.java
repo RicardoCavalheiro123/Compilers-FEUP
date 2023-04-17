@@ -61,7 +61,7 @@ public abstract class SemanticVisitor extends PreorderJmmVisitor<SymbolTable, In
     }
 
     public Boolean literal(String str, SymbolTable symbolTable) {
-        return (str.equals("int") || str.equals("Boolean") || str.equals("array"));
+        return (str.equals("int") || str.equals("boolean") || str.equals("String"));
     }
 
     //Check if imported

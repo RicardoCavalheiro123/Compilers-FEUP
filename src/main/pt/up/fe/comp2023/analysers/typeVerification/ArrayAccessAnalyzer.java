@@ -16,14 +16,14 @@ import java.util.Objects;
 public class ArrayAccessAnalyzer extends SemanticVisitor {
     private List<Report> reportsArrayAccess;
 
-    public ArrayAccessAnalyzer() {
-        this.reportsArrayAccess = new ArrayList<>();
-    }
-
     @Override
     protected void buildVisitor() {
         setDefaultVisit(this::defaultVisit);
         addVisit("ArrayAccess", this::visitArrayAccess);
+    }
+
+    public ArrayAccessAnalyzer() {
+        this.reportsArrayAccess = new ArrayList<>();
     }
 
     private Integer defaultVisit(JmmNode jmmNode, SymbolTable symbolTable) { return null; }

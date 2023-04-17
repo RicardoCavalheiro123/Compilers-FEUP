@@ -5,6 +5,9 @@ import pt.up.fe.comp.jmm.analysis.JmmSemanticsResult;
 import pt.up.fe.comp.jmm.ast.JmmNode;
 import pt.up.fe.comp.jmm.parser.JmmParserResult;
 import pt.up.fe.comp.jmm.report.Report;
+import pt.up.fe.comp2023.analysers.functionVerification.MainAnalyzer;
+import pt.up.fe.comp2023.analysers.functionVerification.MethodArgumentsCompatibilityAnalyzer;
+import pt.up.fe.comp2023.analysers.functionVerification.MethodExistsAnalyser;
 import pt.up.fe.comp2023.analysers.typeVerification.*;
 import pt.up.fe.comp2023.symbol.table.SymbolTable;
 
@@ -31,7 +34,11 @@ public class SimpleAnalysis implements JmmAnalysis {
                 new OperandsTypeCompatibilityAnalyzer(),
                 new ExpressionConditionAnalyzer(),
                 new AssigneeAssignedCompatibilityAnalyzer(),
-                new IdentifierAnalyzer()
+                new IdentifierAnalyzer(),
+                new MethodExistsAnalyser(),
+                new MainAnalyzer(),
+                //new CorrespondingDeclarationAnalyzer(),
+                new MethodArgumentsCompatibilityAnalyzer()
             );
 
             System.out.println("Performing semantic analysis...");
