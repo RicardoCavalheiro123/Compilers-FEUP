@@ -15,6 +15,7 @@ public class SimpleJasmin implements JasminBackend {
 
     List<Report> reports = new ArrayList<>();
     String superClassName;
+    boolean isAssign = false;
 
     @Override
     public JasminResult toJasmin(OllirResult ollirResult) {
@@ -173,7 +174,9 @@ public class SimpleJasmin implements JasminBackend {
             }
         }
 
+        this.isAssign = true;
         jasminCodeBuilder.append(getInstructionJasminString(method, instruction.getRhs()));
+        this.isAssign = false;
         jasminCodeBuilder.append("\n\t");
         jasminCodeBuilder.append(JasminUtils.storeElement(method, dest));
 
@@ -196,9 +199,11 @@ public class SimpleJasmin implements JasminBackend {
 
         jasminCodeBuilder.append(callInstruction.toJasmin(method, instruction));
 
-        if(!method.isConstructMethod() && (instruction.getReturnType().getTypeOfElement() != ElementType.VOID || callInstruction instanceof InvokeSpecialInstruction)) {
+
+        if(!method.isConstructMethod() && !this.isAssign &&  ((callInstruction instanceof InvokeVirtualInstruction || callInstruction instanceof InvokeStaticInstruction) && instruction.getReturnType().getTypeOfElement() != ElementType.VOID) ||
+                (callInstruction instanceof InvokeSpecialInstruction)) {
             jasminCodeBuilder.append("\n\t");
-            jasminCodeBuilder.append("pop\n");
+            //jasminCodeBuilder.append("pop\n");
         }
 
         return jasminCodeBuilder.toString();
