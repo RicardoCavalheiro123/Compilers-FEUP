@@ -10,8 +10,10 @@ OllirToJasminInvokeVirtual {
 
 	
 	.method public foo().V {
+        gs.GetterAndSetter :=.GetterAndSetter new(GetterAndSetter).GetterAndSetter;
+        invokespecial(gs.GetterAndSetter, "<init>").V;
 
-		invokevirtual(ioPlus, "requestNumber").i32;
+		invokevirtual(gs.GetterAndSetter, "getA").i32;
 
 		ret.V;
 	}

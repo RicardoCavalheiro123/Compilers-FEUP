@@ -140,7 +140,7 @@ public class JasminUtils {
     }
 
     public static String invokes(CallInstruction instruction, StringBuilder jasminCodeBuilder) {
-        jasminCodeBuilder.append(((Operand)instruction.getFirstArg()).getName().replace(".", "/"));
+        jasminCodeBuilder.append(((ClassType) instruction.getFirstArg().getType()).getName().replace(".", "/"));
         jasminCodeBuilder.append("/" + ((LiteralElement) instruction.getSecondArg()).getLiteral().replace("\\", "").replace("\"", "")).append("(");
 
         for (Element e: instruction.getListOfOperands()) {

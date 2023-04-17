@@ -37,8 +37,13 @@ public class Backend2Test {
     }
 
     @Test
-    public void testInvokeVirtual() {
+    public void testInvokeStatic() {
         testOllirToJasmin("pt/up/fe/comp/cp2/myjasmin/OllirToJasminInvokeStatic.ollir");
+    }
+
+    @Test
+    public void testInvokeVirtual() {
+        testOllirToJasmin("pt/up/fe/comp/cp2/myjasmin/OllirToJasminInvokeVirtual.ollir");
     }
 
     public static void testOllirToJasmin(String resource, String expectedOutput) {
