@@ -200,10 +200,9 @@ public class SimpleJasmin implements JasminBackend {
         jasminCodeBuilder.append(callInstruction.toJasmin(method, instruction));
 
 
-        if(!method.isConstructMethod() && !this.isAssign &&  ((callInstruction instanceof InvokeVirtualInstruction || callInstruction instanceof InvokeStaticInstruction) && instruction.getReturnType().getTypeOfElement() != ElementType.VOID) ||
-                (callInstruction instanceof InvokeSpecialInstruction)) {
+        if(!method.isConstructMethod() && !this.isAssign && ((callInstruction instanceof InvokeSpecialInstruction) || (instruction.getReturnType().getTypeOfElement() != ElementType.VOID))) {
             jasminCodeBuilder.append("\n\t");
-            //jasminCodeBuilder.append("pop\n");
+            jasminCodeBuilder.append("pop\n");
         }
 
         return jasminCodeBuilder.toString();
