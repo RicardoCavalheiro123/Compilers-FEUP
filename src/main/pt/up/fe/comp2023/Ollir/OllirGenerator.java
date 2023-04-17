@@ -300,7 +300,7 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
         this.ollirCode.append("\n");
         this.ollirCode.append(".method public static main(args.array.String).V {\n");
 
-
+        this.currentMethod = "main";
         for (JmmNode child : jmmNode.getChildren()) {
             if(!child.getKind().equals("MainParam")){
                 visit(child, ollirCode);
