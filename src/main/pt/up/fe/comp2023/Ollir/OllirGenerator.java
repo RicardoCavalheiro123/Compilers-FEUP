@@ -69,11 +69,9 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
 
     private String dealWithMethodCall(JmmNode jmmNode, StringBuilder ollir) {
 
-        /*for (JmmNode child : jmmNode.getChildren()) {
-            dealWithArgumentOfMethod(child);
-        }*/
 
-        if(jmmNode.getChildren().get(0).getKind().equals("This")){
+
+        /*if(jmmNode.getChildren().get(0).getKind().equals("This")){
             this.ollirCode.append("invokevirtual(" + jmmNode.getJmmParent().get("id") + ", \"" + jmmNode.get("method") + "\"");}
 
         this.ollirCode.append("invokestatic(" + jmmNode.getChildren().get(0).get("id") + ", \"" + jmmNode.get("method") + "\"");
@@ -83,8 +81,22 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
             visit(jmmNode.getChildren().get(idx), ollir);
         }
 
-        this.ollirCode.append(").V");
+        this.ollirCode.append(").V");*/
+        assign = true;
+        List<String> args = new ArrayList<>();
 
+        for (Integer i = 1; i < jmmNode.getChildren().size(); i++) {
+            args.add("," + visit(jmmNode.getChildren().get(i), ollir));
+        }
+        String result = String.join("",args);
+
+        if(is_Static(jmmNode.getChildren().get(0).get("id"))){
+            this.ollirCode.append("invokestatic(" + jmmNode.getChildren().get(0).get("id") +"," + "\"" + jmmNode.get("method")+ "\"" +result+ ").V");
+        }
+
+
+
+        assign = false;
         return null;
     }
 
@@ -141,6 +153,15 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
         if(jmmNode.getChildren().get(0).getKind().equals("NewObject")){
             String type = jmmNode.getChildren().get(0).get("id");
             this.ollirCode.append(jmmNode.get("id") + '.' + type + " :=." + type + " ");
+            for (JmmNode child : jmmNode.getChildren()) {
+                visit(child, ollirCode);
+
+            }
+            this.ollirCode.append(";\n");
+            return null;
+        }
+        else if(jmmNode.getChildren().get(0).getKind().equals("MethodCall")){
+            this.ollirCode.append(jmmNode.get("id") + var_type + " :=." + var_type + " ");
             for (JmmNode child : jmmNode.getChildren()) {
                 visit(child, ollirCode);
 
@@ -375,6 +396,9 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
                 case "boolean":
                     variableType = ".bool";
                     break;
+                default:
+                    variableType = "." +type.getName();
+                    break;
 
             }
         }
@@ -453,4 +477,15 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
         return null;
     }
 
+    public Boolean is_Static(String name) {
+        //Check if it is an import
+        for (String x : symbolTable.getImports()) {
+            if(name.equals( formatString(x))) return true;
+
+        }
+        return false;
+
+    }
+
 }
+
