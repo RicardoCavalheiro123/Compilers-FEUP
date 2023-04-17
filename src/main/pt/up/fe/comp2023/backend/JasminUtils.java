@@ -30,8 +30,9 @@ public class JasminUtils {
             }
 
         } else if (element instanceof ArrayOperand arrayOperand) {
+            ArrayOperand operand = (ArrayOperand) element;
 
-            jasminCodeBuilder.append(loadElement(method, arrayOperand));
+            jasminCodeBuilder.append("aload").append(JasminUtils.regCode(method.getVarTable().get(operand.getName()).getVirtualReg())).append("\n"); // load array (ref)
             jasminCodeBuilder.append("\n\t");
             jasminCodeBuilder.append(loadElement(method, arrayOperand.getIndexOperands().get(0)));
             jasminCodeBuilder.append("\n\t");

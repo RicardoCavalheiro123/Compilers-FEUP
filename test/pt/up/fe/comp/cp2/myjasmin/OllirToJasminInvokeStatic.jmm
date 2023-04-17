@@ -1,0 +1,12 @@
+import io;
+import MathUtils;
+
+class OllirToJasminInvokeStatic {
+
+    public int foo() {
+        MathUtils c1 = new MathUtils();
+        io.println("val =", c1.random(1, 2));
+
+        return c;
+    }
+}

@@ -107,10 +107,6 @@ public class SimpleJasmin implements JasminBackend {
 
             jasminCodeBuilder.append(instructions);
 
-            if (pop) {
-                jasminCodeBuilder.append("\tpop\n");
-            }
-
             if (method.getMethodAccessModifier() == AccessModifiers.DEFAULT) {
                 jasminCodeBuilder.append("\treturn\n");
             }
@@ -147,9 +143,8 @@ public class SimpleJasmin implements JasminBackend {
         Element dest = instruction.getDest();
 
         if(dest.getType().getTypeOfElement() == ElementType.ARRAYREF) {
-            ArrayOperand op = (ArrayOperand) dest;
-            JasminUtils.loadElement(method, op);
-            JasminUtils.loadElement(method, op.getIndexOperands().get(0));
+            Operand op = (Operand) dest;
+            jasminCodeBuilder.append(JasminUtils.loadElement(method, op));
         } else {
             if (instruction.getRhs().getInstType() == InstructionType.BINARYOPER) {
                 BinaryOpInstruction binaryOpInstruction = (BinaryOpInstruction) instruction.getRhs();
@@ -218,7 +213,7 @@ public class SimpleJasmin implements JasminBackend {
 
         jasminCodeBuilder.append(JasminUtils.loadElement(method, instruction.getOperands().get(0)));
 
-        
+
         return jasminCodeBuilder.toString();
     }
 
@@ -228,6 +223,10 @@ public class SimpleJasmin implements JasminBackend {
         if(instruction.hasReturnValue()) {
             jasminCodeBuilder.append(JasminUtils.loadElement(method, instruction.getOperand()));
             jasminCodeBuilder.append("\n\t");
+        }
+
+        if (pop) {
+            jasminCodeBuilder.append("pop\n\t");
         }
 
         if(instruction.getOperand() != null) {
