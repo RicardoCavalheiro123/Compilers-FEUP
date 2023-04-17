@@ -1,11 +1,14 @@
-import io;
-class Simple {
+class OllirToJasminFields {
 
-    public int add(int a, int b){
 
-        b = a.const();
-        return 0;
+
+    public static void main(String[] args) {
+
     }
 
+    public int foo(Symbol a) {
+           a.xd();
 
+        return 0;
+    }
 }
