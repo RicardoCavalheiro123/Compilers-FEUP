@@ -1,14 +1,10 @@
 class OllirToJasminInvokeVirtual {
 
-    public int foo() {
-        int a;
-        int b;
-        int c;
+    public void foo() {
+        GetterAndSetter gs = new GetterAndSetter();
 
-        a = 1;
-        b = 2;
-        c = a * b;
+        gs.getA();
 
-        return c;
+        return;
     }
 }

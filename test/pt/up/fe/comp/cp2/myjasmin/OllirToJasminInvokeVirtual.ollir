@@ -1,0 +1,20 @@
+OllirToJasminInvokeVirtual {
+
+	.construct OllirToJasminInvokeVirtual().V {
+		invokespecial(this, "<init>").V;
+	}
+
+	.method public static main(args.array.String).V {
+		ret.V;
+	}
+
+	
+	.method public foo().V {
+        gs.GetterAndSetter :=.GetterAndSetter new(GetterAndSetter).GetterAndSetter;
+        invokespecial(gs.GetterAndSetter, "<init>").V;
+
+		invokevirtual(gs.GetterAndSetter, "getA").i32;
+
+		ret.V;
+	}
+}
