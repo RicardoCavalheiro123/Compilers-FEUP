@@ -1,14 +1,11 @@
-class OllirToJasminFields {
+import io;
 
-
-
+class Arithmetic_div {
     public static void main(String[] args) {
+        int a;
 
-    }
-
-    public int foo(Symbol a) {
-           a.xd();
-
-        return 0;
+        a = 20 / 4;
+        
+        io.print(a);
     }
 }
