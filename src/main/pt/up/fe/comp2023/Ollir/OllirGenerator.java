@@ -103,7 +103,10 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
             this.ollirCode.append("invokestatic(" + jmmNode.getChildren().get(0).get(var) +"," + "\"" + jmmNode.get("method")+ "\"" +result+ ").V");
         }
         else{
-            this.ollirCode.append("invokevirtual(" + jmmNode.getChildren().get(0).get(var) +"," + "\"" + jmmNode.get("method")+ "\"" +result+ ")" + var_type + ";\n");
+            if(jmmNode.getJmmParent().getKind().equals("Assign")){
+                return "invokevirtual(" + jmmNode.getChildren().get(0).get(var) + getTypeOfVariable(this.currentMethod,jmmNode.getChildren().get(0).get(var) ) +"," + "\"" + jmmNode.get("method")+ "\"" +result+ ")" + var_type + "";
+            }
+            this.ollirCode.append("invokevirtual(" + jmmNode.getChildren().get(0).get(var) + getTypeOfVariable(this.currentMethod,jmmNode.getChildren().get(0).get(var) ) +"," + "\"" + jmmNode.get("method")+ "\"" +result+ ")" + var_type + "");
         }
 
 
@@ -489,9 +492,11 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
         return String.join(".", parts);
     }
     public String getTypeOfVariable(String variableName, String methodName) {
-        MethodTable methodTable = this.symbolTable.getMethod(methodName);
-        if(methodTable.getParameters().stream().anyMatch(x -> x.getName().equals(variableName))){
-            return methodTable.getParameters().stream().filter(x -> x.getName().equals(variableName)).findFirst().get().getType().getName();
+        MethodTable methodTable = this.symbolTable.getMethod(variableName);
+
+        if(methodTable.getParameters().stream().anyMatch(x -> x.getName().equals(methodName))){
+
+            return getVariableType(methodTable.getParameters().stream().filter(x -> x.getName().equals(methodName)).findFirst().get().getType(), null);
         }
         if(methodTable.getVariables().get(variableName) != null){
 
