@@ -97,10 +97,10 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
 
         if(is_Static(jmmNode.getChildren().get(0).getOptional(var).get(), jmmNode)){
             if(jmmNode.getJmmParent().getKind().equals("Assign")){
-                return "invokestatic(" + jmmNode.getChildren().get(0).get(var) +"," + "\"" + jmmNode.get("method")+ "\"" +result+ ").32";
+                return "invokestatic(" + jmmNode.getChildren().get(0).get(var) +"," + "\"" + jmmNode.get("method")+ "\"" +result+ ").V";
             }
 
-            this.ollirCode.append("invokestatic(" + jmmNode.getChildren().get(0).get(var) +"," + "\"" + jmmNode.get("method")+ "\"" +result+ ").32");
+            this.ollirCode.append("invokestatic(" + jmmNode.getChildren().get(0).get(var) +"," + "\"" + jmmNode.get("method")+ "\"" +result+ ").V");
         }
         else{
             if(jmmNode.getJmmParent().getKind().equals("Assign")){
