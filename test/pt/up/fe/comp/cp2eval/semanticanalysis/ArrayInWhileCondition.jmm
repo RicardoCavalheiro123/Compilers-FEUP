@@ -1,16 +1,15 @@
-class CompileAssignment {
+class ArrayInWhileCondition {
 
     public static void main(String[] args) {
 
     }
 
     public int foo() {
-        int a;
-        int b;
+        int[] a;
+        a = new int[2];
 
-        b = 2;
-
-        a = b;
+        while (a) {
+        }
 
         return 0;
     }

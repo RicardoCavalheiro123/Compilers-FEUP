@@ -56,4 +56,7 @@ public class MethodTable {
     public List<Symbol> getLocalVariables() {
         return new ArrayList<>(variables.keySet());
     }
+    public HashMap<Symbol, Boolean> getVariables() {
+        return variables;
+    }
 }

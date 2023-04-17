@@ -1,4 +1,4 @@
-class CompileAssignment {
+class BoolTimesInt {
 
     public static void main(String[] args) {
 
@@ -6,12 +6,10 @@ class CompileAssignment {
 
     public int foo() {
         int a;
-        int b;
+        boolean b;
 
-        b = 2;
-
-        a = b;
-
-        return 0;
+        a = 10;
+        b = true;
+        return b * a;
     }
 }
