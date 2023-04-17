@@ -90,9 +90,9 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
         }
         String result = String.join("",args);
 
-        //if(is_Static(jmmNode.getChildren().get(0).get("id"))){
+        if(is_Static(jmmNode.getChildren().get(0).get("id"), jmmNode)){
             this.ollirCode.append("invokestatic(" + jmmNode.getChildren().get(0).get("id") +"," + "\"" + jmmNode.get("method")+ "\"" +result+ ").V");
-        //}
+        }
 
 
 
@@ -118,9 +118,16 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
 
         visit(jmmNode.getChildren().get(1), ollir);
         return null;*/
-        String type = getVariableType(symbol.getType(), ollir);
+        String type = "";
+
         var right = visit(jmmNode.getChildren().get(1), ollir);
         var left = visit(jmmNode.getChildren().get(0), ollir);
+        if(symbol == null){
+            type = var_type;
+        }
+        else{
+            type = getVariableType(symbol.getType(), ollir);
+        }
         if(jmmNode.getJmmParent().getKind().equals("Assign")){
             return left + " " + jmmNode.get("op") + type + " " + right;
         }
@@ -210,6 +217,7 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
     }
 
     private String dealWithBoolean(JmmNode jmmNode, StringBuilder ollir) {
+        this.var_type = ".bool";
         if(assign){
             return jmmNode.get("value") + var_type;
         }
@@ -219,6 +227,7 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
     }
 
     private String dealWithInteger(JmmNode jmmNode, StringBuilder ollir) {
+        this.var_type = ".i32";
         if(assign){
             return jmmNode.get("value") + var_type;
         }
@@ -477,14 +486,18 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
         return null;
     }
 
-    public Boolean is_Static(String name) {
-        //Check if it is an import
-        for (String x : symbolTable.getImports()) {
-            if(name.equals( formatString(x))) return true;
+    public Boolean is_Static(String name, JmmNode node) {
+        if(this.symbolTable.isParameter(this.currentMethod, name)){
+            return false;
+        }
+
+        //Check if it is a field
+        else if(this.symbolTable.isField(this.currentMethod,name)){
+            return false;
+
 
         }
-        return false;
-
+        return true;
     }
 
 }
