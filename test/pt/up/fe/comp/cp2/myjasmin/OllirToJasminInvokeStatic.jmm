@@ -1,0 +1,9 @@
+import io;
+
+class OllirToJasminInvokeStatic {
+
+    public int foo() {
+        io.println("val =");
+        return c;
+    }
+}

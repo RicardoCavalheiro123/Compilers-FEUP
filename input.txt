@@ -1,22 +1,17 @@
-import io.ok;
+class CompileAssignment {
 
-class Fac {
-    int inteiro = 3;
+    public static void main(String[] args) {
 
-    public int computeFac(int num, int[] num2){
-        String num_aux;
-        int num = 123;
-
-        if (num < 1)
-            num_aux = 1;
-        method.call(num_aux[3] * 2);
-        return num_aux;
-    }
-    public static void main (String[] args){
-        io.println(new Fac().computeFac(10));
     }
 
-    int foo(int anInt, int[] anArray, boolean aBool, String aString) {
-        return a;
+    public int foo() {
+        int a;
+        int b;
+
+        b = 2;
+
+        a = b;
+
+        return 0;
     }
 }

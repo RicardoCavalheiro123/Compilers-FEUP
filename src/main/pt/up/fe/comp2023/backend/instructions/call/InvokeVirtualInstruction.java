@@ -1,0 +1,28 @@
+package pt.up.fe.comp2023.backend.instructions.call;
+
+import org.specs.comp.ollir.*;
+import pt.up.fe.comp2023.backend.JasminUtils;
+import pt.up.fe.comp2023.backend.instructions.call.InstructionCall;
+
+public class InvokeVirtualInstruction implements InstructionCall {
+    @Override
+    public String toJasmin(Method method, CallInstruction instruction) {
+        StringBuilder jasminCodeBuilder = new StringBuilder();
+
+        jasminCodeBuilder.append(JasminUtils.loadElement(method, instruction.getFirstArg()));
+
+        jasminCodeBuilder.append("\n\t");
+        jasminCodeBuilder.append("invokevirtual ");
+
+        jasminCodeBuilder.append(((ClassType) instruction.getFirstArg().getType()).getName().replace(".", "/"));
+        jasminCodeBuilder.append("/" + ((LiteralElement) instruction.getSecondArg()).getLiteral().replace("\\", "")).append("(");
+
+        for (Element e: instruction.getListOfOperands()) {
+            jasminCodeBuilder.append(JasminUtils.typeCode(e.getType()));
+        }
+
+        jasminCodeBuilder.append(")" + JasminUtils.typeCode(instruction.getReturnType()));
+
+        return jasminCodeBuilder.toString();
+    }
+}
