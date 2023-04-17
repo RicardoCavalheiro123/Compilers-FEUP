@@ -8,10 +8,7 @@ import pt.up.fe.comp.jmm.ast.JmmNode;
 import pt.up.fe.comp2023.symbol.table.MethodTable;
 import pt.up.fe.comp2023.symbol.table.SymbolTable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
 
@@ -117,8 +114,17 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
     }
 
     private String dealWithNewObject(JmmNode jmmNode, StringBuilder ollir) {
-        this.ollirCode.append("temp" + tempcounter + "." +jmmNode.get("id") + " :=." + jmmNode.get("id") + " new(" + jmmNode.get("id") + ")." + jmmNode.get("id") + ";\n");
-        this.ollirCode.append("invokespecial("+ "temp" + tempcounter +"." + jmmNode.get("id") + ",\"<init>\").V");
+        if(jmmNode.getJmmParent().getKind().equals("Assign")){
+            this.ollirCode.append(jmmNode.getJmmParent().get("id"));
+        }
+        else{
+            this.ollirCode.append("temp" + tempcounter);
+            tempcounter++;
+        }
+        this.ollirCode.append("." +jmmNode.get("id") + " :=." + jmmNode.get("id") + " new(" + jmmNode.get("id") + ")." + jmmNode.get("id") + ";\n");
+        this.ollirCode.append("invokespecial(");
+        StringBuilder ex = jmmNode.getJmmParent().getKind().equals("Assign") ? this.ollirCode.append(jmmNode.getJmmParent().get("id")) : this.ollirCode.append("temp" + (tempcounter - 1));
+        this.ollirCode.append("." + jmmNode.get("id") + ",\"<init>\").V");
 
 
         return null;
@@ -499,9 +505,12 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
 
             return getVariableType(methodTable.getParameters().stream().filter(x -> x.getName().equals(methodName)).findFirst().get().getType(), null);
         }
-        if(methodTable.getVariables().get(variableName) != null){
-
+        for(Symbol t : methodTable.getVariables().keySet()){
+            if(t.getName().equals(methodName)){
+                return "." + t.getType().getName();
+            }
         }
+
         return null;
     }
 
