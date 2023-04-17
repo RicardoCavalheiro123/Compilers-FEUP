@@ -1,4 +1,6 @@
-class CompileAssignment {
+import io;
+
+class CompileMethodInvocation {
 
     public static void main(String[] args) {
 
@@ -6,11 +8,10 @@ class CompileAssignment {
 
     public int foo() {
         int a;
-        int b;
 
-        b = 2;
+        a = 1;
 
-        a = b;
+        io.println(2 + 3 * 2);
 
         return 0;
     }
