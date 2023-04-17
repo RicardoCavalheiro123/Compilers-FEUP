@@ -218,10 +218,7 @@ public class SimpleJasmin implements JasminBackend {
 
         jasminCodeBuilder.append(JasminUtils.loadElement(method, instruction.getOperands().get(0)));
 
-        jasminCodeBuilder.append("\n\t");
-
-        jasminCodeBuilder.append("ifne ").append(instruction.getLabel());
-
+        
         return jasminCodeBuilder.toString();
     }
 
