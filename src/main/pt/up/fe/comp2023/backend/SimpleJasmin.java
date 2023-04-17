@@ -196,7 +196,7 @@ public class SimpleJasmin implements JasminBackend {
 
         jasminCodeBuilder.append(callInstruction.toJasmin(method, instruction));
 
-        if(instruction.getReturnType().getTypeOfElement() != ElementType.VOID) {
+        if(instruction.getReturnType().getTypeOfElement() != ElementType.VOID && callInstruction instanceof InvokeSpecialInstruction) {
             jasminCodeBuilder.append("\n\t");
             jasminCodeBuilder.append("pop\n");
         }
