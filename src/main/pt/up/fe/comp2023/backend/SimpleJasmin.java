@@ -15,7 +15,6 @@ public class SimpleJasmin implements JasminBackend {
 
     List<Report> reports = new ArrayList<>();
     String superClassName;
-    boolean pop;
 
     @Override
     public JasminResult toJasmin(OllirResult ollirResult) {
@@ -197,8 +196,9 @@ public class SimpleJasmin implements JasminBackend {
 
         jasminCodeBuilder.append(callInstruction.toJasmin(method, instruction));
 
-        if(!method.isConstructMethod() && (instruction.getReturnType().getTypeOfElement() != ElementType.VOID || instruction.getInvocationType() != CallType.invokespecial)) {
-            pop = true;
+        if(instruction.getReturnType().getTypeOfElement() != ElementType.VOID) {
+            jasminCodeBuilder.append("\n\t");
+            //jasminCodeBuilder.append("pop\n");
         }
 
         return jasminCodeBuilder.toString();
@@ -223,10 +223,6 @@ public class SimpleJasmin implements JasminBackend {
         if(instruction.hasReturnValue()) {
             jasminCodeBuilder.append(JasminUtils.loadElement(method, instruction.getOperand()));
             jasminCodeBuilder.append("\n\t");
-        }
-
-        if (pop) {
-            jasminCodeBuilder.append("pop\n\t");
         }
 
         if(instruction.getOperand() != null) {

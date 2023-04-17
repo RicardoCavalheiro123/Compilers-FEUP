@@ -116,9 +116,9 @@ public class JasminUtils {
         boolean array = false;
 
         while (typeOfElement == ElementType.ARRAYREF) {
-            array = true;
             jasminCodeBuilder.append("[");
             typeOfElement = ((ArrayType) type).getArrayType();
+            type = ((ArrayType) type).getElementType();
         }
 
         switch (typeOfElement) {
@@ -126,29 +126,14 @@ public class JasminUtils {
             case BOOLEAN -> jasminCodeBuilder.append("Z");
             case STRING -> jasminCodeBuilder.append("Ljava/lang/String;");
             case VOID -> jasminCodeBuilder.append("V");
-            case OBJECTREF -> {
-                if (array) {
-                    jasminCodeBuilder.append("L").append(((ClassType) ((ArrayType) type).getElementType()).getName()).append(";");
-                } else {
-                    jasminCodeBuilder.append("L").append(((ClassType) type).getName().replace(".", "/")).append(";");
-                }
-            }
+            case OBJECTREF -> jasminCodeBuilder.append("L").append(((ClassType) type).getName().replace(".", "/")).append(";");
             default -> jasminCodeBuilder.append("; getTypeCode not implemented for ").append(type).append(".");
         }
 
         return jasminCodeBuilder.toString();
     }
 
-    public static String invokes(CallInstruction instruction, StringBuilder jasminCodeBuilder) {
-        jasminCodeBuilder.append(((ClassType) instruction.getFirstArg().getType()).getName().replace(".", "/"));
-        jasminCodeBuilder.append("/" + ((LiteralElement) instruction.getSecondArg()).getLiteral().replace("\\", "").replace("\"", "")).append("(");
-
-        for (Element e: instruction.getListOfOperands()) {
-            jasminCodeBuilder.append(JasminUtils.typeCode(e.getType()));
-        }
-
-        jasminCodeBuilder.append(")" + JasminUtils.typeCode(instruction.getReturnType()));
-
-        return jasminCodeBuilder.toString();
+    public static String className(Method method, String name) {
+        return name.replace(".", "/");
     }
 }

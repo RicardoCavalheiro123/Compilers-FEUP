@@ -1,6 +1,0 @@
-import io;
-class HelloWorld{
-	public static void main(String[] args) {
-        io.println(1234);
-	}
-}
