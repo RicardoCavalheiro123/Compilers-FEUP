@@ -113,10 +113,12 @@ public class JasminUtils {
     public static String typeCode(Type type) {
         StringBuilder jasminCodeBuilder = new StringBuilder();
         ElementType typeOfElement = type.getTypeOfElement();
+        boolean array = false;
 
         while (typeOfElement == ElementType.ARRAYREF) {
             jasminCodeBuilder.append("[");
             typeOfElement = ((ArrayType) type).getArrayType();
+            type = ((ArrayType) type).getElementType();
         }
 
         switch (typeOfElement) {

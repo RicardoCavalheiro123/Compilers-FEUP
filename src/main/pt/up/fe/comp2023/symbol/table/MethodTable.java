@@ -18,18 +18,18 @@ public class MethodTable {
     }
 
     public MethodTable(JmmNode node) {
+        List<JmmNode> children = node.getChildren(); // return type, parameters, var declarations and statements
         if(node.get("name").equals("main")) {
             // main method
             returnType = new Type("void", false);
             parameters.add(new Symbol(new Type(node.getJmmChild(0).get("typeName"), true), "args"));
-            return;
+
         }
+        else {
 
-        List<JmmNode> children = node.getChildren(); // return type, parameters, var declarations and statements
-
-        JmmNode returnNode = children.get(0);
-        this.returnType = new Type(returnNode.get("typeName"), returnNode.get("isArray").equals("true"));
-
+            JmmNode returnNode = children.get(0);
+            this.returnType = new Type(returnNode.get("typeName"), returnNode.get("isArray").equals("true"));
+        }
         for (int i=1; i<children.size(); i++) {
             JmmNode child = children.get(i);
             if (child.getKind().equals("Parameter")) {

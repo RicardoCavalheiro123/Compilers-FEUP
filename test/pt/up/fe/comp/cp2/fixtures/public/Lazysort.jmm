@@ -1,4 +1,4 @@
-import MathUtils; //lowerLimit,upperLimit
+import MathUtils;
 import Quicksort;
 
 class Lazysort extends Quicksort {
@@ -19,7 +19,6 @@ class Lazysort extends Quicksort {
         q = new Lazysort();
 
         q.quicksort(L);
-        Quicksort.printL(L);
         d = q.printL(L);
     }
 

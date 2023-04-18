@@ -11,11 +11,13 @@ public class InvokeVirtualInstruction implements InstructionCall {
 
         jasminCodeBuilder.append(JasminUtils.loadElement(method, instruction.getFirstArg()));
 
+        for (Element element : instruction.getListOfOperands()) jasminCodeBuilder.append("\n\t").append(JasminUtils.loadElement(method, element));
+
         jasminCodeBuilder.append("\n\t");
         jasminCodeBuilder.append("invokevirtual ");
 
         jasminCodeBuilder.append(((ClassType) instruction.getFirstArg().getType()).getName().replace(".", "/"));
-        jasminCodeBuilder.append("/" + ((LiteralElement) instruction.getSecondArg()).getLiteral().replace("\\", "")).append("(");
+        jasminCodeBuilder.append("/" + ((LiteralElement) instruction.getSecondArg()).getLiteral().replace("\\", "").replace("\"", "")).append("(");
 
         for (Element e: instruction.getListOfOperands()) {
             jasminCodeBuilder.append(JasminUtils.typeCode(e.getType()));
