@@ -31,7 +31,6 @@ public class OperandsTypeCompatibilityAnalyzer extends SemanticVisitor {
     public List<Report> getReports() { return this.reportsOperandsType; }
 
     public Integer visitOperandsType(JmmNode node, SymbolTable symbolTable) {
-        //this.getExpressionType(node, symbolTable);
 
         if(!(Objects.equals(this.getJmmNodeType(node, symbolTable), new Type("int", false))) &&
             !(Objects.equals(this.getJmmNodeType(node, symbolTable), new Type("boolean", false)))) {
