@@ -1,5 +1,6 @@
 package pt.up.fe.comp2023.analysers.functionVerification;
 
+import pt.up.fe.comp.jmm.analysis.table.Type;
 import pt.up.fe.comp.jmm.ast.JmmNode;
 import pt.up.fe.comp.jmm.report.Report;
 import pt.up.fe.comp.jmm.report.ReportType;
@@ -33,48 +34,38 @@ public class MethodExistsAnalyser extends SemanticVisitor {
 
     public Integer visitMethodExists(JmmNode node, SymbolTable symbolTable) {
 
-        //Check if parent node has current node
-        if(node.getJmmParent().getChildren().size() <= 1) {
-            return 0;
+        if(Objects.equals(node.getKind(), "MethodCall")) {
+            var a = getJmmNodeType(node.getJmmChild(0), symbolTable);
+
+            if(Objects.equals(a.getName(), symbolTable.getClassName()) && (!Objects.equals(symbolTable.getSuper(), ""))) {
+                return 0;
+            }
+
+            if(Objects.equals(a, new Type("invalid", false))) {
+                if(imported(node.getJmmChild(0).get("id"), symbolTable)) return 0;
+            }
+            else {
+                if(imported(a.getName(), symbolTable)) return 0;
+            }
         }
 
+
         //Find method, null if not found
-        MethodTable method = symbolTable.findMethod(node.getJmmParent().getJmmChild(1).get("id"));
+        MethodTable method = symbolTable.findMethod(node.get("method"));
 
         //Check if method is implemented and has super class
-        if(method == null && symbolTable.getSuper() == null) {
+        if(method == null && symbolTable.getSuper() == "") {
             reportsMethodExists.add(
                 new Report(
                     ReportType.ERROR,
                     Stage.SEMANTIC,
                     Integer.parseInt(node.get("lineStart")),
                     Integer.parseInt(node.get("colStart")),
-                    "Method " + node.getJmmParent().getJmmChild(1).get("id") + " not implemented in class."
+                    "Method not implemented in class."
             ));
+
+            return 0;
         }
-
-        if (this.getJmmNodeType(node.getJmmChild(0), symbolTable).getName().equals(symbolTable.getClassName())) {
-
-            JmmNode analyse_node;
-
-            if (Objects.equals(node.getJmmChild(1).getKind(), "NewObject")) {
-                analyse_node = node.getJmmChild(1).getJmmChild(0);
-            } else {
-                analyse_node = node.getJmmChild(1);
-            }
-
-            MethodTable method2 = symbolTable.findMethod(analyse_node.get("id"));
-
-            // If method isn't implemented in the class and doesn't have a super class
-            if (method2 == null && symbolTable.getSuper() == null) {
-                addReport(new Report(
-                        ReportType.ERROR, Stage.SEMANTIC,
-                        Integer.parseInt(node.get("lineStart")),
-                        Integer.parseInt(node.get("colStart")),
-                        "Method is not implemented in this class."));
-            }
-        }
-
 
         return 0;
     }

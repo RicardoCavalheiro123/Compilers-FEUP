@@ -32,7 +32,7 @@ public class ArrayAccessAnalyzer extends SemanticVisitor {
 
     public Integer visitArrayAccess(JmmNode node, SymbolTable symbolTable) {
         var ancestor = node.getJmmChild(0);
-        var n = node.getJmmChild(1);
+        var index = node.getJmmChild(1);
 
         //If first is not an array and is trying to be accessed as an array, report error
         if(!(this.getJmmNodeType(ancestor, symbolTable)).isArray()) {
@@ -46,8 +46,8 @@ public class ArrayAccessAnalyzer extends SemanticVisitor {
             ));
         }
 
-        //Checks if array access index is of type INTEGER, if not reports error
-        if(!Objects.equals(this.getJmmNodeType(ancestor, symbolTable), new Type("int", false))) {
+        //Checks if array is of type INTEGER, if not reports error
+        if(!Objects.equals(this.getJmmNodeType(ancestor, symbolTable), new Type("int", true))) {
             reportsArrayAccess.add(
                 new Report(
                         ReportType.ERROR,
@@ -58,7 +58,19 @@ public class ArrayAccessAnalyzer extends SemanticVisitor {
             ));
         }
 
-        if (!Objects.equals(this.getJmmNodeType(ancestor, symbolTable).getName(), "int")) {
+        //Checks if array access index is of type INTEGER, if not reports error
+        if(!Objects.equals(this.getJmmNodeType(index, symbolTable), new Type("int", false))) {
+            reportsArrayAccess.add(
+                new Report(
+                        ReportType.ERROR,
+                        Stage.SEMANTIC,
+                        Integer.parseInt(node.get("lineStart")),
+                        Integer.parseInt(node.get("colStart")),
+                        "Index to access array is not of type integer!"
+                ));
+        }
+
+        /*if (!Objects.equals(this.getJmmNodeType(ancestor, symbolTable).getName(), "int")) {
             reportsArrayAccess.add(
                 new Report(
                         ReportType.ERROR,
@@ -67,7 +79,7 @@ public class ArrayAccessAnalyzer extends SemanticVisitor {
                         Integer.parseInt(node.get("colStart")),
                         "Accessing arrays is only allowed on arrays!"
             ));
-        }
+        }*/
 
         return 0;
     }

@@ -8,6 +8,7 @@ import pt.up.fe.comp.jmm.report.Report;
 import pt.up.fe.comp2023.analysers.functionVerification.MainAnalyzer;
 import pt.up.fe.comp2023.analysers.functionVerification.MethodArgumentsCompatibilityAnalyzer;
 import pt.up.fe.comp2023.analysers.functionVerification.MethodExistsAnalyser;
+import pt.up.fe.comp2023.analysers.functionVerification.MethodReturnTypeAnalyzer;
 import pt.up.fe.comp2023.analysers.typeVerification.*;
 import pt.up.fe.comp2023.symbol.table.SymbolTable;
 
@@ -38,10 +39,13 @@ public class SimpleAnalysis implements JmmAnalysis {
                 new MethodExistsAnalyser(),
                 new MainAnalyzer(),
                 //new CorrespondingDeclarationAnalyzer(),
-                new MethodArgumentsCompatibilityAnalyzer()
+                new MethodArgumentsCompatibilityAnalyzer(),
+                new MethodReturnTypeAnalyzer()
             );
 
             System.out.println("Performing semantic analysis...");
+
+
 
             for(SemanticVisitor analyzer: semantic_analyzers) {
                 analyzer.visit(root, symbolTable);

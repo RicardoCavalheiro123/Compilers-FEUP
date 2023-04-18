@@ -29,12 +29,14 @@ public class MethodArgumentsCompatibilityAnalyzer extends SemanticVisitor {
     public List<Report> getReports() { return this.reportsMethodArguments; }
 
     public Integer visitMethodsArguments(JmmNode node, SymbolTable symbolTable) {
-        if(!Objects.equals(node.getJmmChild(0).getKind(), "This")) {
-            return 0;
+        if(symbolTable.findMethod(node.get("method")) == null) {
+            if(!Objects.equals(node.getJmmChild(0).getKind(), "This") ||
+                    !Objects.equals(getJmmNodeType(node.getJmmChild(0), symbolTable), new Type(symbolTable.getClassName(), false))
+            ) {
+                return 0;
+            }
         }
-        if(!Objects.equals(getJmmNodeType(node.getJmmChild(0), symbolTable), new Type(symbolTable.getClassName(), false))) {
-            return 0;
-        }
+
 
         var method_arguments = symbolTable.findMethod(node.get("method")).getParameters();
         var method_call_arguments_size = node.getChildren().size() - 1;

@@ -34,7 +34,7 @@ public class ExpressionConditionAnalyzer extends SemanticVisitor {
     public Integer visitExpressionCondition(JmmNode node, SymbolTable symbolTable) {
         var condition = node.getJmmChild(0);
 
-        if(!Objects.equals(this.getJmmNodeType(condition, symbolTable), new Type("Boolean", false))) {
+        if(!Objects.equals(this.getJmmNodeType(condition, symbolTable), new Type("boolean", false))) {
             reportsExpressionCondition.add(
                 new Report(
                         ReportType.ERROR,

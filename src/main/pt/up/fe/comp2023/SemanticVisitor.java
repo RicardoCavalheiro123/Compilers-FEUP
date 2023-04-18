@@ -95,15 +95,38 @@ public abstract class SemanticVisitor extends PreorderJmmVisitor<SymbolTable, In
                 return true;
             }
         }
+        else if(Objects.equals(t2, type_super)) {
+            if(Objects.equals(t1, type_class) || this.imported(t1.getName(), symbolTable)) {
+                return true;
+            }
+        }
+        else if (this.imported(t2.getName(), symbolTable)) {
+            if(this.imported(t1.getName(), symbolTable)) {
+                return true;
+            }
+        }
 
         return false;
     }
 
     protected Type getExpressionType(JmmNode node, SymbolTable symbolTable) {
-        var type1 = node.getJmmChild(0).getKind();
-        var type2 = node.getJmmChild(1).getKind();
+        var type1 = getJmmNodeType(node.getJmmChild(0), symbolTable);
+        var type2 = getJmmNodeType(node.getJmmChild(1), symbolTable);
 
-        if(Objects.equals(type1, type2) && type1 == "int" && type2 == "int") {
+        if((Objects.equals(type1, type2) && Objects.equals(type1, new Type("int", false))) ||
+            (Objects.equals(type1, type2) && Objects.equals(type1, new Type("int", true))) ||
+            (Objects.equals(type1, new Type("int", true)) && Objects.equals(type2, new Type("int", false))) ||
+            (Objects.equals(type1, new Type("int", false)) && Objects.equals(type2, new Type("int", true)))
+        ){
+            if(Objects.equals(node.get("op"), "==") ||
+                    Objects.equals(node.get("op"), "!=") ||
+                    Objects.equals(node.get("op"), "<") ||
+                    Objects.equals(node.get("op"), ">") ||
+                    Objects.equals(node.get("op"), "<=") ||
+                    Objects.equals(node.get("op"), ">=")) {
+                return new Type("boolean", false);
+            }
+
             return new Type("int", false);
         }
 
@@ -131,19 +154,23 @@ public abstract class SemanticVisitor extends PreorderJmmVisitor<SymbolTable, In
                 return b;
             case "This":
                 return new Type(symbolTable.getClassName(), false);
-            case "Integer", "ArrayLength":
+            case "Integer", "ArrayLength", "IntType":
                 return new Type("int", false);
             case "Boolean":
-                return new Type("Boolean", false);
+                return new Type("boolean", false);
             case "UnaryOp":
                 Type c = this.getUnOpType(node, symbolTable);
                 return c;
+            case "ObjectType":
+                return new Type(node.get("typeName"), false);
+            case "ArrayAccess":
+                return new Type("int", true);
             case "MethodCall":
                 break;
             case "NewIntArray":
                 break;
             case "NewObject":
-                break;
+                return new Type(node.get("id"), false);
             default:
                 return new Type("invalid", false);
         }
