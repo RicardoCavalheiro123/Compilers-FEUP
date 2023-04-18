@@ -78,7 +78,6 @@ public class OllirToJasmin {
             if (method.getMethodAccessModifier() != AccessModifiers.DEFAULT) {
                 jasminCodeBuilder.append("\t.limit stack ").append("99").append("\n");
                 jasminCodeBuilder.append("\t.limit locals ").append("99").append("\n");
-                jasminCodeBuilder.append("\t\n");
             }
 
             jasminCodeBuilder.append(instructions);
@@ -178,7 +177,7 @@ public class OllirToJasmin {
 
         if(!method.isConstructMethod() && !this.isAssign && ((callInstruction instanceof InvokeSpecialInstruction) || (instruction.getReturnType().getTypeOfElement() != ElementType.VOID))) {
             jasminCodeBuilder.append("\n\t");
-            jasminCodeBuilder.append("pop\n");
+            jasminCodeBuilder.append("pop");
         }
 
         return jasminCodeBuilder.toString();
