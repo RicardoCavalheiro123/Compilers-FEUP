@@ -12,8 +12,6 @@ import pt.up.fe.comp.jmm.jasmin.JasminResult;
 import pt.up.fe.comp.jmm.ollir.OllirResult;
 import pt.up.fe.comp.jmm.parser.JmmParserResult;
 
-import pt.up.fe.comp2023.backend.OllirToJasmin;
-
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsLogs;
 import pt.up.fe.specs.util.SpecsSystem;
@@ -64,7 +62,7 @@ public class Launcher {
 
 
         // Instantiate JmmOptimizer
-        SimpleOllir ollir = new SimpleOllir();
+        SimpleOptimization ollir = new SimpleOptimization();
 
         // Ollir stage
         OllirResult ollirResult = ollir.toOllir(semanticsResult);

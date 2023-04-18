@@ -7,7 +7,7 @@ import pt.up.fe.comp.jmm.ollir.OllirResult;
 import pt.up.fe.comp2023.ollir.OllirGenerator;
 import pt.up.fe.comp2023.semantics.symbol_table.SymbolTable;
 
-public class SimpleOllir implements JmmOptimization {
+public class SimpleOptimization implements JmmOptimization {
     @Override
     public OllirResult toOllir(JmmSemanticsResult jmmSemanticsResult) {
         System.out.println("Ollir stage");
