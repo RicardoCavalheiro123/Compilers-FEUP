@@ -11,9 +11,6 @@ import pt.up.fe.comp.jmm.analysis.JmmSemanticsResult;
 import pt.up.fe.comp.jmm.jasmin.JasminResult;
 import pt.up.fe.comp.jmm.ollir.OllirResult;
 import pt.up.fe.comp.jmm.parser.JmmParserResult;
-import pt.up.fe.comp2023.backend.SimpleJasmin;
-
-import pt.up.fe.comp2023.Ollir.SimpleOllir;
 
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsLogs;
@@ -51,6 +48,7 @@ public class Launcher {
 
         System.out.println(parserResult.getRootNode().toTree());
 
+
         // Instantiate JmmAnalyzer
         SimpleAnalysis analyzer = new SimpleAnalysis();
 
@@ -63,40 +61,31 @@ public class Launcher {
         System.out.println(semanticsResult.getSymbolTable());
 
 
-
         // Instantiate JmmOptimizer
-        SimpleOllir ollir = new SimpleOllir();
+        SimpleOptimization ollir = new SimpleOptimization();
 
         // Ollir stage
         OllirResult ollirResult = ollir.toOllir(semanticsResult);
 
         // Check if there are ollir errors
+        TestUtils.noErrors(ollirResult.getReports());
 
-        //TestUtils.noErrors(ollirResult.getReports());
-
-        // Receives String JmmCode and returns OllirResult
-        //OllirResult ollirR = TestUtils.optimize(semanticsResult);
-
-//        System.out.println(ollirResult.getOllirCode());
-
-        // ... add remaining stages
-
+        System.out.println(ollirResult.getOllirCode());
 
 
         // Instantiate JasminGenerator
-        SimpleJasmin jasminGenerator = new SimpleJasmin();
+        SimpleBackend simpleBackend = new SimpleBackend();
 
         // Generate Jasmin code stage
-        //JasminResult jasminResult = jasminGenerator.toJasmin(ollirResult);
+        JasminResult jasminResult = simpleBackend.toJasmin(ollirResult);
 
-        // Check if there are semantic errors
-        //TestUtils.backend(jasminResult.getJasminCode());
-        //TestUtils.backend(new OllirResult());
+        // Check if there are jasmin errors
+        TestUtils.noErrors(ollirResult.getReports());
 
-        //TestUtils.backend(semanticsResult);
+        jasminResult.run();
+        System.out.println(jasminResult.getJasminCode());
 
-        //jasminResult.run();
-        //System.out.println(jasminResult.getJasminCode());
+        // ... add remaining stages
     }
 
     private static Map<String, String> parseArgs(String[] args) {

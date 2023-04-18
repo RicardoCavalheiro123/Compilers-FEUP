@@ -1,4 +1,4 @@
-package pt.up.fe.comp2023.symbol.table;
+package pt.up.fe.comp2023.semantics.symbol_table;
 
 import pt.up.fe.comp.jmm.analysis.table.Symbol;
 import pt.up.fe.comp.jmm.analysis.table.Type;

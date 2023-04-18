@@ -1,12 +1,11 @@
-package pt.up.fe.comp2023.Ollir;
+package pt.up.fe.comp2023.ollir;
 
-import pt.up.fe.comp.jmm.analysis.JmmSemanticsResult;
 import pt.up.fe.comp.jmm.analysis.table.Symbol;
 import pt.up.fe.comp.jmm.analysis.table.Type;
 import pt.up.fe.comp.jmm.ast.AJmmVisitor;
 import pt.up.fe.comp.jmm.ast.JmmNode;
-import pt.up.fe.comp2023.symbol.table.MethodTable;
-import pt.up.fe.comp2023.symbol.table.SymbolTable;
+import pt.up.fe.comp2023.semantics.symbol_table.MethodTable;
+import pt.up.fe.comp2023.semantics.symbol_table.SymbolTable;
 
 import java.util.*;
 

@@ -1,39 +1,15 @@
 package pt.up.fe.comp2023.backend;
 
 import org.specs.comp.ollir.*;
-import pt.up.fe.comp.jmm.jasmin.JasminBackend;
-import pt.up.fe.comp.jmm.jasmin.JasminResult;
-import pt.up.fe.comp.jmm.ollir.OllirResult;
-import pt.up.fe.comp.jmm.report.Report;
-import pt.up.fe.comp.jmm.report.Stage;
 import pt.up.fe.comp2023.backend.instructions.call.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class SimpleJasmin implements JasminBackend {
-
-    List<Report> reports = new ArrayList<>();
+public class OllirToJasmin {
     String superClassName;
     boolean isAssign = false;
 
-    @Override
-    public JasminResult toJasmin(OllirResult ollirResult) {
-        ClassUnit resultOllirClass = ollirResult.getOllirClass();
+    public String getJasminString(ClassUnit resultOllirClass) {
         superClassName = resultOllirClass.getSuperClass() == null ? "java/lang/Object" : resultOllirClass.getSuperClass();
 
-        try {
-            String jasminCode = getJasminString(resultOllirClass);
-
-            System.out.println(jasminCode);
-
-            return new JasminResult(ollirResult, jasminCode, this.reports);
-        } catch (Exception e) {
-            return new JasminResult(resultOllirClass.getClassName(), null, List.of(Report.newError(Stage.GENERATION, -1, -1, "Error while generating Jasmin code", e)));
-        }
-    }
-
-    private String getJasminString(ClassUnit resultOllirClass) {
         StringBuilder jasminCodeBuilder = new StringBuilder();
 
         jasminCodeBuilder.append(getClassJasminString(resultOllirClass));
