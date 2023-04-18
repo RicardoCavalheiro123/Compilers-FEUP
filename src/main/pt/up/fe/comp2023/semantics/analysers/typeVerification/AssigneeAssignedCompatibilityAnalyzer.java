@@ -35,6 +35,8 @@ public class AssigneeAssignedCompatibilityAnalyzer extends SemanticVisitor {
         var assigned = this.getJmmNodeType(node.getJmmChild(0), symbolTable);
         var type = this.getIdType(node, symbolTable);
 
+        if(Objects.equals(assigned, new Type("inexists", false))) return 0;
+
         if(Objects.equals(node.getJmmChild(0).getKind(), "NewObject")) {
             var t = new Type(node.getJmmChild(0).get("id"), false);
 

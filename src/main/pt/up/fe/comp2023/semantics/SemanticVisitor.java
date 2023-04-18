@@ -25,8 +25,8 @@ public abstract class SemanticVisitor extends PreorderJmmVisitor<SymbolTable, In
 
     public Type getIdType(JmmNode node, SymbolTable symbolTable) {
         String id = node.get("id");
-        var method = node.getAncestor("Method");
-        var method_name = method.get().get("name");
+        var method = node.getAncestor("Method").isEmpty() ? node.getAncestor("MainMethod").get() : node.getAncestor("Method").get() ;
+        var method_name = method.get("name");
 
         // ver se esta nos parametros da função
         var m2 = symbolTable.findMethod(method_name);
@@ -161,7 +161,10 @@ public abstract class SemanticVisitor extends PreorderJmmVisitor<SymbolTable, In
             case "ArrayAccess":
                 return new Type("int", false);
             case "MethodCall":
-                break;
+                if(symbolTable.findMethod(node.get("method")) == null) {
+                    return new Type("inexists", false);
+                }
+                return symbolTable.findMethod(node.get("method")).getReturnType();
             case "NewIntArray":
                 return new Type("int", true);
             case "NewObject":
@@ -170,6 +173,5 @@ public abstract class SemanticVisitor extends PreorderJmmVisitor<SymbolTable, In
                 return new Type("invalid", false);
         }
 
-        return new Type("invalid", false);
     }
 }

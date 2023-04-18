@@ -35,36 +35,37 @@ public class MethodArgumentsCompatibilityAnalyzer extends SemanticVisitor {
                 return 0;
             }
         }
-
-        var method_arguments = symbolTable.findMethod(node.get("method")).getParameters();
-        var method_call_arguments_size = node.getChildren().size() - 1;
-
-        if(method_arguments.size() != method_call_arguments_size) {
-            reportsMethodArguments.add(
-                new Report(
-                    ReportType.ERROR,
-                    Stage.SEMANTIC,
-                    Integer.parseInt(node.get("lineStart")),
-                    Integer.parseInt(node.get("colStart")),
-                    "Method call argument number does not correspond to method declaration!"
-            ));
-        }
         else {
-            for(int i = 1; i <= method_arguments.size(); i++) {
-                Type called_type = getJmmNodeType(node.getJmmChild(i), symbolTable);
-                Type need_type = method_arguments.get(i - 1).getType();
 
-                if(!compatibleType(called_type, need_type, symbolTable)) {
-                    reportsMethodArguments.add(
+            var method_arguments = symbolTable.findMethod(node.get("method")).getParameters();
+            var method_call_arguments_size = node.getChildren().size() - 1;
+
+            if (method_arguments.size() != method_call_arguments_size) {
+                reportsMethodArguments.add(
                         new Report(
-                            ReportType.ERROR,
-                            Stage.SEMANTIC,
-                            Integer.parseInt(node.get("lineStart")),
-                            Integer.parseInt(node.get("colStart")),
-                            "Method call argument does not match actual parameter type!"
-                    ));
+                                ReportType.ERROR,
+                                Stage.SEMANTIC,
+                                Integer.parseInt(node.get("lineStart")),
+                                Integer.parseInt(node.get("colStart")),
+                                "Method call argument number does not correspond to method declaration!"
+                        ));
+            } else {
+                for (int i = 1; i <= method_arguments.size(); i++) {
+                    Type called_type = getJmmNodeType(node.getJmmChild(i), symbolTable);
+                    Type need_type = method_arguments.get(i - 1).getType();
 
-                    return 0;
+                    if (!compatibleType(called_type, need_type, symbolTable)) {
+                        reportsMethodArguments.add(
+                                new Report(
+                                        ReportType.ERROR,
+                                        Stage.SEMANTIC,
+                                        Integer.parseInt(node.get("lineStart")),
+                                        Integer.parseInt(node.get("colStart")),
+                                        "Method call argument does not match actual parameter type!"
+                                ));
+
+                        return 0;
+                    }
                 }
             }
         }
