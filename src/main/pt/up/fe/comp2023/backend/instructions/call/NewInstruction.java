@@ -24,7 +24,7 @@ public class NewInstruction implements InstructionCall {
                     .append(((Operand) instruction.getFirstArg()).getName())
                     .append("\n");
 
-            jasminCodeBuilder.append("\tdup\n");
+            jasminCodeBuilder.append("\tdup");
 
         } else {
             jasminCodeBuilder.append("; New type not implement for ").append(newType).append("\n");
