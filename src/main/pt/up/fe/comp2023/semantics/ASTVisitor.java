@@ -1,20 +1,17 @@
-package pt.up.fe.comp2023;
+package pt.up.fe.comp2023.semantics;
 
 import pt.up.fe.comp.jmm.analysis.table.Symbol;
 import pt.up.fe.comp.jmm.analysis.table.Type;
 import pt.up.fe.comp.jmm.ast.JmmNode;
 import pt.up.fe.comp.jmm.ast.PreorderJmmVisitor;
 import pt.up.fe.comp.jmm.report.Report;
-import pt.up.fe.comp2023.symbol.table.MethodTable;
-import pt.up.fe.comp2023.symbol.table.SymbolTable;
+import pt.up.fe.comp2023.semantics.symbol_table.MethodTable;
+import pt.up.fe.comp2023.semantics.symbol_table.SymbolTable;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
-public class PreorderVisitor extends PreorderJmmVisitor<Object, Object> {
+public class ASTVisitor extends PreorderJmmVisitor<Object, Object> {
     SymbolTable st = new SymbolTable();
     private List<Report> reports;
 

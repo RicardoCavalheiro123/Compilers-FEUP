@@ -1,4 +1,4 @@
-package pt.up.fe.comp2023.symbol.table;
+package pt.up.fe.comp2023.semantics.symbol_table;
 
 import pt.up.fe.comp.jmm.analysis.table.Symbol;
 import pt.up.fe.comp.jmm.analysis.table.Type;
@@ -7,7 +7,6 @@ import pt.up.fe.comp.jmm.analysis.table.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;
-import java.util.Optional;
 
 public class SymbolTable implements pt.up.fe.comp.jmm.analysis.table.SymbolTable {
     public String className = "";

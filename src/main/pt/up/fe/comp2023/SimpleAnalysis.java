@@ -5,12 +5,14 @@ import pt.up.fe.comp.jmm.analysis.JmmSemanticsResult;
 import pt.up.fe.comp.jmm.ast.JmmNode;
 import pt.up.fe.comp.jmm.parser.JmmParserResult;
 import pt.up.fe.comp.jmm.report.Report;
-import pt.up.fe.comp2023.analysers.functionVerification.MainAnalyzer;
-import pt.up.fe.comp2023.analysers.functionVerification.MethodArgumentsCompatibilityAnalyzer;
-import pt.up.fe.comp2023.analysers.functionVerification.MethodExistsAnalyser;
-import pt.up.fe.comp2023.analysers.functionVerification.MethodReturnTypeAnalyzer;
-import pt.up.fe.comp2023.analysers.typeVerification.*;
-import pt.up.fe.comp2023.symbol.table.SymbolTable;
+import pt.up.fe.comp2023.semantics.SemanticVisitor;
+import pt.up.fe.comp2023.semantics.analysers.functionVerification.MainAnalyzer;
+import pt.up.fe.comp2023.semantics.analysers.functionVerification.MethodArgumentsCompatibilityAnalyzer;
+import pt.up.fe.comp2023.semantics.analysers.functionVerification.MethodExistsAnalyser;
+import pt.up.fe.comp2023.semantics.analysers.functionVerification.MethodReturnTypeAnalyzer;
+import pt.up.fe.comp2023.semantics.ASTVisitor;
+import pt.up.fe.comp2023.semantics.symbol_table.SymbolTable;
+import pt.up.fe.comp2023.semantics.analysers.typeVerification.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,7 +24,7 @@ public class SimpleAnalysis implements JmmAnalysis {
         try {
             JmmNode root = jmmParserResult.getRootNode();
 
-            PreorderVisitor visitor = new PreorderVisitor();
+            ASTVisitor visitor = new ASTVisitor();
 
             visitor.visit(root, null);
 
@@ -30,7 +32,7 @@ public class SimpleAnalysis implements JmmAnalysis {
 
             List<Report> reports = new ArrayList<>(visitor.getReports());
 
-            List<SemanticVisitor> semantic_analyzers = Arrays.asList(
+            /*List<SemanticVisitor> semantic_analyzers = Arrays.asList(
                 new ArrayAccessAnalyzer(),
                 new OperandsTypeCompatibilityAnalyzer(),
                 new ExpressionConditionAnalyzer(),
@@ -49,7 +51,7 @@ public class SimpleAnalysis implements JmmAnalysis {
             for(SemanticVisitor analyzer: semantic_analyzers) {
                 analyzer.visit(root, symbolTable);
                 reports.addAll(analyzer.getReports());
-            }
+            }*/
 
             return new JmmSemanticsResult(jmmParserResult, symbolTable, reports);
 

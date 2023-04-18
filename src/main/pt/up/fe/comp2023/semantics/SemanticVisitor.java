@@ -1,12 +1,10 @@
-package pt.up.fe.comp2023;
+package pt.up.fe.comp2023.semantics;
 
-import pt.up.fe.comp.jmm.analysis.table.Symbol;
 import pt.up.fe.comp.jmm.analysis.table.Type;
 import pt.up.fe.comp.jmm.ast.JmmNode;
 import pt.up.fe.comp.jmm.ast.PreorderJmmVisitor;
 import pt.up.fe.comp.jmm.report.Report;
-import pt.up.fe.comp2023.symbol.table.MethodTable;
-import pt.up.fe.comp2023.symbol.table.SymbolTable;
+import pt.up.fe.comp2023.semantics.symbol_table.SymbolTable;
 
 import java.util.*;
 

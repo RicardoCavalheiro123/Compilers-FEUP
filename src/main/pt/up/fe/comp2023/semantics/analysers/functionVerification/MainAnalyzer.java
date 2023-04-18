@@ -1,11 +1,11 @@
-package pt.up.fe.comp2023.analysers.functionVerification;
+package pt.up.fe.comp2023.semantics.analysers.functionVerification;
 
 import pt.up.fe.comp.jmm.ast.JmmNode;
 import pt.up.fe.comp.jmm.report.Report;
 import pt.up.fe.comp.jmm.report.ReportType;
 import pt.up.fe.comp.jmm.report.Stage;
-import pt.up.fe.comp2023.SemanticVisitor;
-import pt.up.fe.comp2023.symbol.table.SymbolTable;
+import pt.up.fe.comp2023.semantics.SemanticVisitor;
+import pt.up.fe.comp2023.semantics.symbol_table.SymbolTable;
 
 import java.util.ArrayList;
 import java.util.List;
