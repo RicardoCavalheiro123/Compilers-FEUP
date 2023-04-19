@@ -1,9 +1,9 @@
-import ioPlus;
-class ArrayInit {
+class Structure_fields {
+    int a;
+    boolean b;
+    int[] c;
 
-	public static void main(String[] args) {
-	    int[] a;
-        a = new int[5];
-        ioPlus.printResult(a.length);
-	}
+    public static void main(String[] args) {
+
+    }
 }

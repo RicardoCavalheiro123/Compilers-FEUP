@@ -452,6 +452,10 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
 
     private String dealWithType(JmmNode node, StringBuilder ollir) {
         if(node.getJmmParent().getKind().equals("Method")) return null;
+
+        if(node.get("isArray").equals("true")){
+            this.ollirCode.append(".array");
+        }
         switch (node.getKind()){
             case "IntType":
                 this.ollirCode.append(".i32");
@@ -478,6 +482,7 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
                 this.ollirCode.append(".bool");
                 break;
         }
+
         return null;
     }
 
