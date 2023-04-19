@@ -6,13 +6,13 @@ import pt.up.fe.comp.jmm.ast.JmmNode;
 import pt.up.fe.comp.jmm.parser.JmmParserResult;
 import pt.up.fe.comp.jmm.report.Report;
 import pt.up.fe.comp2023.semantics.SemanticVisitor;
-import pt.up.fe.comp2023.semantics.analysers.functionVerification.MainAnalyzer;
-import pt.up.fe.comp2023.semantics.analysers.functionVerification.MethodArgumentsCompatibilityAnalyzer;
-import pt.up.fe.comp2023.semantics.analysers.functionVerification.MethodExistsAnalyser;
-import pt.up.fe.comp2023.semantics.analysers.functionVerification.MethodReturnTypeAnalyzer;
+import pt.up.fe.comp2023.semantics.analysers.function_verification.MainAnalyzer;
+import pt.up.fe.comp2023.semantics.analysers.function_verification.MethodArgumentsCompatibilityAnalyzer;
+import pt.up.fe.comp2023.semantics.analysers.function_verification.MethodExistsAnalyser;
+import pt.up.fe.comp2023.semantics.analysers.function_verification.MethodReturnTypeAnalyzer;
 import pt.up.fe.comp2023.semantics.ASTVisitor;
 import pt.up.fe.comp2023.semantics.symbol_table.SymbolTable;
-import pt.up.fe.comp2023.semantics.analysers.typeVerification.*;
+import pt.up.fe.comp2023.semantics.analysers.type_verification.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;

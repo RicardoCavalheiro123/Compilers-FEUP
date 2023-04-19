@@ -1,4 +1,4 @@
-package pt.up.fe.comp2023.semantics.analysers.functionVerification;
+package pt.up.fe.comp2023.semantics.analysers.function_verification;
 
 import pt.up.fe.comp.jmm.analysis.table.Type;
 import pt.up.fe.comp.jmm.ast.JmmNode;
