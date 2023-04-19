@@ -228,8 +228,8 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
         }
 
         //Check if it is a field
-        else if(this.symbolTable.isField(this.currentMethod,jmmNode.get("id"))){
-            this.symbol = this.symbolTable.getField(this.currentMethod, jmmNode.get("id"));
+        else if(this.symbolTable.isFieldOfMethod(this.currentMethod,jmmNode.get("id"))){
+            this.symbol = this.symbolTable.getFieldOfMethod(this.currentMethod, jmmNode.get("id"));
             if(symbol.getType().isArray()) {
                 var_type = ".array" + getVariableType(symbol.getType(), ollir);
             }
@@ -295,8 +295,8 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
 
         }
         //Check if it is a field
-        else if(this.symbolTable.isField(this.currentMethod,jmmNode.get("id"))){
-            symbol = this.symbolTable.getField(this.currentMethod, jmmNode.get("id"));
+        else if(this.symbolTable.isFieldOfMethod(this.currentMethod,jmmNode.get("id"))){
+            symbol = this.symbolTable.getFieldOfMethod(this.currentMethod, jmmNode.get("id"));
             var_type = getVariableType(symbol.getType(), ollir);
 
         }
@@ -350,8 +350,8 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
             }
 
             //Check if it is a field
-            else if(this.symbolTable.isField(this.currentMethod,child.get(val)) && !val.equals("")){
-                this.symbol = this.symbolTable.getField(this.currentMethod, child.get(val));
+            else if(this.symbolTable.isFieldOfMethod(this.currentMethod,child.get(val)) && !val.equals("")){
+                this.symbol = this.symbolTable.getFieldOfMethod(this.currentMethod, child.get(val));
 
             }
             else {
@@ -611,7 +611,7 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
         }
 
         //Check if it is a field
-        else if(this.symbolTable.isField(this.currentMethod,name)){
+        else if(this.symbolTable.isFieldOfMethod(this.currentMethod,name)){
             return false;
 
 
