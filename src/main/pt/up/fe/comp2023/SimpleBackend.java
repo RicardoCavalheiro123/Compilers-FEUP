@@ -21,6 +21,7 @@ public class SimpleBackend implements JasminBackend {
         try {
             OllirToJasmin ollirToJasmin = new OllirToJasmin();
             String jasminCode = ollirToJasmin.getJasminString(resultOllirClass);
+            System.out.println(jasminCode);
 
             return new JasminResult(ollirResult, jasminCode, reports);
         } catch (Exception e) {

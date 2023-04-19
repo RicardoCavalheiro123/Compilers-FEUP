@@ -12,7 +12,6 @@ public class NewInstruction implements InstructionCall {
 
         if (newType == ElementType.ARRAYREF) {
 
-            // TODO
             for (Element e : instruction.getListOfOperands()) {
                 jasminCodeBuilder.append(JasminUtils.loadElement(method, e)).append("\n\t");
             }
