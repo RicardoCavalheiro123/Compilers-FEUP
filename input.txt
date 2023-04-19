@@ -1,6 +1,4 @@
-import ioPlus;
-class ArrayAccess {
-
+class Structure_fields {
 	public static void main(String[] args) {
 	    int[] a;
         a = new int[5];
@@ -19,4 +17,5 @@ class ArrayAccess {
 
 
 	}
+
 }

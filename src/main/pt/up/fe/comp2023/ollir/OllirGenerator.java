@@ -54,8 +54,19 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
         addVisit("NewIntArray", this::dealWithNewIntArray);
         addVisit("ArrayAccess", this::dealWithArrayAccess);
         addVisit("ArrayAssign", this::dealWithArrayAssign);
+        addVisit("ArrayLength", this::dealWithArrayLength);
 
 
+    }
+
+    private String dealWithArrayLength(JmmNode jmmNode, StringBuilder ollir) {
+        String result = "";
+        for(JmmNode child : jmmNode.getChildren()){
+            result = visit(child, ollir);
+        }
+        this.ollirCode.append("temp" + tempcounter + ".i32" + " :=.i32 " + "arraylength(" + result + ")" + ".i32.i32;\n");
+        tempcounter++;
+        return "temp" + (tempcounter-1) + ".i32";
     }
 
     private String dealWithArrayAssign(JmmNode jmmNode, StringBuilder ollir) {
@@ -440,6 +451,10 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
 
     private String dealWithType(JmmNode node, StringBuilder ollir) {
         if(node.getJmmParent().getKind().equals("Method")) return null;
+
+        if(node.get("isArray").equals("true")){
+            this.ollirCode.append(".array");
+        }
         switch (node.getKind()){
             case "IntType":
                 this.ollirCode.append(".i32");
@@ -466,6 +481,7 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
                 this.ollirCode.append(".bool");
                 break;
         }
+
         return null;
     }
 
