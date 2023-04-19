@@ -261,7 +261,7 @@ public class OllirToJasmin {
         if (instruction.getOperation().getOpType() == OperationType.NOTB) {
             jasminCodeBuilder.append(" 1");
         } else {
-            jasminCodeBuilder.append("; Invalid unary operation");
+            throw new RuntimeException("Unary operation not supported");
         }
 
         return jasminCodeBuilder.toString();
@@ -278,7 +278,6 @@ public class OllirToJasmin {
         jasminCodeBuilder.append(JasminUtils.loadElement(method, right));
         jasminCodeBuilder.append("\n\t");
         jasminCodeBuilder.append(JasminUtils.operationCode(instruction.getOperation()));
-        jasminCodeBuilder.append("\n\t");
 
         return jasminCodeBuilder.toString();
     }
