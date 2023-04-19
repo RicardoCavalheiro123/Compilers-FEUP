@@ -22,8 +22,6 @@ public class SimpleBackend implements JasminBackend {
             OllirToJasmin ollirToJasmin = new OllirToJasmin();
             String jasminCode = ollirToJasmin.getJasminString(resultOllirClass);
 
-            System.out.println(jasminCode);
-
             return new JasminResult(ollirResult, jasminCode, reports);
         } catch (Exception e) {
             return new JasminResult(resultOllirClass.getClassName(), null, List.of(Report.newError(Stage.GENERATION, -1, -1, "Error while generating Jasmin code", e)));

@@ -83,6 +83,7 @@ public class Launcher {
         TestUtils.noErrors(jasminResult.getReports());
 
         jasminResult.run();
+
         System.out.println(jasminResult.getJasminCode());
 
         // ... add remaining stages
