@@ -14,8 +14,15 @@ public class SemanticAnalysisTest2 {
     }
 
     @Test
-    public void Method_Call_Missing() {
+    public void methodCallMissing() {
+
         var result = TestUtils.analyse(SpecsIo.getResource("pt/up/fe/comp/cp2/fixtures/public/cpf/2_semantic_analysis/calls/Method_Call_Missing.jmm"));
+        TestUtils.mustFail(result);
+    }
+
+    @Test
+    public void varNotDeclared() {
+        var result = TestUtils.analyse(SpecsIo.getResource("pt/up/fe/comp/cp2/semanticanalysis/VarNotDeclared.jmm"));
         TestUtils.mustFail(result);
     }
 

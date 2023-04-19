@@ -65,6 +65,25 @@ public class AssigneeAssignedCompatibilityAnalyzer extends SemanticVisitor {
             ));
         }
 
+        if(Objects.equals(node.getJmmParent().getKind(), "MainMethod")) {
+            if(symbolTable.getFields().size() == 0) return 0;
+
+            for(var field: symbolTable.getFields()) {
+                if(Objects.equals(node.get("id"), field.getName())) {
+                    reportsAssigneeAssigned.add(
+                            new Report(
+                                    ReportType.ERROR,
+                                    Stage.SEMANTIC,
+                                    Integer.parseInt(node.get("lineStart")),
+                                    Integer.parseInt(node.get("colStart")),
+                                    "Cannot access global variables in main method!"
+                            ));
+
+                    return 0;
+                }
+            }
+        }
+
         return 0;
     }
 }
