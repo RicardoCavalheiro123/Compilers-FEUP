@@ -14,6 +14,42 @@ public class SemanticAnalysisTest2 {
     }
 
     @Test
+    public void methodCallMissing() {
+
+        var result = TestUtils.analyse(SpecsIo.getResource("pt/up/fe/comp/cp2/fixtures/public/cpf/2_semantic_analysis/calls/Method_Call_Missing.jmm"));
+        TestUtils.mustFail(result);
+    }
+
+    @Test
+    public void otherClassMethodCallSimple() {
+
+        var result = TestUtils.analyse(SpecsIo.getResource("pt/up/fe/comp/cp2/fixtures/public/cpf/2_semantic_analysis/calls/Other_Class_Method_Call_Simple.jmm"));
+        TestUtils.noErrors(result);
+    }
+
+    @Test
+    public void importSuper() {
+
+        var result = TestUtils.analyse(SpecsIo.getResource("pt/up/fe/comp/cp2/fixtures/public/cpf/2_semantic_analysis/import/ImportSuper.jmm"));
+        TestUtils.noErrors(result);
+    }
+
+    @Test
+    public void varLookupField() {
+
+        var result = TestUtils.analyse(SpecsIo.getResource("pt/up/fe/comp/cp2/fixtures/public/cpf/2_semantic_analysis/lookup/VarLookup_Field.jmm"));
+        TestUtils.mustFail(result);
+    }
+
+    @Test
+    public void varLookupFieldMainFail() {
+
+        var result = TestUtils.analyse(SpecsIo.getResource("pt/up/fe/comp/cp2/fixtures/public/cpf/2_semantic_analysis/lookup/VarLookup_Field_Main_Fail.jmm"));
+        TestUtils.mustFail(result);
+    }
+
+
+    @Test
     public void varNotDeclared() {
         var result = TestUtils.analyse(SpecsIo.getResource("pt/up/fe/comp/cp2/semanticanalysis/VarNotDeclared.jmm"));
         TestUtils.mustFail(result);
