@@ -119,7 +119,7 @@ public class OllirToJasmin {
 
         if(dest.getType().getTypeOfElement() == ElementType.ARRAYREF) {
             Operand op = (Operand) dest;
-            jasminCodeBuilder.append(JasminUtils.loadElement(method, op));
+            jasminCodeBuilder.append(JasminUtils.loadElement(method, op)).append("\n\t");
         } else {
             if (instruction.getRhs().getInstType() == InstructionType.BINARYOPER) {
                 BinaryOpInstruction binaryOpInstruction = (BinaryOpInstruction) instruction.getRhs();

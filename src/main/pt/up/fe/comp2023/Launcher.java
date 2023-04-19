@@ -80,7 +80,7 @@ public class Launcher {
         JasminResult jasminResult = simpleBackend.toJasmin(ollirResult);
 
         // Check if there are jasmin errors
-        TestUtils.noErrors(ollirResult.getReports());
+        TestUtils.noErrors(jasminResult.getReports());
 
         jasminResult.run();
         System.out.println(jasminResult.getJasminCode());

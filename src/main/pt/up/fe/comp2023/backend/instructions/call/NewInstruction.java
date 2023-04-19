@@ -13,6 +13,15 @@ public class NewInstruction implements InstructionCall {
         if (newType == ElementType.ARRAYREF) {
 
             // TODO
+            for (Element e : instruction.getListOfOperands()) {
+                jasminCodeBuilder.append(JasminUtils.loadElement(method, e)).append("\n\t");
+            }
+
+            if (instruction.getListOfOperands().get(0).getType().getTypeOfElement() == ElementType.INT32) {
+                jasminCodeBuilder.append("newarray int");
+            } else {
+                throw new RuntimeException("New Array type not implemented");
+            }
 
         } else if (newType == ElementType.OBJECTREF) {
 
@@ -27,7 +36,7 @@ public class NewInstruction implements InstructionCall {
             jasminCodeBuilder.append("\tdup");
 
         } else {
-            jasminCodeBuilder.append("; New type not implement for ").append(newType).append("\n");
+            throw new RuntimeException("New type not implemented");
         }
 
         return jasminCodeBuilder.toString();

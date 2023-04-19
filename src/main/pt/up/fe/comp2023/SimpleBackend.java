@@ -12,20 +12,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SimpleBackend implements JasminBackend {
-    List<Report> reports = new ArrayList<>();
 
     @Override
     public JasminResult toJasmin(OllirResult ollirResult) {
+        List<Report> reports = new ArrayList<>(ollirResult.getReports());
         ClassUnit resultOllirClass = ollirResult.getOllirClass();
 
-        OllirToJasmin ollirToJasmin = new OllirToJasmin();
-
         try {
+            OllirToJasmin ollirToJasmin = new OllirToJasmin();
             String jasminCode = ollirToJasmin.getJasminString(resultOllirClass);
 
             System.out.println(jasminCode);
 
-            return new JasminResult(ollirResult, jasminCode, this.reports);
+            return new JasminResult(ollirResult, jasminCode, reports);
         } catch (Exception e) {
             return new JasminResult(resultOllirClass.getClassName(), null, List.of(Report.newError(Stage.GENERATION, -1, -1, "Error while generating Jasmin code", e)));
         }

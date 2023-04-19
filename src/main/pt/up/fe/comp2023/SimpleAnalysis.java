@@ -19,8 +19,11 @@ import java.util.Arrays;
 import java.util.List;
 
 public class SimpleAnalysis implements JmmAnalysis {
+
     @Override
     public JmmSemanticsResult semanticAnalysis(JmmParserResult jmmParserResult) {
+        List<Report> reports = new ArrayList<>(jmmParserResult.getReports());
+
         try {
             JmmNode root = jmmParserResult.getRootNode();
 
@@ -30,7 +33,7 @@ public class SimpleAnalysis implements JmmAnalysis {
 
             SymbolTable symbolTable = visitor.getSymbolTable();
 
-            List<Report> reports = new ArrayList<>(visitor.getReports());
+            reports.addAll(visitor.getReports());
 
             /*List<SemanticVisitor> semantic_analyzers = Arrays.asList(
                 new ArrayAccessAnalyzer(),
