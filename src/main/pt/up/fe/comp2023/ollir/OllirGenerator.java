@@ -447,7 +447,7 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
             return null;
 
         if(!jmmNode.getJmmParent().getKind().equals("MethodDeclaration")){
-            this.ollirCode.append(".field public " + jmmNode.get("var"));
+            this.ollirCode.append(".field " + jmmNode.get("var"));
         }
 
         for (JmmNode child : jmmNode.getChildren()) {
