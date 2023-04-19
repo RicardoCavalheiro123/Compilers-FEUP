@@ -14,7 +14,7 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
     private final SymbolTable symbolTable;
     private StringBuilder ollirCode;
     private String currentMethod = "";
-    private Integer tempcounter = 1;
+    private Integer tempcounter = 0;
     private Boolean assign = false;
     private Symbol symbol = null;
 
@@ -51,10 +51,56 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
         addVisit("NewObject", this::dealWithNewObject);
         addVisit("MethodCall", this::dealWithMethodCall);
         addVisit("Stmt", this::dealWithStatement);
+        addVisit("NewIntArray", this::dealWithNewIntArray);
+        addVisit("ArrayAccess", this::dealWithArrayAccess);
+        addVisit("ArrayAssign", this::dealWithArrayAssign);
 
 
     }
 
+    private String dealWithArrayAssign(JmmNode jmmNode, StringBuilder ollir) {
+        assign = true;
+        String result = "";
+        String a = visit(jmmNode.getChildren().get(0), ollir);
+        this.ollirCode.append("temp" + tempcounter + var_type + " :=" + var_type + " " + a + ";\n");
+        String temp = "temp" + tempcounter;
+        tempcounter++;
+        for(int i = 0; i < jmmNode.getChildren().size(); i++){
+            result = visit(jmmNode.getChildren().get(i), ollir);
+        }
+        this.ollirCode.append(jmmNode.get("id")+"[" + temp + var_type + "]" + var_type + " :=" + var_type + " " + result + ";\n");
+        assign = false;
+        return result;
+    }
+
+    private String dealWithArrayAccess(JmmNode jmmNode, StringBuilder ollir) {
+        String result = "";
+        List<String> args = new ArrayList<>();
+        for(JmmNode child : jmmNode.getChildren()){
+            result = visit(child, ollir);
+            args.add(result);
+        }
+        this.ollirCode.append("temp" + tempcounter + var_type + " :=" + var_type + " " + args.get(1) + var_type + ";\n");
+        tempcounter++;
+        this.ollirCode.append("temp" + tempcounter + var_type + " :=" + var_type + " " + jmmNode.getChildren().get(0).get("id") + "[" + "temp" + (tempcounter-1) + var_type + "]" + var_type + ";\n");
+        tempcounter++;
+        return "temp" + (tempcounter-1) + var_type;
+    }
+
+    private String dealWithNewIntArray(JmmNode jmmNode, StringBuilder ollir) {
+
+        String result = "";
+        for(JmmNode child : jmmNode.getChildren()){
+            result = visit(child, ollir);
+        }
+
+
+        this.ollirCode.append("temp" + tempcounter + var_type + " :=" + var_type + " " + result + ";\n");
+        tempcounter++;
+        return "new(array, temp" + (tempcounter-1) + var_type + ").array" + var_type;
+
+
+    }
     private String dealWithStatement(JmmNode jmmNode, StringBuilder ollir) {
         for (JmmNode child : jmmNode.getChildren()) {
             visit(child, ollir);
@@ -164,7 +210,7 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
 
         //Check if is a parameter
         assign = true;
-        this.tempcounter = 1;
+
         if(this.symbolTable.isParameter(this.currentMethod, jmmNode.get("id"))){
             this.symbol = this.symbolTable.getParameter(this.currentMethod, jmmNode.get("id"));
             var_type = getVariableType(symbol.getType(), ollir);
@@ -173,7 +219,12 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
         //Check if it is a field
         else if(this.symbolTable.isField(this.currentMethod,jmmNode.get("id"))){
             this.symbol = this.symbolTable.getField(this.currentMethod, jmmNode.get("id"));
-            var_type = getVariableType(symbol.getType(), ollir);
+            if(symbol.getType().isArray()) {
+                var_type = ".array" + getVariableType(symbol.getType(), ollir);
+            }
+            else{
+                var_type = getVariableType(symbol.getType(), ollir);
+            }
 
 
         }
@@ -206,6 +257,7 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
 
             String type = getVariableType(symbol.getType(), ollir);
             this.ollirCode.append(jmmNode.get("id") + type + " :=" + type + " " + temp + ";\n");
+
 
         }
 
@@ -429,6 +481,21 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
                     break;
                 default:
                     variableType = "." +type.getName();
+                    break;
+
+            }
+        }
+        else {
+            variableType = ".array.";
+            switch (type.getName()){
+                case "int":
+                    variableType += "i32";
+                    break;
+                case "boolean":
+                    variableType += "bool";
+                    break;
+                default:
+                    variableType += type.getName();
                     break;
 
             }
