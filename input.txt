@@ -1,22 +1,51 @@
-import GetterAndSetter;
 import io;
-class PrintOtherClassFromParam {
-	public int print(GetterAndSetter b){
-		GetterAndSetter myGetter;
-		int content;
-		myGetter = b;
-		content = myGetter.getA();
-		io.print(content);
-		return 1;
-	}
+import Quicksort;
 
-	public static void main(String[] args){
-		GetterAndSetter b;
-		PrintOtherClassFromParam c;
-		int dummy;
-		b = new GetterAndSetter();
-		dummy = b.setA(10);
-		c = new PrintOtherClassFromParam();
-		c.print(b);
-	}
+class CompileBasic extends Quicksort {
+
+    int intField;
+    boolean boolField;
+    int[] boas;
+    String boas2;
+    CompileBasic boas3;
+
+    public int method1() {
+        int intLocal1;
+        boolean boolLocal1;
+
+        intLocal1 = 1 + 2 * 3 + 4;
+        boolLocal1 = 1;
+
+        return 0;
+    }
+
+    public boolean method2(int intParam1, boolean boolParam1) {
+        return boolParam1;
+    }
+
+    public int method3() {
+        int a;
+        int b;
+        int c;
+
+        a = 1;
+        b = 2;
+        c = a;
+
+        return a + b;
+    }
+
+    public int method4() {
+        int[] intLocal2;
+
+        intLocal2 = new int[3];
+        intLocal2[0] = 1;
+        intLocal2[1] = 2;
+        intLocal2[2] = 3;
+
+        return 0;
+    }
+
+    public static void main(String[] args) {
+    }
 }

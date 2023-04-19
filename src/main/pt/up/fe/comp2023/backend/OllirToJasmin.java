@@ -116,10 +116,11 @@ public class OllirToJasmin {
         StringBuilder jasminCodeBuilder = new StringBuilder();
 
         Element dest = instruction.getDest();
+        if(dest instanceof ArrayOperand) {
+            ArrayOperand aop = ((ArrayOperand) dest);
+            jasminCodeBuilder.append("aload").append(JasminUtils.regCode(method.getVarTable().get(aop.getName()).getVirtualReg())).append("\n\t");
+            jasminCodeBuilder.append(JasminUtils.loadElement(method, aop.getIndexOperands().get(0))).append("\n\t");
 
-        if(dest.getType().getTypeOfElement() == ElementType.ARRAYREF) {
-            Operand op = (Operand) dest;
-            jasminCodeBuilder.append(JasminUtils.loadElement(method, op));
         } else {
             if (instruction.getRhs().getInstType() == InstructionType.BINARYOPER) {
                 BinaryOpInstruction binaryOpInstruction = (BinaryOpInstruction) instruction.getRhs();
