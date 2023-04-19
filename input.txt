@@ -1,21 +1,5 @@
-class Structure_fields {
-	public static void main(String[] args) {
-	    int[] a;
-        a = new int[5];
-        a[0] = 1;
-		a[1] = 2;
-		a[2] = 3;
-		a[3] = 4;
-		a[4] = 5;
+import io;
 
-
-        ioPlus.printResult(a[0]);
-        ioPlus.printResult(a[1]);
-        ioPlus.printResult(a[2]);
-        ioPlus.printResult(a[3]);
-        ioPlus.printResult(a[4]);
-
-
-	}
+class A {
 
 }

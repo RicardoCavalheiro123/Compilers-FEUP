@@ -101,4 +101,12 @@ public class SymbolTable implements pt.up.fe.comp.jmm.analysis.table.SymbolTable
     public Symbol getField(String currentMethod, String id) {
         return methods.get(currentMethod).getLocalVariables().stream().filter(symbol -> symbol.getName().equals(id)).findFirst().get();
     }
+
+    public boolean isFieldOfClass(String id) {
+        return fields.keySet().stream().anyMatch(symbol -> symbol.getName().equals(id));
+    }
+
+    public Symbol getFieldOfClass(String id) {
+        return fields.keySet().stream().filter(symbol -> symbol.getName().equals(id)).findFirst().get();
+    }
 }

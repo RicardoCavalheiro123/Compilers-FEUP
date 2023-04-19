@@ -237,9 +237,18 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
                 var_type = getVariableType(symbol.getType(), ollir);
             }
 
+        }
+        //Check if it is a field of the class
+        else if(this.symbolTable.isFieldOfClass(jmmNode.get("id"))){
+            this.symbol = this.symbolTable.getFieldOfClass(jmmNode.get("id"));
+            if(symbol.getType().isArray()) {
+                var_type = ".array" + getVariableType(symbol.getType(), ollir);
+            }
+            else{
+                var_type = getVariableType(symbol.getType(), ollir);
+            }
 
         }
-
         if(jmmNode.getChildren().get(0).getKind().equals("NewObject")){
 
             for (JmmNode child : jmmNode.getChildren()) {
