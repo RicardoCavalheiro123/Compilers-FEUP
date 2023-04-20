@@ -55,8 +55,7 @@ class CompileBasic extends GetterAndSetter {
 
     public static void main(String[] args) {
         GetterAndSetter test;
-        int a;
         test = new GetterAndSetter();
-        a = test.getA();
+        test.getA();
     }
 }
