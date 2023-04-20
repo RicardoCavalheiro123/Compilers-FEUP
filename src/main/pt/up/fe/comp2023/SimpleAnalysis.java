@@ -52,6 +52,7 @@ public class SimpleAnalysis implements JmmAnalysis {
 
 
             for(SemanticVisitor analyzer: semantic_analyzers) {
+                if(reports.size() >= 1) break;
                 analyzer.visit(root, symbolTable);
                 reports.addAll(analyzer.getReports());
             }
