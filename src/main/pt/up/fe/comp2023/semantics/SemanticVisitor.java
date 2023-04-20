@@ -37,14 +37,6 @@ public abstract class SemanticVisitor extends PreorderJmmVisitor<SymbolTable, In
                 return param.getType();
             }
         }
-        // ver se esta nos parametros da class (fields)
-        var fields = symbolTable.getFields();
-
-        for(var field: fields) {
-            if(Objects.equals(field.getName(), id)) {
-                return field.getType();
-            }
-        }
 
         // ver se esta nas variaveis da funcao
         var variables = m2.getLocalVariables();
@@ -52,6 +44,15 @@ public abstract class SemanticVisitor extends PreorderJmmVisitor<SymbolTable, In
         for(var variable: variables) {
             if(Objects.equals(variable.getName(), id)) {
                 return variable.getType();
+            }
+        }
+
+        // ver se esta nos parametros da class (fields)
+        var fields = symbolTable.getFields();
+
+        for(var field: fields) {
+            if(Objects.equals(field.getName(), id)) {
+                return field.getType();
             }
         }
 
@@ -115,14 +116,18 @@ public abstract class SemanticVisitor extends PreorderJmmVisitor<SymbolTable, In
         var type1 = getJmmNodeType(node.getJmmChild(0), symbolTable);
         var type2 = getJmmNodeType(node.getJmmChild(1), symbolTable);
 
-        if((Objects.equals(type1, type2) && Objects.equals(type1, new Type("int", false)))
+        if(((Objects.equals(type1, type2) && Objects.equals(type1, new Type("int", false))) ||
+            (Objects.equals(type1, type2) && Objects.equals(type1, new Type("boolean", false))))
         ){
             if(Objects.equals(node.get("op"), "==") ||
                     Objects.equals(node.get("op"), "!=") ||
                     Objects.equals(node.get("op"), "<") ||
                     Objects.equals(node.get("op"), ">") ||
                     Objects.equals(node.get("op"), "<=") ||
-                    Objects.equals(node.get("op"), ">=")) {
+                    Objects.equals(node.get("op"), ">=") ||
+                    Objects.equals(node.get("op"), "&&") ||
+                    Objects.equals(node.get("op"), "||")
+            ) {
                 return new Type("boolean", false);
             }
 
@@ -153,9 +158,9 @@ public abstract class SemanticVisitor extends PreorderJmmVisitor<SymbolTable, In
                 return b;
             case "This":
                 return new Type(symbolTable.getClassName(), false);
-            case "Integer", "ArrayLength", "IntType":
+            case "Integer", "ArrayLength":
                 return new Type("int", false);
-            case "Boolean":
+            case "Boolean", "BooleanType":
                 return new Type("boolean", false);
             case "UnaryOp":
                 Type c = this.getUnOpType(node, symbolTable);
@@ -173,6 +178,12 @@ public abstract class SemanticVisitor extends PreorderJmmVisitor<SymbolTable, In
                 return new Type("int", true);
             case "NewObject":
                 return new Type(node.get("id"), false);
+            case "IntType":
+                if(node.get("isArray").equals("true")) {
+                    return new Type("int", true);
+                }
+                return new Type("int", false);
+
             default:
                 return new Type("invalid", false);
         }

@@ -19,6 +19,7 @@ public class ArrayAccessAnalyzer extends SemanticVisitor {
     protected void buildVisitor() {
         setDefaultVisit(this::defaultVisit);
         addVisit("ArrayAccess", this::visitArrayAccess);
+        addVisit("ArrayAssign", this::visitArrayAccess);
     }
 
     public ArrayAccessAnalyzer() {
