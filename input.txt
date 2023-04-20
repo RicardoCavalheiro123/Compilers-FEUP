@@ -8,8 +8,8 @@ class CompileBasic extends GetterAndSetter {
     boolean boolField;
     int[] boas;
 
-    public int method1() {
-        int intLocal1;
+    public int method1(int intField) {
+        int intField;
         boolean boolLocal1;
 
         intField = 1 + 2;
