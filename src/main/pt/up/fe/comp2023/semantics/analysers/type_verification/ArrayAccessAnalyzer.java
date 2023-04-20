@@ -47,7 +47,7 @@ public class ArrayAccessAnalyzer extends SemanticVisitor {
         }
 
         //Checks if array is of type INTEGER, if not reports error
-        if(!Objects.equals(this.getJmmNodeType(ancestor, symbolTable), new Type("int", true))) {
+        /*if(!Objects.equals(this.getJmmNodeType(ancestor, symbolTable), new Type("int", true))) {
             reportsArrayAccess.add(
                 new Report(
                         ReportType.ERROR,
@@ -56,7 +56,7 @@ public class ArrayAccessAnalyzer extends SemanticVisitor {
                         Integer.parseInt(node.get("colStart")),
                         "Accessing arrays is only allowed on arrays!"
             ));
-        }
+        }*/
 
         //Checks if array access index is of type INTEGER, if not reports error
         if(!Objects.equals(this.getJmmNodeType(index, symbolTable), new Type("int", false))) {
