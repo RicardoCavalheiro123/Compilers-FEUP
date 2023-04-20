@@ -290,10 +290,10 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
             }
             String type = getVariableType(symbol.getType(), ollir);
 
-            if(fieldOfClass){
+            /*if(fieldOfClass){
                 this.ollirCode.append("putfield(this," + jmmNode.get("id") + type + "," + temp + ").V;\n");
                 return null;
-            }
+            }*/
 
 
             this.ollirCode.append(jmmNode.get("id") + type + " :=" + type + " " + temp + ";\n");
@@ -324,9 +324,9 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
         else if(this.symbolTable.isFieldOfClass(jmmNode.get("id"))){
             symbol = this.symbolTable.getFieldOfClass(jmmNode.get("id"));
             var_type = getVariableType(symbol.getType(), ollir);
-            this.ollirCode.append("temp" + tempcounter + var_type + ":=" + var_type + " getfield(this," + jmmNode.get("id") + var_type + ")" + var_type + ";\n");
+            /*this.ollirCode.append("temp" + tempcounter + var_type + ":=" + var_type + " getfield(this," + jmmNode.get("id") + var_type + ")" + var_type + ";\n");
             tempcounter++;
-            return "temp" + (tempcounter-1) + var_type;
+            return "temp" + (tempcounter-1) + var_type;*/
         }
         if(assign){
             return jmmNode.get("id") + var_type;
