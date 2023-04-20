@@ -17,32 +17,37 @@ public class MethodTable {
         this.variables = variables;
     }
 
-    public MethodTable(JmmNode node) {
+    public static MethodTable newInstance(JmmNode node) {
+        List<Symbol> parameters = new ArrayList<>();
+        Type returnType = null;
+        HashMap<Symbol, Boolean> variables = new HashMap<>();
+
         List<JmmNode> children = node.getChildren(); // return type, parameters, var declarations and statements
         if(node.get("name").equals("main")) {
             // main method
             returnType = new Type("void", false);
             parameters.add(new Symbol(new Type(node.getJmmChild(0).get("typeName"), true), "args"));
-
         }
         else {
-
             JmmNode returnNode = children.get(0);
-            this.returnType = new Type(returnNode.get("typeName"), returnNode.get("isArray").equals("true"));
+            returnType = new Type(returnNode.get("typeName"), returnNode.get("isArray").equals("true"));
         }
+
         for (int i=1; i<children.size(); i++) {
             JmmNode child = children.get(i);
             if (child.getKind().equals("Parameter")) {
                 JmmNode typeNode = child.getJmmChild(0);
                 Type type = new Type(typeNode.get("typeName"), typeNode.get("isArray").equals("true"));
-                this.parameters.add(new Symbol(type, child.get("var")));
+                parameters.add(new Symbol(type, child.get("var")));
 
             } else if (child.getKind().equals("VarDeclaration")) {
                 Type type = new Type(child.getJmmChild(0).get("typeName"), child.getJmmChild(0).get("isArray").equals("true"));
-                this.variables.put(new Symbol(type, child.get("var")), false);
+                variables.put(new Symbol(type, child.get("var")), false);
 
             }
         }
+
+        return new MethodTable(returnType, parameters, variables);
     }
 
     public Type getReturnType() {

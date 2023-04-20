@@ -39,6 +39,8 @@ public class IdentifierAnalyzer extends SemanticVisitor {
                 Integer.parseInt(node.get("colStart")),
                 "Identifier " + node.get("id") + " does not have corresponding declaration!"
             ));
+
+            return 0;
         }
 
         return 0;

@@ -36,7 +36,7 @@ public class ASTVisitor extends PreorderJmmVisitor<Object, Object> {
     private Object defaultVisit(JmmNode jmmNode, Object obj) { return null; }
 
     private Object dealWithMethod(JmmNode jmmNode, Object obj) {
-        st.methods.put(jmmNode.get("name"), new MethodTable(jmmNode));
+        st.methods.put(jmmNode.get("name"), MethodTable.newInstance(jmmNode));
         return true;
     }
 

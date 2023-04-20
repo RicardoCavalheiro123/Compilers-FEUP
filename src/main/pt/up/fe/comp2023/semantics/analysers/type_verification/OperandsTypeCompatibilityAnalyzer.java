@@ -41,6 +41,8 @@ public class OperandsTypeCompatibilityAnalyzer extends SemanticVisitor {
                         Integer.parseInt(node.get("colStart")),
                         "Operand types are not compatible for Binary expression!"
                 ));
+
+            return 0;
         }
 
         return 0;

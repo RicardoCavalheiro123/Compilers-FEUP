@@ -19,6 +19,7 @@ public class ArrayAccessAnalyzer extends SemanticVisitor {
     protected void buildVisitor() {
         setDefaultVisit(this::defaultVisit);
         addVisit("ArrayAccess", this::visitArrayAccess);
+        addVisit("ArrayAssign", this::visitArray);
     }
 
     public ArrayAccessAnalyzer() {
@@ -43,6 +44,8 @@ public class ArrayAccessAnalyzer extends SemanticVisitor {
                         Integer.parseInt(node.get("colStart")),
                         "Accessing arrays is only allowed on arrays!"
             ));
+
+            return 0;
         }
 
         //Checks if array is of type INTEGER, if not reports error
@@ -55,6 +58,8 @@ public class ArrayAccessAnalyzer extends SemanticVisitor {
                         Integer.parseInt(node.get("colStart")),
                         "Accessing arrays is only allowed on arrays!"
             ));
+
+            return 0;
         }
 
         //Checks if array access index is of type INTEGER, if not reports error
@@ -67,6 +72,8 @@ public class ArrayAccessAnalyzer extends SemanticVisitor {
                         Integer.parseInt(node.get("colStart")),
                         "Index to access array is not of type integer!"
                 ));
+
+            return 0;
         }
 
         /*if (!Objects.equals(this.getJmmNodeType(ancestor, symbolTable).getName(), "int")) {
@@ -79,6 +86,40 @@ public class ArrayAccessAnalyzer extends SemanticVisitor {
                         "Accessing arrays is only allowed on arrays!"
             ));
         }*/
+
+        return 0;
+    }
+
+    public Integer visitArray(JmmNode node, SymbolTable symbolTable) {
+        var index = node.getJmmChild(0);
+        var value = node.getJmmChild(1);
+        var t1 = getJmmNodeType(index, symbolTable);
+        var t2 = getJmmNodeType(index, symbolTable);
+
+        if(!(Objects.equals(getJmmNodeType(index, symbolTable), new Type("int", false)))) {
+            reportsArrayAccess.add(
+                new Report(
+                        ReportType.ERROR,
+                        Stage.SEMANTIC,
+                        Integer.parseInt(node.get("lineStart")),
+                        Integer.parseInt(node.get("colStart")),
+                        "Index to access array is not of type integer!"
+                ));
+
+            return 0;
+        }
+        if(!(Objects.equals(getJmmNodeType(value, symbolTable), new Type("int", false)))) {
+            reportsArrayAccess.add(
+                new Report(
+                        ReportType.ERROR,
+                        Stage.SEMANTIC,
+                        Integer.parseInt(node.get("lineStart")),
+                        Integer.parseInt(node.get("colStart")),
+                        "Value assigned to array position not of integer type!"
+                ));
+
+            return 0;
+        }
 
         return 0;
     }

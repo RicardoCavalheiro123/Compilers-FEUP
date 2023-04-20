@@ -116,10 +116,11 @@ public class OllirToJasmin {
         StringBuilder jasminCodeBuilder = new StringBuilder();
 
         Element dest = instruction.getDest();
+        if(dest instanceof ArrayOperand) {
+            ArrayOperand aop = ((ArrayOperand) dest);
+            jasminCodeBuilder.append("aload").append(JasminUtils.regCode(method.getVarTable().get(aop.getName()).getVirtualReg())).append("\n\t");
+            jasminCodeBuilder.append(JasminUtils.loadElement(method, aop.getIndexOperands().get(0))).append("\n\t");
 
-        if(dest.getType().getTypeOfElement() == ElementType.ARRAYREF) {
-            Operand op = (Operand) dest;
-            jasminCodeBuilder.append(JasminUtils.loadElement(method, op));
         } else {
             if (instruction.getRhs().getInstType() == InstructionType.BINARYOPER) {
                 BinaryOpInstruction binaryOpInstruction = (BinaryOpInstruction) instruction.getRhs();
@@ -260,7 +261,7 @@ public class OllirToJasmin {
         if (instruction.getOperation().getOpType() == OperationType.NOTB) {
             jasminCodeBuilder.append(" 1");
         } else {
-            jasminCodeBuilder.append("; Invalid unary operation");
+            throw new RuntimeException("Unary operation not supported");
         }
 
         return jasminCodeBuilder.toString();
@@ -277,7 +278,6 @@ public class OllirToJasmin {
         jasminCodeBuilder.append(JasminUtils.loadElement(method, right));
         jasminCodeBuilder.append("\n\t");
         jasminCodeBuilder.append(JasminUtils.operationCode(instruction.getOperation()));
-        jasminCodeBuilder.append("\n\t");
 
         return jasminCodeBuilder.toString();
     }

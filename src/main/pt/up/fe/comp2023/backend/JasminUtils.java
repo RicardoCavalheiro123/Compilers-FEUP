@@ -32,7 +32,7 @@ public class JasminUtils {
         } else if (element instanceof ArrayOperand arrayOperand) {
             ArrayOperand operand = (ArrayOperand) element;
 
-            jasminCodeBuilder.append("aload").append(JasminUtils.regCode(method.getVarTable().get(operand.getName()).getVirtualReg())).append("\n"); // load array (ref)
+            jasminCodeBuilder.append("aload").append(JasminUtils.regCode(method.getVarTable().get(operand.getName()).getVirtualReg()));
             jasminCodeBuilder.append("\n\t");
             jasminCodeBuilder.append(loadElement(method, arrayOperand.getIndexOperands().get(0)));
             jasminCodeBuilder.append("\n\t");
@@ -49,10 +49,10 @@ public class JasminUtils {
                     op.getType().getTypeOfElement() == ElementType.THIS) {
                 jasminCodeBuilder.append("aload").append(regCode(method.getVarTable().get(op.getName()).getVirtualReg()));
             } else {
-                jasminCodeBuilder.append("; loadElement not implemented for Operand ").append(element.getClass().toString()).append(".");
+                throw new RuntimeException("loadElement not implemented for Operand " + element.getClass().toString() + ".");
             }
         } else {
-            jasminCodeBuilder.append("; loadElement not implemented for ").append(element.getClass().toString()).append(".");
+            throw new RuntimeException("loadElement not implemented for " + element.getClass().toString() + ".");
         }
 
         return jasminCodeBuilder.toString();
@@ -65,14 +65,18 @@ public class JasminUtils {
 
         if (op.getType().getTypeOfElement() == ElementType.INT32 ||
                 op.getType().getTypeOfElement() == ElementType.BOOLEAN) {
-            jasminCodeBuilder.append("istore").append(regCode(method.getVarTable().get(op.getName()).getVirtualReg()));
+            if (method.getVarTable().get(op.getName()).getVarType().getTypeOfElement() == ElementType.ARRAYREF){
+                jasminCodeBuilder.append("iastore");
+            } else {
+                jasminCodeBuilder.append("istore").append(regCode(method.getVarTable().get(op.getName()).getVirtualReg()));
+            }
         } else if (op.getType().getTypeOfElement() == ElementType.STRING ||
                 op.getType().getTypeOfElement() == ElementType.OBJECTREF ||
                 op.getType().getTypeOfElement() == ElementType.ARRAYREF ||
                 op.getType().getTypeOfElement() == ElementType.THIS) {
             jasminCodeBuilder.append("astore").append(regCode(method.getVarTable().get(op.getName()).getVirtualReg()));
         } else {
-            jasminCodeBuilder.append("; storeElement not implemented for Operand ").append(element.getClass().toString()).append(".");
+            throw new RuntimeException("storeElement not implemented for Operand " + element.getClass().toString() + ".");
         }
 
         return jasminCodeBuilder.toString();
@@ -104,7 +108,7 @@ public class JasminUtils {
             case LTE -> jasminCodeBuilder.append("if_icmple");
             case GTE -> jasminCodeBuilder.append("if_icmpge");
 
-            default -> jasminCodeBuilder.append("; operationCode not implemented for ").append(operation.getOpType().toString()).append(".");
+            default -> throw new UnsupportedOperationException("Operation not implemented: " + operation.getOpType());
         }
 
         return jasminCodeBuilder.toString();
@@ -127,7 +131,7 @@ public class JasminUtils {
             case STRING -> jasminCodeBuilder.append("Ljava/lang/String;");
             case VOID -> jasminCodeBuilder.append("V");
             case OBJECTREF -> jasminCodeBuilder.append("L").append(((ClassType) type).getName().replace(".", "/")).append(";");
-            default -> jasminCodeBuilder.append("; getTypeCode not implemented for ").append(type).append(".");
+            default -> throw new UnsupportedOperationException("Type not implemented: " + typeOfElement);
         }
 
         return jasminCodeBuilder.toString();
