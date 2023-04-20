@@ -49,6 +49,8 @@ public class AssigneeAssignedCompatibilityAnalyzer extends SemanticVisitor {
                             Integer.parseInt(node.get("colStart")),
                             "Assignee is not of assigned type!"
                     ));
+
+                return 0;
             }
 
             return 0;
@@ -63,19 +65,21 @@ public class AssigneeAssignedCompatibilityAnalyzer extends SemanticVisitor {
                         Integer.parseInt(node.get("colStart")),
                         "Assignee is not of assigned type!"
             ));
+
+            return 0;
         }
 
         if(Objects.equals(node.getJmmParent().getKind(), "MainMethod")) {
             if(symbolTable.getFields().size() == 0) return 0;
 
-            //Check parameters
-            for(var param: symbolTable.findMethod("main").getParameters()) {
-                if(Objects.equals(param.getName(), node.get("id"))) return 0;
-            }
-
             //Check local method variables
             for(var var: symbolTable.findMethod("main").getLocalVariables()) {
                 if(Objects.equals(var.getName(), node.get("id"))) return 0;
+            }
+
+            //Check parameters
+            for(var param: symbolTable.findMethod("main").getParameters()) {
+                if(Objects.equals(param.getName(), node.get("id"))) return 0;
             }
 
             for(var field: symbolTable.getFields()) {
