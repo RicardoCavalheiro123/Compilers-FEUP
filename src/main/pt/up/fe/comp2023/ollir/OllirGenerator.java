@@ -17,8 +17,8 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
     private Integer tempcounter = 0;
     private Boolean assign = false;
     private Symbol symbol = null;
-
     private String var_type = "";
+
     public String getOllirCode() {
         return ollirCode.toString();
     }
@@ -55,8 +55,20 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
         addVisit("ArrayAccess", this::dealWithArrayAccess);
         addVisit("ArrayAssign", this::dealWithArrayAssign);
         addVisit("ArrayLength", this::dealWithArrayLength);
+        addVisit("StringType", this::dealWithStringType);
+        addVisit("ObjectType", this::dealWithObjectType);
 
 
+    }
+
+    private String dealWithObjectType(JmmNode jmmNode, StringBuilder ollir) {
+        this.ollirCode.append("." + jmmNode.get("typeName"));
+        return null;
+    }
+
+    private String dealWithStringType(JmmNode jmmNode, StringBuilder ollir) {
+            this.ollirCode.append("." + jmmNode.get("typeName"));
+            return null;
     }
 
     private String dealWithArrayLength(JmmNode jmmNode, StringBuilder ollir) {

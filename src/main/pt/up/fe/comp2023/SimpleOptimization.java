@@ -14,14 +14,13 @@ public class SimpleOptimization implements JmmOptimization {
 
         StringBuilder ollir = new StringBuilder();
 
-        SymbolTable s = (SymbolTable) jmmSemanticsResult.getSymbolTable();
+
         OllirGenerator visitor = new OllirGenerator((SymbolTable) jmmSemanticsResult.getSymbolTable(), ollir);
 
         JmmNode root = jmmSemanticsResult.getRootNode();
 
         visitor.visit(root, new StringBuilder(""));
 
-        System.out.println(visitor.getOllirCode());
 
         return new OllirResult(jmmSemanticsResult, visitor.getOllirCode(),jmmSemanticsResult.getReports());
     }
