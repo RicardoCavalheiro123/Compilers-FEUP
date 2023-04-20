@@ -63,6 +63,7 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
     }
 
     private String dealWithObjectType(JmmNode jmmNode, StringBuilder ollir) {
+
         this.ollirCode.append("." + jmmNode.get("typeName"));
         return null;
     }
@@ -200,15 +201,7 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
     }
 
     private String dealWithBinaryOp(JmmNode jmmNode, StringBuilder ollir) {
-        /*
-        visit(jmmNode.getChildren().get(0), ollir);
-        if(jmmNode.get("op").equals("&&") || jmmNode.get("op").equals("||"))
-            this.ollirCode.append(" " + jmmNode.get("op") + ".bool ");
-        else
-            this.ollirCode.append(" " + jmmNode.get("op") + ".i32 ");
 
-        visit(jmmNode.getChildren().get(1), ollir);
-        return null;*/
         String type = "";
 
         var right = visit(jmmNode.getChildren().get(1), ollir);
@@ -231,7 +224,7 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
     }
 
     private String dealWithAssign(JmmNode jmmNode, StringBuilder ollir) {
-
+        int isparameter = -1;
         //Check if is a parameter
         assign = true;
         boolean fieldOfClass = false;
@@ -239,6 +232,7 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
         if(this.symbolTable.isParameter(this.currentMethod, jmmNode.get("id"))){
             this.symbol = this.symbolTable.getParameter(this.currentMethod, jmmNode.get("id"));
             var_type = getVariableType(symbol.getType(), ollir);
+            isparameter = this.symbolTable.getParameterIndex(this.currentMethod, jmmNode.get("id")) + 1;
         }
 
         //Check if it is a field
@@ -291,7 +285,12 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
             }
             String type = getVariableType(symbol.getType(), ollir);
 
-            if(fieldOfClass){
+            if(isparameter!=-1){
+                this.ollirCode.append("$" + isparameter + ".");
+
+            }
+
+            else if(fieldOfClass){
                 this.ollirCode.append("putfield(this," + jmmNode.get("id") + type + "," + temp + ").V;\n");
                 return null;
             }
@@ -308,11 +307,12 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
     }
     private String dealWithIdentifier(JmmNode jmmNode, StringBuilder ollir) {
 
-
+        int parameter = -1;
         //Check if is a parameter
         if(this.symbolTable.isParameter(this.currentMethod, jmmNode.get("id"))){
             symbol = this.symbolTable.getParameter(this.currentMethod, jmmNode.get("id"));
             var_type = getVariableType(symbol.getType(), ollir);
+            parameter = this.symbolTable.getParameterIndex(this.currentMethod, jmmNode.get("id")) + 1;
 
         }
         //Check if it is a field
@@ -325,14 +325,19 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
         else if(this.symbolTable.isFieldOfClass(jmmNode.get("id"))){
             symbol = this.symbolTable.getFieldOfClass(jmmNode.get("id"));
             var_type = getVariableType(symbol.getType(), ollir);
-            /*this.ollirCode.append("temp" + tempcounter + var_type + ":=" + var_type + " getfield(this," + jmmNode.get("id") + var_type + ")" + var_type + ";\n");
+            this.ollirCode.append("temp" + tempcounter + var_type + ":=" + var_type + " getfield(this," + jmmNode.get("id") + var_type + ")" + var_type + ";\n");
             tempcounter++;
-            return "temp" + (tempcounter-1) + var_type;*/
+            return "temp" + (tempcounter-1) + var_type;
         }
+        String res = "";
+        if(parameter != -1){
+            res += "$" + parameter + ".";
+        }
+
         if(assign){
-            return jmmNode.get("id") + var_type;
+            return res + jmmNode.get("id") + var_type;
         }
-        this.ollirCode.append(jmmNode.get("id") + getVariableType(symbol.getType(), ollir));
+        this.ollirCode.append(res + jmmNode.get("id") + getVariableType(symbol.getType(), ollir));
 
 
         return null;
@@ -640,12 +645,7 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
         }
 
         //Check if it is a field
-        else if(this.symbolTable.isFieldOfMethod(this.currentMethod,name)){
-            return false;
-
-
-        }
-        return true;
+        else return !this.symbolTable.isFieldOfMethod(this.currentMethod, name);
     }
 
 }

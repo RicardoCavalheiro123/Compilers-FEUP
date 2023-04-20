@@ -109,4 +109,8 @@ public class SymbolTable implements pt.up.fe.comp.jmm.analysis.table.SymbolTable
     public Symbol getFieldOfClass(String id) {
         return fields.keySet().stream().filter(symbol -> symbol.getName().equals(id)).findFirst().get();
     }
+
+    public int getParameterIndex(String currentMethod, String id) {
+        return methods.get(currentMethod).getParameters().indexOf(getParameter(currentMethod, id));
+    }
 }

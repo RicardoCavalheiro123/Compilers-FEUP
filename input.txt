@@ -2,20 +2,14 @@ import io;
 
 class A {
     int a;
-    int b;
 
-    public int x(){
-        int a;
+    public int x(int b, int a){
+        int b = 0;
         a = 10;
-        b = 20;
-        a = 5 + 5 + b * a;
-        io.print(a);
+        b = a;
+        io.println(a);
         return a;
     }
 
-    public static void main(String[] args){
-        A a;
-        a = new A();
-        a.x();
-    }
+
 }
