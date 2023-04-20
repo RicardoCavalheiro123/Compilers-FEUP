@@ -19,7 +19,7 @@ public class ArrayAccessAnalyzer extends SemanticVisitor {
     protected void buildVisitor() {
         setDefaultVisit(this::defaultVisit);
         addVisit("ArrayAccess", this::visitArrayAccess);
-        addVisit("ArrayAssign", this::visitArrayAccess);
+        addVisit("ArrayAssign", this::visitArray);
     }
 
     public ArrayAccessAnalyzer() {
@@ -33,6 +33,8 @@ public class ArrayAccessAnalyzer extends SemanticVisitor {
     public Integer visitArrayAccess(JmmNode node, SymbolTable symbolTable) {
         var ancestor = node.getJmmChild(0);
         var index = node.getJmmChild(1);
+        var t1 = getJmmNodeType(ancestor, symbolTable);
+        var t2 = getJmmNodeType(index, symbolTable);
 
         //If first is not an array and is trying to be accessed as an array, report error
         if(!(this.getJmmNodeType(ancestor, symbolTable)).isArray()) {
@@ -44,10 +46,12 @@ public class ArrayAccessAnalyzer extends SemanticVisitor {
                         Integer.parseInt(node.get("colStart")),
                         "Accessing arrays is only allowed on arrays!"
             ));
+
+            return 0;
         }
 
         //Checks if array is of type INTEGER, if not reports error
-        /*if(!Objects.equals(this.getJmmNodeType(ancestor, symbolTable), new Type("int", true))) {
+        if(!Objects.equals(this.getJmmNodeType(ancestor, symbolTable), new Type("int", true))) {
             reportsArrayAccess.add(
                 new Report(
                         ReportType.ERROR,
@@ -56,7 +60,9 @@ public class ArrayAccessAnalyzer extends SemanticVisitor {
                         Integer.parseInt(node.get("colStart")),
                         "Accessing arrays is only allowed on arrays!"
             ));
-        }*/
+
+            return 0;
+        }
 
         //Checks if array access index is of type INTEGER, if not reports error
         if(!Objects.equals(this.getJmmNodeType(index, symbolTable), new Type("int", false))) {
@@ -68,6 +74,8 @@ public class ArrayAccessAnalyzer extends SemanticVisitor {
                         Integer.parseInt(node.get("colStart")),
                         "Index to access array is not of type integer!"
                 ));
+
+            return 0;
         }
 
         /*if (!Objects.equals(this.getJmmNodeType(ancestor, symbolTable).getName(), "int")) {
@@ -80,6 +88,38 @@ public class ArrayAccessAnalyzer extends SemanticVisitor {
                         "Accessing arrays is only allowed on arrays!"
             ));
         }*/
+
+        return 0;
+    }
+
+    public Integer visitArray(JmmNode node, SymbolTable symbolTable) {
+        var index = node.getJmmChild(0);
+        var value = node.getJmmChild(1);
+        var t1 = getJmmNodeType(index, symbolTable);
+        var t2 = getJmmNodeType(index, symbolTable);
+
+        if(!(Objects.equals(getJmmNodeType(index, symbolTable), new Type("int", false)))) {
+            reportsArrayAccess.add(
+                new Report(
+                        ReportType.ERROR,
+                        Stage.SEMANTIC,
+                        Integer.parseInt(node.get("lineStart")),
+                        Integer.parseInt(node.get("colStart")),
+                        "Index to access array is not of type integer!"
+                ));
+
+            return 0;
+        }
+        else if(!(Objects.equals(getJmmNodeType(value, symbolTable), new Type("int", false)))) {
+            reportsArrayAccess.add(
+                new Report(
+                        ReportType.ERROR,
+                        Stage.SEMANTIC,
+                        Integer.parseInt(node.get("lineStart")),
+                        Integer.parseInt(node.get("colStart")),
+                        "Value assigned to array position not of integer type!"
+                ));
+        }
 
         return 0;
     }
