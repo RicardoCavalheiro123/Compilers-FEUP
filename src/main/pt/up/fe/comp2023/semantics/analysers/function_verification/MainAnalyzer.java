@@ -40,6 +40,8 @@ public class MainAnalyzer extends SemanticVisitor {
                     Integer.parseInt(node.get("colStart")),
                     "This cannot be used in main method!"
                 ));
+
+            return 0;
         }
 
         return 0;

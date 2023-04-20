@@ -49,6 +49,8 @@ public class MethodArgumentsCompatibilityAnalyzer extends SemanticVisitor {
                                 Integer.parseInt(node.get("colStart")),
                                 "Method call argument number does not correspond to method declaration!"
                         ));
+
+                return 0;
             } else {
                 for (int i = 1; i <= method_arguments.size(); i++) {
                     Type called_type = getJmmNodeType(node.getJmmChild(i), symbolTable);

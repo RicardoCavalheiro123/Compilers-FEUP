@@ -49,6 +49,8 @@ public class AssigneeAssignedCompatibilityAnalyzer extends SemanticVisitor {
                             Integer.parseInt(node.get("colStart")),
                             "Assignee is not of assigned type!"
                     ));
+
+                return 0;
             }
 
             return 0;
@@ -63,6 +65,8 @@ public class AssigneeAssignedCompatibilityAnalyzer extends SemanticVisitor {
                         Integer.parseInt(node.get("colStart")),
                         "Assignee is not of assigned type!"
             ));
+
+            return 0;
         }
 
         if(Objects.equals(node.getJmmParent().getKind(), "MainMethod")) {

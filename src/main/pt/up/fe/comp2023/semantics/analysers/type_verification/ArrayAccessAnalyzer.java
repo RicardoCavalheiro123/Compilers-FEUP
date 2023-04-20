@@ -33,8 +33,6 @@ public class ArrayAccessAnalyzer extends SemanticVisitor {
     public Integer visitArrayAccess(JmmNode node, SymbolTable symbolTable) {
         var ancestor = node.getJmmChild(0);
         var index = node.getJmmChild(1);
-        var t1 = getJmmNodeType(ancestor, symbolTable);
-        var t2 = getJmmNodeType(index, symbolTable);
 
         //If first is not an array and is trying to be accessed as an array, report error
         if(!(this.getJmmNodeType(ancestor, symbolTable)).isArray()) {
@@ -110,7 +108,7 @@ public class ArrayAccessAnalyzer extends SemanticVisitor {
 
             return 0;
         }
-        else if(!(Objects.equals(getJmmNodeType(value, symbolTable), new Type("int", false)))) {
+        if(!(Objects.equals(getJmmNodeType(value, symbolTable), new Type("int", false)))) {
             reportsArrayAccess.add(
                 new Report(
                         ReportType.ERROR,
@@ -119,6 +117,8 @@ public class ArrayAccessAnalyzer extends SemanticVisitor {
                         Integer.parseInt(node.get("colStart")),
                         "Value assigned to array position not of integer type!"
                 ));
+
+            return 0;
         }
 
         return 0;

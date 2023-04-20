@@ -42,6 +42,8 @@ public class ExpressionConditionAnalyzer extends SemanticVisitor {
                         Integer.parseInt(node.get("colStart")),
                         "Condition in expression not Boolean type!"
             ));
+
+            return 0;
         }
         return 0;
     }

@@ -50,6 +50,8 @@ public class MethodReturnTypeAnalyzer extends SemanticVisitor {
                             Integer.parseInt(node.get("colStart")),
                             "Return type does not match method declaration!"
                         ));
+
+                    return 0;
                 }
 
                 return 0;
@@ -66,6 +68,8 @@ public class MethodReturnTypeAnalyzer extends SemanticVisitor {
                     Integer.parseInt(node.get("colStart")),
                     "Return type does not match method declaration!"
                 ));
+
+            return 0;
         }
 
         return 0;
