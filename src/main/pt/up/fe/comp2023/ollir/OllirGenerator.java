@@ -55,8 +55,9 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
         addVisit("ArrayAccess", this::dealWithArrayAccess);
         addVisit("ArrayAssign", this::dealWithArrayAssign);
         addVisit("ArrayLength", this::dealWithArrayLength);
+        /*
         addVisit("StringType", this::dealWithStringType);
-        addVisit("ObjectType", this::dealWithObjectType);
+        addVisit("ObjectType", this::dealWithObjectType);*/
 
 
     }
@@ -290,10 +291,10 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
             }
             String type = getVariableType(symbol.getType(), ollir);
 
-            /*if(fieldOfClass){
+            if(fieldOfClass){
                 this.ollirCode.append("putfield(this," + jmmNode.get("id") + type + "," + temp + ").V;\n");
                 return null;
-            }*/
+            }
 
 
             this.ollirCode.append(jmmNode.get("id") + type + " :=" + type + " " + temp + ";\n");
