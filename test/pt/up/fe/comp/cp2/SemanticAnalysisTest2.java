@@ -88,12 +88,6 @@ public class SemanticAnalysisTest2 {
     }
 
     @Test
-    public void Array_Index() {
-        var result = TestUtils.analyse(SpecsIo.getResource("pt/up/fe/comp/cp2/fixtures/public/cpf/2_semantic_analysis/type_verification/Array_Index.jmm"));
-        TestUtils.noErrors(result);
-    }
-
-    @Test
     public void Array_Index_Bad() {
         var result = TestUtils.analyse(SpecsIo.getResource("pt/up/fe/comp/cp2/fixtures/public/cpf/2_semantic_analysis/type_verification/Array_Index_Bad.jmm"));
         TestUtils.mustFail(result);

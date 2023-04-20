@@ -12,7 +12,6 @@ gradle*
 !libs-jmm/**/*.class
 
 # Test folders
-test/pt/up/fe/comp/cp2/fixtures/public/
 test/pt/up/fe/comp/cp2/Backend2Test.java
 test/pt/up/fe/comp/cp2/BackendCallTest.java
 test/pt/up/fe/comp/cp2/BackendBasicTest.java
