@@ -1,16 +1,20 @@
-class OllirToJasminInvokeVirtual {
+import io;
+
+class A {
     int a;
-    public static void main(String[] args) {
-        int a;
-        a = 5;
 
+    public int x(){
+        a = 10;
+        io.print(a);
+        return a;
     }
-    public Ollir getA(int a) {
-        a = 10 + a;
-        Ollir b;
-        b = new Ollir();
-        b = 2;
-        return b;
 
-
+    public static void main(String[] args){
+        A a;
+        int b;
+        a = new A();
+        a.x();
+        b = a.x();
+        io.print(a.x());
+    }
 }

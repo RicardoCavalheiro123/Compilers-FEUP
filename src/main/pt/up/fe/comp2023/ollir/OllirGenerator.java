@@ -155,9 +155,9 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
 
         }
 
-        if(jmmNode.getJmmParent().getKind().equals("BinaryOp")){
+        if(jmmNode.getJmmParent().getKind().equals("BinaryOp") || jmmNode.getJmmParent().getKind().equals("MethodCall")){
             this.ollirCode.append("temp" + tempcounter + var_type + " :=" + var_type + " ");
-            this.ollirCode.append("invokevirtual(" + jmmNode.getChildren().get(0).get(var) +"," + "\"" + jmmNode.get("method")+ "\"" +result+ ")" + var_type + ";\n");
+            this.ollirCode.append("invokevirtual(" + jmmNode.getChildren().get(0).get(var) + getTypeOfVariable(this.currentMethod,jmmNode.getChildren().get(0).get(var)) +"," + "\"" + jmmNode.get("method")+ "\"" +result+ ")" + var_type + ";\n");
             tempcounter++;
             return "temp" + (tempcounter-1) + var_type;
         }
