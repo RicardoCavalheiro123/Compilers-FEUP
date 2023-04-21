@@ -210,9 +210,9 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
             type = var_type;
         }
         else{
-            type = getVariableType(symbol.getType(), ollir);
+            type = var_type;
         }
-        if(jmmNode.getJmmParent().getKind().equals("Assign")){
+        if(jmmNode.getJmmParent().getKind().equals("Assign") || jmmNode.getJmmParent().getKind().equals("NewIntArray")){
             return left + " " + jmmNode.get("op") + type + " " + right;
         }
 
