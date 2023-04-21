@@ -11,10 +11,7 @@ class A {
 
     public static void main(String[] args){
         A a;
-        int b;
         a = new A();
         a.x();
-        b = a.x();
-        io.print(a.x());
     }
 }
