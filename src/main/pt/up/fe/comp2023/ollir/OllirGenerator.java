@@ -55,11 +55,18 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
         addVisit("ArrayAccess", this::dealWithArrayAccess);
         addVisit("ArrayAssign", this::dealWithArrayAssign);
         addVisit("ArrayLength", this::dealWithArrayLength);
-        /*
-        addVisit("StringType", this::dealWithStringType);
+        addVisit("This", this::dealWithThis);
+
+        /*addVisit("StringType", this::dealWithStringType);
         addVisit("ObjectType", this::dealWithObjectType);*/
 
 
+    }
+
+    private String dealWithThis(JmmNode jmmNode, StringBuilder ollir) {
+        if(assign) return "this." + symbolTable.getClassName();
+        this.ollirCode.append("this." + symbolTable.getClassName());
+        return null;
     }
 
     private String dealWithObjectType(JmmNode jmmNode, StringBuilder ollir) {
