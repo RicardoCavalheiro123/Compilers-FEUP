@@ -1,39 +1,16 @@
-import io;
-import Quicksort;
-import GetterAndSetter;
-
-class CompileBasic extends GetterAndSetter {
-
-    int intField;
-    boolean boolField;
-    int[] boas;
-
-    public int method1(int intField) {
-        int intField;
-        boolean boolLocal1;
-
-        intField = 1 + 2;
-
-        return 0;
-    }
-
-    public boolean method2(int intParam1, boolean boolParam1) {
-        return boolParam1;
-    }
-
-    public int method3() {
+class OllirToJasminInvokeVirtual {
+    int a;
+    public static void main(String[] args) {
         int a;
-        int b;
-        int c;
+        a = 5;
 
-        a = 1;
-        b = 2;
-        c = a;
-
-        io.println(c);
-
-        return a + b;
     }
+    public Ollir getA(int a) {
+        a = 10 + a;
+        Ollir b;
+        b = new Ollir();
+        b = 2;
+        return b;
 
 
 }

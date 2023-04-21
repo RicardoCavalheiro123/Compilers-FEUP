@@ -32,9 +32,9 @@ public class SimpleAnalysis implements JmmAnalysis {
             visitor.visit(root, null);
 
             SymbolTable symbolTable = visitor.getSymbolTable();
-
-            reports.addAll(visitor.getReports());
 /*
+            reports.addAll(visitor.getReports());
+
             List<SemanticVisitor> semantic_analyzers = Arrays.asList(
                 new ArrayAccessAnalyzer(),
                 new OperandsTypeCompatibilityAnalyzer(),
