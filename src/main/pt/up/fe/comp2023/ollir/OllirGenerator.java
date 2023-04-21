@@ -231,7 +231,7 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
 
 
         //Check if it is a variable
-        if(this.symbolTable.isLocalVar(this.currentMethod,jmmNode.get("id")) && false){
+        if(this.symbolTable.isLocalVar(this.currentMethod,jmmNode.get("id"))){
             this.symbol = this.symbolTable.getLocalVar(this.currentMethod, jmmNode.get("id"));
             if(symbol.getType().isArray()) {
                 var_type = ".array" + getVariableType(symbol.getType(), ollir);
@@ -319,7 +319,7 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
 
         int parameter = -1;
 
-        if(this.symbolTable.isLocalVar(this.currentMethod,jmmNode.get("id")) && false){
+        if(this.symbolTable.isLocalVar(this.currentMethod,jmmNode.get("id"))){
             symbol = this.symbolTable.getLocalVar(this.currentMethod, jmmNode.get("id"));
             var_type = getVariableType(symbol.getType(), ollir);
 
