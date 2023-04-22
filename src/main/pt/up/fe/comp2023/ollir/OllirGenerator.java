@@ -177,10 +177,11 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
             this.ollirCode.append("invokestatic(" + jmmNode.getChildren().get(0).get(var) +"," + "\"" + jmmNode.get("method")+ "\"" +result+ ").V");
         }
         else{
+            String return_type = getReturnOfMethod(jmmNode.get("method"));
             if(jmmNode.getJmmParent().getKind().equals("Assign")){
                 return "invokevirtual(" + jmmNode.getChildren().get(0).get(var) + getTypeOfVariable(this.currentMethod,jmmNode.getChildren().get(0).get(var) ) +"," + "\"" + jmmNode.get("method")+ "\"" +result+ ")" + var_type + "";
             }
-            this.ollirCode.append("invokevirtual(" + jmmNode.getChildren().get(0).get(var) + getTypeOfVariable(this.currentMethod,jmmNode.getChildren().get(0).get(var) ) +"," + "\"" + jmmNode.get("method")+ "\"" +result+ ")" + ".V" + "");
+            this.ollirCode.append("invokevirtual(" + jmmNode.getChildren().get(0).get(var) + getTypeOfVariable(this.currentMethod,jmmNode.getChildren().get(0).get(var) ) +"," + "\"" + jmmNode.get("method")+ "\"" +result+ ")" + return_type + "");
         }
 
 
@@ -188,6 +189,12 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
 
         assign = false;
         return null;
+    }
+
+    private String getReturnOfMethod(String method) {
+
+        Type type = this.symbolTable.getMethod(method).getReturnType();
+        return getVariableType(type, new StringBuilder());
     }
 
     private String dealWithNewObject(JmmNode jmmNode, StringBuilder ollir) {
