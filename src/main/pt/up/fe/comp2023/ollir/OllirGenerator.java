@@ -192,9 +192,11 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
     }
 
     private String getReturnOfMethod(String method) {
-
-        Type type = this.symbolTable.getMethod(method).getReturnType();
-        return getVariableType(type, new StringBuilder());
+        try {
+            return getVariableType(this.symbolTable.getMethod(method).getReturnType(), new StringBuilder());
+        } catch (Exception e) {
+            return ".V";
+        }
     }
 
     private String dealWithNewObject(JmmNode jmmNode, StringBuilder ollir) {
