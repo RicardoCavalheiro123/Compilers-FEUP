@@ -7,6 +7,13 @@ import pt.up.fe.specs.util.SpecsIo;
 public class SemanticAnalysisTest2 {
 
     @Test
+    public void test() {
+
+        var result = TestUtils.analyse(SpecsIo.getResource("pt/up/fe/comp/cp2/fixtures/public/cpf/2_semantic_analysis/calls/test.jmm"));
+        TestUtils.noErrors(result);
+    }
+
+    @Test
     public void PrintOtherClassInline() {
 
         var result = TestUtils.analyse(SpecsIo.getResource("pt/up/fe/comp/cp2/fixtures/public/cpf/2_semantic_analysis/calls/PrintOtherClassInline.jmm"));

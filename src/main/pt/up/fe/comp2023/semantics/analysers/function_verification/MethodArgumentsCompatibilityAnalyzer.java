@@ -37,6 +37,10 @@ public class MethodArgumentsCompatibilityAnalyzer extends SemanticVisitor {
         }
         else {
 
+            var imprt = getJmmNodeType(node.getJmmChild(0), symbolTable);
+
+            if(imprt != null && imported(imprt.getName(), symbolTable)) return 0;
+
             var method_arguments = symbolTable.findMethod(node.get("method")).getParameters();
             var method_call_arguments_size = node.getChildren().size() - 1;
 
