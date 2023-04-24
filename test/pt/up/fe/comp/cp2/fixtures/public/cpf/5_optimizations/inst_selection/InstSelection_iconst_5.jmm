@@ -1,7 +1,0 @@
-class InstSelection_iconst_5 {
-	public int foo() {
-		int a;
-		a = 5;
-		return a;
-	}
-}

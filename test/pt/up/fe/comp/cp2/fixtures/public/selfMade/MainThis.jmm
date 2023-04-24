@@ -1,5 +1,0 @@
-class MainThis {
-    public static void main(String[] args){
-        this;
-    }
-}
