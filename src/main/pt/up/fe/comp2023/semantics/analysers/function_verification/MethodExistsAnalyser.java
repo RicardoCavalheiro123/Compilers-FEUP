@@ -10,6 +10,7 @@ import pt.up.fe.comp2023.semantics.symbol_table.MethodTable;
 import pt.up.fe.comp2023.semantics.symbol_table.SymbolTable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -31,6 +32,25 @@ public class MethodExistsAnalyser extends SemanticVisitor {
     public List<Report> getReports() { return this.reportsMethodExists; }
 
     public Integer visitMethodExists(JmmNode node, SymbolTable symbolTable) {
+
+
+        if(!Objects.equals(symbolTable.getSuper(), "")) {
+            var exists = "[" + symbolTable.getSuper() + "]";
+
+            if(!symbolTable.getImports().contains(exists)) {
+                reportsMethodExists.add(
+                    new Report(
+                        ReportType.ERROR,
+                        Stage.SEMANTIC,
+                        Integer.parseInt(node.get("lineStart")),
+                        Integer.parseInt(node.get("colStart")),
+                        "Extended class has to be imported!"
+                    ));
+
+            return 0;
+            }
+        }
+
 
         if(Objects.equals(node.getKind(), "MethodCall")) {
             var a = getJmmNodeType(node.getJmmChild(0), symbolTable);

@@ -49,16 +49,14 @@ public class SimpleAnalysis implements JmmAnalysis {
 
             System.out.println("Performing semantic analysis...");
 
-
-
             for(SemanticVisitor analyzer: semantic_analyzers) {
                 analyzer.visit(root, symbolTable);
                 reports.addAll(analyzer.getReports());
             }
 
             return new JmmSemanticsResult(jmmParserResult, symbolTable, reports);
-
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
             return null;
         }

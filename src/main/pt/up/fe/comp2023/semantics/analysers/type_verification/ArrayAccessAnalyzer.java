@@ -76,25 +76,12 @@ public class ArrayAccessAnalyzer extends SemanticVisitor {
             return 0;
         }
 
-        /*if (!Objects.equals(this.getJmmNodeType(ancestor, symbolTable).getName(), "int")) {
-            reportsArrayAccess.add(
-                new Report(
-                        ReportType.ERROR,
-                        Stage.SEMANTIC,
-                        Integer.parseInt(node.get("lineStart")),
-                        Integer.parseInt(node.get("colStart")),
-                        "Accessing arrays is only allowed on arrays!"
-            ));
-        }*/
-
         return 0;
     }
 
     public Integer visitArray(JmmNode node, SymbolTable symbolTable) {
         var index = node.getJmmChild(0);
         var value = node.getJmmChild(1);
-        var t1 = getJmmNodeType(index, symbolTable);
-        var t2 = getJmmNodeType(index, symbolTable);
 
         if(!(Objects.equals(getJmmNodeType(index, symbolTable), new Type("int", false)))) {
             reportsArrayAccess.add(
@@ -120,6 +107,8 @@ public class ArrayAccessAnalyzer extends SemanticVisitor {
 
             return 0;
         }
+
+
 
         return 0;
     }
