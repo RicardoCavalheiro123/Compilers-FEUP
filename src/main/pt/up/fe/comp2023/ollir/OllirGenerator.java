@@ -85,7 +85,7 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
         for(JmmNode child : jmmNode.getChildren()){
             result = visit(child, ollir);
         }
-        this.ollirCode.append("temp" + tempcounter + ".i32" + " :=.i32 " + "arraylength(" + result + ")" + ".i32.i32;\n");
+        this.ollirCode.append("temp" + tempcounter + ".i32" + " :=.i32 " + "arraylength(" + result + ")" + ".i32;\n");
         tempcounter++;
         return "temp" + (tempcounter-1) + ".i32";
     }
