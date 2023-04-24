@@ -2,19 +2,17 @@ import io;
 
 class A {
     int a;
-    int b;
 
     public int x(){
-        int[] a;
-        a = new int[5];
-        a[0] = 1;
-        a[1] = 2;
-        io.println(a[0]);
-        return a[1];
+        int a;
+        a = 10;
+        io.print(a);
+        return a;
     }
 
     public static void main(String[] args){
-
-
+        A a;
+        a = new A();
+        a.x();
     }
 }
