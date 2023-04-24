@@ -56,11 +56,41 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
         addVisit("ArrayAssign", this::dealWithArrayAssign);
         addVisit("ArrayLength", this::dealWithArrayLength);
         addVisit("This", this::dealWithThis);
+        addVisit("IfElse", this::dealWithIfElse);
+        addVisit("Block", this::dealWithBlock);
 
         /*addVisit("StringType", this::dealWithStringType);
         addVisit("ObjectType", this::dealWithObjectType);*/
 
 
+    }
+
+    private String dealWithBlock(JmmNode jmmNode, StringBuilder ollir) {
+        this.ollirCode.append("\n");
+        for(JmmNode child : jmmNode.getChildren()){
+            visit(child, ollir);
+        }
+        this.ollirCode.append("\n");
+        return null;
+    }
+/*if (a.bool) goto ifbody_0;
+    invokestatic(io, "print", 0.i32).V;
+goto endif_0;
+ifbody_0:
+    invokestatic(io, "print", 1.i32).V;
+endif_0:*/
+    private String dealWithIfElse(JmmNode jmmNode, StringBuilder ollir) {
+        String result = "";
+        assign = true;
+        result = visit(jmmNode.getChildren().get(0), ollir);
+        assign = false;
+        this.ollirCode.append("if (" + result + ") goto ifbody_0;");
+        visit(jmmNode.getChildren().get(2), ollir);
+        this.ollirCode.append("goto endif_0;\n");
+        this.ollirCode.append("ifbody_0:");
+        visit(jmmNode.getChildren().get(1), ollir);
+        this.ollirCode.append("endif_0:\n");
+        return result;
     }
 
     private String dealWithThis(JmmNode jmmNode, StringBuilder ollir) {
@@ -218,25 +248,29 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
 
     private String dealWithBinaryOp(JmmNode jmmNode, StringBuilder ollir) {
 
-        String type = "";
 
+
+
+        List<String> Comp_Op = Arrays.asList("<", ">", "<=", ">=", "==", "!=");
         var right = visit(jmmNode.getChildren().get(1), ollir);
         var left = visit(jmmNode.getChildren().get(0), ollir);
-        if(symbol == null){
-            type = var_type;
-        }
-        else{
-            type = var_type;
-        }
+        String result_type = "";
+        if(Comp_Op.contains(jmmNode.get("op"))) result_type = ".bool";
+        else result_type = ".i32";
         if(jmmNode.getJmmParent().getKind().equals("Assign") || jmmNode.getJmmParent().getKind().equals("NewIntArray")){
-            return left + " " + jmmNode.get("op") + type + " " + right;
+            return left + " " + jmmNode.get("op") + result_type + " " + right;
         }
 
-        this.ollirCode.append("temp" + tempcounter + type + " :=" + type + " " + left + " " + jmmNode.get("op") + type + " " + right + ";\n");
+
+        this.ollirCode.append("temp" + tempcounter + result_type + " :=" + result_type + " " + left + " " + jmmNode.get("op"));
+
+
+        this.ollirCode.append(result_type + " " + right + ";\n");
+
         tempcounter++;
 
 
-        return "temp" + (tempcounter - 1) + type;
+        return "temp" + (tempcounter - 1) + result_type;
     }
 
     private String dealWithAssign(JmmNode jmmNode, StringBuilder ollir) {
