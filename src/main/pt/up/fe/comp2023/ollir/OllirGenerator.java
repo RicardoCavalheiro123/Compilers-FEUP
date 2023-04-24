@@ -238,8 +238,6 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
         }
 
 
-
-
         assign = false;
         return null;
     }
