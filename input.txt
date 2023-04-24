@@ -1,12 +1,27 @@
-import io;
+import ioPlus;
+class SimpleIfElseStat {
+	public static void main(String[] args) {
+		int a;
+		int b;
+        boolean c;
+		a = 5;
+		b = 10;
 
-class Test {
-    public int compFac(int num){
-       return num;
-    }
+        c = a < b;
+        if(a < b){
+          ioPlus.printResult(a);
+        } else {
+           ioPlus.printResult(b);
+        }
 
-    public static void main(String[] args){
-        int a;
-        a = io.println(new Test().compFac(10));
-    }
+		a = 10;
+		b = 8;
+
+        if(a < b){
+          ioPlus.printResult(a);
+        } else {
+           ioPlus.printResult(b);
+        }
+
+	}
 }
