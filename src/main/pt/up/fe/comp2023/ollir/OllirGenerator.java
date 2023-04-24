@@ -14,10 +14,12 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
     private final SymbolTable symbolTable;
     private StringBuilder ollirCode;
     private String currentMethod = "";
-    private Integer tempcounter = 0;
-    private Boolean assign = false;
+    private int temp_counter = 0;
+    private int loop_counter = 0;
+    private boolean assign = false;
     private Symbol symbol = null;
     private String var_type = "";
+
 
     public String getOllirCode() {
         return ollirCode.toString();
@@ -58,38 +60,53 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
         addVisit("This", this::dealWithThis);
         addVisit("IfElse", this::dealWithIfElse);
         addVisit("Block", this::dealWithBlock);
-
+        addVisit("While", this::dealWithWhile);
         /*addVisit("StringType", this::dealWithStringType);
         addVisit("ObjectType", this::dealWithObjectType);*/
 
 
     }
 
+    private String dealWithWhile(JmmNode jmmNode, StringBuilder ollir){
+
+        String result = "";
+        assign = true;
+        result = visit(jmmNode.getChildren().get(0), ollir);
+        assign = false;
+        this.ollirCode.append("if (" + result + ") goto whilebody_"+ this.loop_counter +";\n");
+        this.ollirCode.append("goto endwhile_" + this.loop_counter + ";\n");
+        this.ollirCode.append("whilebody_" + this.loop_counter +":\n");
+        this.loop_counter++;
+        visit(jmmNode.getChildren().get(1), ollir);
+        this.loop_counter--;
+        this.ollirCode.append("if (" + result + ") goto whilebody_"+ this.loop_counter +";\n");
+        this.ollirCode.append("endwhile_" + this.loop_counter + ":\n");
+        return null;
+
+    }
+
     private String dealWithBlock(JmmNode jmmNode, StringBuilder ollir) {
-        this.ollirCode.append("\n");
+
         for(JmmNode child : jmmNode.getChildren()){
             visit(child, ollir);
         }
-        this.ollirCode.append("\n");
+
         return null;
     }
-/*if (a.bool) goto ifbody_0;
-    invokestatic(io, "print", 0.i32).V;
-goto endif_0;
-ifbody_0:
-    invokestatic(io, "print", 1.i32).V;
-endif_0:*/
+
     private String dealWithIfElse(JmmNode jmmNode, StringBuilder ollir) {
         String result = "";
         assign = true;
         result = visit(jmmNode.getChildren().get(0), ollir);
         assign = false;
-        this.ollirCode.append("if (" + result + ") goto ifbody_0;");
+        this.ollirCode.append("if (" + result + ") goto ifbody_"+ this.loop_counter +";\n");
+        this.loop_counter++;
         visit(jmmNode.getChildren().get(2), ollir);
-        this.ollirCode.append("goto endif_0;\n");
-        this.ollirCode.append("ifbody_0:");
+        this.ollirCode.append("goto endif_"+(this.loop_counter-1)+";\n");
+        this.ollirCode.append("ifbody_"+(this.loop_counter-1)+":\n");
         visit(jmmNode.getChildren().get(1), ollir);
-        this.ollirCode.append("endif_0:\n");
+        this.ollirCode.append("endif_"+(this.loop_counter-1)+":\n");
+        this.loop_counter--;
         return result;
     }
 
@@ -115,18 +132,18 @@ endif_0:*/
         for(JmmNode child : jmmNode.getChildren()){
             result = visit(child, ollir);
         }
-        this.ollirCode.append("temp" + tempcounter + ".i32" + " :=.i32 " + "arraylength(" + result + ")" + ".i32;\n");
-        tempcounter++;
-        return "temp" + (tempcounter-1) + ".i32";
+        this.ollirCode.append("temp" + temp_counter + ".i32" + " :=.i32 " + "arraylength(" + result + ")" + ".i32;\n");
+        temp_counter++;
+        return "temp" + (temp_counter -1) + ".i32";
     }
 
     private String dealWithArrayAssign(JmmNode jmmNode, StringBuilder ollir) {
         assign = true;
         String result = "";
         String a = visit(jmmNode.getChildren().get(0), ollir);
-        this.ollirCode.append("temp" + tempcounter + var_type + " :=" + var_type + " " + a + ";\n");
-        String temp = "temp" + tempcounter;
-        tempcounter++;
+        this.ollirCode.append("temp" + temp_counter + var_type + " :=" + var_type + " " + a + ";\n");
+        String temp = "temp" + temp_counter;
+        temp_counter++;
         for(int i = 0; i < jmmNode.getChildren().size(); i++){
             result = visit(jmmNode.getChildren().get(i), ollir);
         }
@@ -142,11 +159,11 @@ endif_0:*/
             result = visit(child, ollir);
             args.add(result);
         }
-        this.ollirCode.append("temp" + tempcounter + var_type + " :=" + var_type + " " + args.get(1) + var_type + ";\n");
-        tempcounter++;
-        this.ollirCode.append("temp" + tempcounter + var_type + " :=" + var_type + " " + jmmNode.getChildren().get(0).get("id") + "[" + "temp" + (tempcounter-1) + var_type + "]" + var_type + ";\n");
-        tempcounter++;
-        return "temp" + (tempcounter-1) + var_type;
+        this.ollirCode.append("temp" + temp_counter + var_type + " :=" + var_type + " " + args.get(1) + var_type + ";\n");
+        temp_counter++;
+        this.ollirCode.append("temp" + temp_counter + var_type + " :=" + var_type + " " + jmmNode.getChildren().get(0).get("id") + "[" + "temp" + (temp_counter -1) + var_type + "]" + var_type + ";\n");
+        temp_counter++;
+        return "temp" + (temp_counter -1) + var_type;
     }
 
     private String dealWithNewIntArray(JmmNode jmmNode, StringBuilder ollir) {
@@ -157,9 +174,9 @@ endif_0:*/
         }
 
 
-        this.ollirCode.append("temp" + tempcounter + var_type + " :=" + var_type + " " + result + ";\n");
-        tempcounter++;
-        return "new(array, temp" + (tempcounter-1) + var_type + ").array" + var_type;
+        this.ollirCode.append("temp" + temp_counter + var_type + " :=" + var_type + " " + result + ";\n");
+        temp_counter++;
+        return "new(array, temp" + (temp_counter -1) + var_type + ").array" + var_type;
 
 
     }
@@ -185,18 +202,18 @@ endif_0:*/
         if(jmmNode.getChildren().get(0).getOptional("id").isPresent()) var = "id";
         else if(jmmNode.getChildren().get(0).getOptional("value").isPresent()) var = "value";
         else if(jmmNode.getChildren().get(0).getKind().equals("This")){
-            this.ollirCode.append("temp" + tempcounter + var_type + " :=" + var_type + " ");
-            tempcounter++;
+            this.ollirCode.append("temp" + temp_counter + var_type + " :=" + var_type + " ");
+            temp_counter++;
             this.ollirCode.append("invokevirtual(" + "this" +"," + "\"" + jmmNode.get("method")+ "\"" +result+ ")" + var_type + ";\n");
-            return "temp" + (tempcounter-1) + var_type;
+            return "temp" + (temp_counter -1) + var_type;
 
         }
 
         if(jmmNode.getJmmParent().getKind().equals("BinaryOp") || jmmNode.getJmmParent().getKind().equals("MethodCall")){
-            this.ollirCode.append("temp" + tempcounter + var_type + " :=" + var_type + " ");
+            this.ollirCode.append("temp" + temp_counter + var_type + " :=" + var_type + " ");
             this.ollirCode.append("invokevirtual(" + jmmNode.getChildren().get(0).get(var) + getTypeOfVariable(this.currentMethod,jmmNode.getChildren().get(0).get(var)) +"," + "\"" + jmmNode.get("method")+ "\"" +result+ ")" + var_type + ";\n");
-            tempcounter++;
-            return "temp" + (tempcounter-1) + var_type;
+            temp_counter++;
+            return "temp" + (temp_counter -1) + var_type;
         }
 
         if(is_Static(jmmNode.getChildren().get(0).getOptional(var).get(), jmmNode)){
@@ -210,6 +227,12 @@ endif_0:*/
             String return_type = getReturnOfMethod(jmmNode.get("method"));
             if(jmmNode.getJmmParent().getKind().equals("Assign")){
                 return "invokevirtual(" + jmmNode.getChildren().get(0).get(var) + getTypeOfVariable(this.currentMethod,jmmNode.getChildren().get(0).get(var) ) +"," + "\"" + jmmNode.get("method")+ "\"" +result+ ")" + var_type + "";
+            }
+            else if(jmmNode.getJmmParent().getKind().equals("Stmt")) this.ollirCode.append("invokevirtual(" + jmmNode.getChildren().get(0).get(var) + getTypeOfVariable(this.currentMethod,jmmNode.getChildren().get(0).get(var) ) +"," + "\"" + jmmNode.get("method")+ "\"" +result+ ")" + return_type + "");
+
+            if(assign){
+                return "invokevirtual(" + jmmNode.getChildren().get(0).get(var) + getTypeOfVariable(this.currentMethod,jmmNode.getChildren().get(0).get(var) ) +"," + "\"" + jmmNode.get("method")+ "\"" +result+ ")";
+
             }
             this.ollirCode.append("invokevirtual(" + jmmNode.getChildren().get(0).get(var) + getTypeOfVariable(this.currentMethod,jmmNode.getChildren().get(0).get(var) ) +"," + "\"" + jmmNode.get("method")+ "\"" +result+ ")" + return_type + "");
         }
@@ -234,12 +257,12 @@ endif_0:*/
             this.ollirCode.append(jmmNode.getJmmParent().get("id"));
         }
         else{
-            this.ollirCode.append("temp" + tempcounter);
-            tempcounter++;
+            this.ollirCode.append("temp" + temp_counter);
+            temp_counter++;
         }
         this.ollirCode.append("." +jmmNode.get("id") + " :=." + jmmNode.get("id") + " new(" + jmmNode.get("id") + ")." + jmmNode.get("id") + ";\n");
         this.ollirCode.append("invokespecial(");
-        StringBuilder ex = jmmNode.getJmmParent().getKind().equals("Assign") ? this.ollirCode.append(jmmNode.getJmmParent().get("id")) : this.ollirCode.append("temp" + (tempcounter - 1));
+        StringBuilder ex = jmmNode.getJmmParent().getKind().equals("Assign") ? this.ollirCode.append(jmmNode.getJmmParent().get("id")) : this.ollirCode.append("temp" + (temp_counter - 1));
         this.ollirCode.append("." + jmmNode.get("id") + ",\"<init>\").V");
 
 
@@ -262,15 +285,15 @@ endif_0:*/
         }
 
 
-        this.ollirCode.append("temp" + tempcounter + result_type + " :=" + result_type + " " + left + " " + jmmNode.get("op"));
+        this.ollirCode.append("temp" + temp_counter + result_type + " :=" + result_type + " " + left + " " + jmmNode.get("op"));
 
 
         this.ollirCode.append(result_type + " " + right + ";\n");
 
-        tempcounter++;
+        temp_counter++;
 
 
-        return "temp" + (tempcounter - 1) + result_type;
+        return "temp" + (temp_counter - 1) + result_type;
     }
 
     private String dealWithAssign(JmmNode jmmNode, StringBuilder ollir) {
@@ -318,6 +341,7 @@ endif_0:*/
 
             }
             this.ollirCode.append(";\n");
+            assign = false;
             return null;
         }
         else if(jmmNode.getChildren().get(0).getKind().equals("MethodCall")){
@@ -349,9 +373,9 @@ endif_0:*/
                     fieldOfClass = false;
                     return null;
                 }
-                this.ollirCode.append("temp" + tempcounter + type + " :=" + type + " " + temp + ";\n");
-                this.ollirCode.append("putfield(this," + jmmNode.get("id") + type + "," + "temp" + tempcounter + type + ").V;\n");
-                tempcounter++;
+                this.ollirCode.append("temp" + temp_counter + type + " :=" + type + " " + temp + ";\n");
+                this.ollirCode.append("putfield(this," + jmmNode.get("id") + type + "," + "temp" + temp_counter + type + ").V;\n");
+                temp_counter++;
                 fieldOfClass = false;
                 return null;
             }
@@ -383,9 +407,9 @@ endif_0:*/
         else if(this.symbolTable.isFieldOfClass(jmmNode.get("id"))){
             symbol = this.symbolTable.getFieldOfClass(jmmNode.get("id"));
             var_type = getVariableType(symbol.getType(), ollir);
-            this.ollirCode.append("temp" + tempcounter + var_type + ":=" + var_type + " getfield(this," + jmmNode.get("id") + var_type + ")" + var_type + ";\n");
-            tempcounter++;
-            return "temp" + (tempcounter-1) + var_type;
+            this.ollirCode.append("temp" + temp_counter + var_type + ":=" + var_type + " getfield(this," + jmmNode.get("id") + var_type + ")" + var_type + ";\n");
+            temp_counter++;
+            return "temp" + (temp_counter -1) + var_type;
         }
         String res = "";
         if(parameter != -1){
