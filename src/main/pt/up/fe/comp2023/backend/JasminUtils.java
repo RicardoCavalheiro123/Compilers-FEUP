@@ -102,11 +102,11 @@ public class JasminUtils {
 
             case ANDB -> jasminCodeBuilder.append("ifeq");
             case NOTB -> jasminCodeBuilder.append("ifne");
-            case ORB -> jasminCodeBuilder.append("if_icmpor");
-            case LTH -> jasminCodeBuilder.append("if_icmplt");
-            case GTH -> jasminCodeBuilder.append("if_icmpgt");
-            case LTE -> jasminCodeBuilder.append("if_icmple");
-            case GTE -> jasminCodeBuilder.append("if_icmpge");
+            case ORB -> jasminCodeBuilder.append("ifor");
+            case LTH -> jasminCodeBuilder.append("iflt");
+            case GTH -> jasminCodeBuilder.append("ifgt");
+            case LTE -> jasminCodeBuilder.append("ifle");
+            case GTE -> jasminCodeBuilder.append("ifge");
 
             default -> throw new UnsupportedOperationException("Operation not implemented: " + operation.getOpType());
         }
@@ -135,5 +135,30 @@ public class JasminUtils {
         }
 
         return jasminCodeBuilder.toString();
+    }
+
+    public static String booleanResult(int condition_label) {
+        StringBuilder jasminCodeBuilder = new StringBuilder();
+
+        jasminCodeBuilder.append(" TRUE_" + condition_label);
+        jasminCodeBuilder.append("\n\t");
+        jasminCodeBuilder.append("iconst_0");
+        jasminCodeBuilder.append("\n\t");
+        jasminCodeBuilder.append("goto " + "CONTINUE_" + condition_label);
+        jasminCodeBuilder.append("\n");
+        jasminCodeBuilder.append("TRUE_" + condition_label + ":");
+        jasminCodeBuilder.append("\n\t");
+        jasminCodeBuilder.append("iconst_1");
+        jasminCodeBuilder.append("\n");
+        jasminCodeBuilder.append("CONTINUE_" + condition_label + ":");
+
+        return jasminCodeBuilder.toString();
+    }
+
+    public static boolean isConditionalOperation(Operation operation) {
+        return switch (operation.getOpType()) {
+            case ANDB, NOTB, ORB, LTH, GTH, LTE, GTE -> true;
+            default -> false;
+        };
     }
 }

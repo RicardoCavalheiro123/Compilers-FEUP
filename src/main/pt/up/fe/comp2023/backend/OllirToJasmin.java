@@ -6,6 +6,7 @@ import pt.up.fe.comp2023.backend.instructions.call.*;
 public class OllirToJasmin {
     String superClassName;
     boolean isAssign = false;
+    int conditionCounter = 0;
 
     public String getJasminString(ClassUnit resultOllirClass) {
         superClassName = resultOllirClass.getSuperClass() == null ? "java/lang/Object" : resultOllirClass.getSuperClass();
@@ -193,6 +194,8 @@ public class OllirToJasmin {
 
         jasminCodeBuilder.append(JasminUtils.loadElement(method, instruction.getOperands().get(0)));
 
+        jasminCodeBuilder.append("\n\t");
+        jasminCodeBuilder.append("ifne ").append(instruction.getLabel());
 
         return jasminCodeBuilder.toString();
     }
@@ -278,6 +281,12 @@ public class OllirToJasmin {
         jasminCodeBuilder.append(JasminUtils.loadElement(method, right));
         jasminCodeBuilder.append("\n\t");
         jasminCodeBuilder.append(JasminUtils.operationCode(instruction.getOperation()));
+
+        // If boolean operation
+        if (JasminUtils.isConditionalOperation(instruction.getOperation())) {
+            jasminCodeBuilder.append(JasminUtils.booleanResult(conditionCounter));
+            conditionCounter++;
+        }
 
         return jasminCodeBuilder.toString();
     }
