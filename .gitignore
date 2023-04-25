@@ -17,3 +17,4 @@ test/pt/up/fe/comp/cp2/BackendCallTest.java
 test/pt/up/fe/comp/cp2/BackendBasicTest.java
 test/pt/up/fe/comp/cp2/BackendArithmeticTest.java
 test/pt/up/fe/comp/cp2/BackendArraysTest.java
+test/pt/up/fe/comp/cp2/fixtures
