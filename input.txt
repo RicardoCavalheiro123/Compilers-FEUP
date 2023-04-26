@@ -73,7 +73,10 @@ class CompileBasic extends Quicksort {
 
     public static void main(String[] args) {
         CompileBasic test2;
+        int a;
         test2 = new CompileBasic();
+        a = 2;
+        a = 2 + a;
         test2.method2();
     }
 }

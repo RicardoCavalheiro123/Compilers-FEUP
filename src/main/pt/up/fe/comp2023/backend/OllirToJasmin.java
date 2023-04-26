@@ -141,10 +141,10 @@ public class OllirToJasmin {
                     }
 
                     if (literalElement != null && operand != null) {
-                         if (operand.getName().equals(dest.toString())) {
+                         if (operand.getName().equals(((Operand) dest).getName())) {
                              int value = Integer.parseInt(literalElement.getLiteral());
 
-                             return "\tiinc " + JasminUtils.regCode(method.getVarTable().get(operand.getName()).getVirtualReg()) + " " + value + "\n";
+                             return "iinc " + method.getVarTable().get(operand.getName()).getVirtualReg() + " " + value;
                         }
                     }
                 }
