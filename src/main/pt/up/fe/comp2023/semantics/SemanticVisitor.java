@@ -23,12 +23,13 @@ public abstract class SemanticVisitor extends PreorderJmmVisitor<SymbolTable, In
         this.reports.add(report);
     }
 
+    //return node id type
     public Type getIdType(JmmNode node, SymbolTable symbolTable) {
         String id = node.get("id");
         var method = node.getAncestor("Method").isEmpty() ? node.getAncestor("MainMethod").get() : node.getAncestor("Method").get() ;
         var method_name = method.get("name");
 
-        // ver se esta nos parametros da função
+        //check existence in function parameters
         var m2 = symbolTable.findMethod(method_name);
         var params = m2.getParameters();
 
@@ -38,7 +39,7 @@ public abstract class SemanticVisitor extends PreorderJmmVisitor<SymbolTable, In
             }
         }
 
-        // ver se esta nas variaveis da funcao
+        //check existence in function variables
         var variables = m2.getLocalVariables();
 
         for(var variable: variables) {
@@ -47,7 +48,7 @@ public abstract class SemanticVisitor extends PreorderJmmVisitor<SymbolTable, In
             }
         }
 
-        // ver se esta nos parametros da class (fields)
+        //check existence in class parameters (fields)
         var fields = symbolTable.getFields();
 
         for(var field: fields) {
@@ -59,7 +60,7 @@ public abstract class SemanticVisitor extends PreorderJmmVisitor<SymbolTable, In
         return new Type("invalid", false);
     }
 
-    //Check if imported
+    //check if imported, true if it is, false otherwise
     public Boolean imported(String str, SymbolTable symbolTable) {
         for(String impt: symbolTable.getImports()) {
             var imports_split = Arrays.asList(impt.trim().split("\\."));
@@ -77,6 +78,7 @@ public abstract class SemanticVisitor extends PreorderJmmVisitor<SymbolTable, In
         return false;
     }
 
+    //check if types t1 and t2 are compatible
     public boolean compatibleType(Type t1, Type t2, SymbolTable symbolTable) {
         Type type_super = new Type(symbolTable.getSuper(), false);
         Type type_class = new Type(symbolTable.getClassName(), false);
@@ -108,6 +110,7 @@ public abstract class SemanticVisitor extends PreorderJmmVisitor<SymbolTable, In
         return false;
     }
 
+    //given a node, return its type
     protected Type getExpressionType(JmmNode node, SymbolTable symbolTable) {
         var type1 = getJmmNodeType(node.getJmmChild(0), symbolTable);
         var type2 = getJmmNodeType(node.getJmmChild(1), symbolTable);
@@ -147,42 +150,48 @@ public abstract class SemanticVisitor extends PreorderJmmVisitor<SymbolTable, In
     public Type getJmmNodeType(JmmNode node, SymbolTable symbolTable) {
         switch(node.getKind()) {
             case "Identifier":
-                Type a = this.getIdType(node, symbolTable);
-                return a;
+                return this.getIdType(node, symbolTable);
+
             case "BinaryOp":
-                Type b = this.getExpressionType(node, symbolTable);
-                return b;
+                return this.getExpressionType(node, symbolTable);
+
             case "This":
                 return new Type(symbolTable.getClassName(), false);
-            case "Integer", "ArrayLength":
+
+            case "Integer", "ArrayLength", "ArrayAccess":
                 return new Type("int", false);
+
             case "Boolean", "BooleanType":
                 return new Type("boolean", false);
+
             case "UnaryOp":
-                Type c = this.getUnOpType(node, symbolTable);
-                return c;
+                return  this.getUnOpType(node, symbolTable);
+
             case "ObjectType":
                 return new Type(node.get("typeName"), false);
-            case "ArrayAccess":
-                return new Type("int", false);
+
             case "MethodCall":
                 if(symbolTable.findMethod(node.get("method")) == null) {
                     return new Type("inexists", false);
                 }
+
                 return symbolTable.findMethod(node.get("method")).getReturnType();
+
             case "NewIntArray":
                 return new Type("int", true);
+
             case "NewObject":
                 return new Type(node.get("id"), false);
+
             case "IntType":
                 if(node.get("isArray").equals("true")) {
                     return new Type("int", true);
                 }
+
                 return new Type("int", false);
 
             default:
                 return new Type("invalid", false);
         }
-
     }
 }

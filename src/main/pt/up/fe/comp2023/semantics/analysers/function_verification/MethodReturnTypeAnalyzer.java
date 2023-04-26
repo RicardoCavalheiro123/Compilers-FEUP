@@ -36,26 +36,23 @@ public class MethodReturnTypeAnalyzer extends SemanticVisitor {
         if(node.getJmmChild(0).getKind().equals("MethodCall")) {
             var a = symbolTable.findMethod(node.getJmmChild(0).get("method"));
 
-            if (a == null) {
-                return 0;
-            }
-            else {
+            if (a != null) {
                 var type = a.getReturnType();
 
-                if(!Objects.equals(type, declared_return_type)) {
+                if (!Objects.equals(type, declared_return_type)) {
                     reportsMethodReturn.add(
-                        new Report(
-                            ReportType.ERROR, Stage.SEMANTIC,
-                            Integer.parseInt(node.get("lineStart")),
-                            Integer.parseInt(node.get("colStart")),
-                            "Return type does not match method declaration!"
-                        ));
+                            new Report(
+                                    ReportType.ERROR, Stage.SEMANTIC,
+                                    Integer.parseInt(node.get("lineStart")),
+                                    Integer.parseInt(node.get("colStart")),
+                                    "Return type does not match method declaration!"
+                            ));
 
                     return 0;
                 }
-
-                return 0;
             }
+
+            return 0;
         }
 
         if(!Objects.equals(declared_return_type, return_type) ||

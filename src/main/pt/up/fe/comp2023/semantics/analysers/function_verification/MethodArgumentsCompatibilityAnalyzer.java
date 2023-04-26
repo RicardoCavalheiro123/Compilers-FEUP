@@ -36,7 +36,6 @@ public class MethodArgumentsCompatibilityAnalyzer extends SemanticVisitor {
             }
         }
         else {
-
             var imprt = getJmmNodeType(node.getJmmChild(0), symbolTable);
 
             if(imprt != null && imported(imprt.getName(), symbolTable)) return 0;

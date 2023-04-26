@@ -32,8 +32,6 @@ public class MethodExistsAnalyser extends SemanticVisitor {
     public List<Report> getReports() { return this.reportsMethodExists; }
 
     public Integer visitMethodExists(JmmNode node, SymbolTable symbolTable) {
-
-
         if(!Objects.equals(symbolTable.getSuper(), "")) {
             var exists = "[" + symbolTable.getSuper() + "]";
 
@@ -51,7 +49,6 @@ public class MethodExistsAnalyser extends SemanticVisitor {
             }
         }
 
-
         if(Objects.equals(node.getKind(), "MethodCall")) {
             var a = getJmmNodeType(node.getJmmChild(0), symbolTable);
 
@@ -67,12 +64,11 @@ public class MethodExistsAnalyser extends SemanticVisitor {
             }
         }
 
-
         //Find method, null if not found
         MethodTable method = symbolTable.findMethod(node.get("method"));
 
         //Check if method is implemented and has super class
-        if(method == null && symbolTable.getSuper() == "") {
+        if(method == null && Objects.equals(symbolTable.getSuper(), "")) {
             reportsMethodExists.add(
                 new Report(
                     ReportType.ERROR,

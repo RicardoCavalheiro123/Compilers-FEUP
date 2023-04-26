@@ -95,6 +95,7 @@ public class ArrayAccessAnalyzer extends SemanticVisitor {
 
             return 0;
         }
+
         if(!(Objects.equals(getJmmNodeType(value, symbolTable), new Type("int", false)))) {
             reportsArrayAccess.add(
                 new Report(
@@ -107,8 +108,6 @@ public class ArrayAccessAnalyzer extends SemanticVisitor {
 
             return 0;
         }
-
-
 
         return 0;
     }
