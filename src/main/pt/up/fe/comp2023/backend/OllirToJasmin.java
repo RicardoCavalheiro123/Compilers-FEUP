@@ -32,7 +32,7 @@ public class OllirToJasmin {
             jasminCodeBuilder.append(".field ");
 
             if(field.getFieldAccessModifier() != AccessModifiers.DEFAULT) {
-                jasminCodeBuilder.append(field.getFieldAccessModifier().toString()).append(" ");
+                jasminCodeBuilder.append(field.getFieldAccessModifier().toString().toLowerCase()).append(" ");
             }
 
             jasminCodeBuilder.append(field.getFieldName()).append(" ")
