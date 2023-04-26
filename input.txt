@@ -1,64 +1,20 @@
-import io;
-import Quicksort;
-
-class CompileBasic extends Quicksort {
-
-    int intField;
-    boolean boolField;
-    int[] boas;
-    String boas2;
-    CompileBasic boas3;
-
-
-    public int method1() {
-        int intLocal1;
-        boolean boolLocal1;
-
-        intLocal1 = 1 + 2 * 3 + 4;
-        boolLocal1 = true;
-
-        return 0;
-    }
-
-    public boolean method2() {
-        intField = 4;
-        boolField = false;
-        return boolField;
-    }
-
-    public int method3(int nr, int boas) {
-        int a;
-        int b;
-
-        a = boas;
-        b = nr + boas;
-
-        io.println(nr);
-
-        return a + b;
-    }
-
-    public int method4(int nr) {
-        int d;
-        int e;
-        int f;
-        int[] intLocal2;
-
-        d = 2;
-        e = 2;
-        f = 2;
-
-        intLocal2 = new int[1+2+3];
-        intLocal2[0] = 1;
-        intLocal2[0+1] = d+e;
-        intLocal2[f] = 3;
-
-        return 0;
-    }
+class MyClass {
 
     public static void main(String[] args) {
-        CompileBasic test;
-        test = new CompileBasic();
-        test.method4(10+2);
+
+    }
+
+    public MyClass foo(int a) {
+        return this;
+    }
+
+    public int bar() {
+        MyClass obj;
+        MyClass obj2;
+        int a;
+        a = 0;
+        obj = new MyClass();
+        obj2 = obj.foo(a);
+        return 0;
     }
 }

@@ -2,6 +2,8 @@ package pt.up.fe.comp2023.backend;
 
 import org.specs.comp.ollir.*;
 
+import java.util.Objects;
+
 public class JasminUtils {
     public static String loadElement(Method method, Element element) {
         StringBuilder jasminCodeBuilder = new StringBuilder();
@@ -47,7 +49,11 @@ public class JasminUtils {
                     op.getType().getTypeOfElement() == ElementType.OBJECTREF ||
                     op.getType().getTypeOfElement() == ElementType.ARRAYREF ||
                     op.getType().getTypeOfElement() == ElementType.THIS) {
-                jasminCodeBuilder.append("aload").append(regCode(method.getVarTable().get(op.getName()).getVirtualReg()));
+                if(Objects.equals(((Operand) element).getName(), "this")) {
+                    jasminCodeBuilder.append("aload_0");
+                } else {
+                    jasminCodeBuilder.append("aload").append(regCode(method.getVarTable().get(op.getName()).getVirtualReg()));
+                }
             } else {
                 throw new RuntimeException("loadElement not implemented for Operand " + element.getClass().toString() + ".");
             }
