@@ -92,6 +92,8 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
         return null;
     }
 
+    //TODO if sem else
+
     private String dealWithIfElse(JmmNode jmmNode, StringBuilder ollir) {
         String result = "";
         // Boolean to return the children code instead of appending it
