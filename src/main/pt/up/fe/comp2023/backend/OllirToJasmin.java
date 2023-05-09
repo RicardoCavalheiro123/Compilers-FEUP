@@ -8,6 +8,9 @@ public class OllirToJasmin {
     boolean isAssign = false;
     int conditionCounter = 0;
 
+    int stackSize = 0;
+    int stackMaxSize = 0;
+
     public String getJasminString(ClassUnit resultOllirClass) {
         superClassName = resultOllirClass.getSuperClass() == null ? "java/lang/Object" : resultOllirClass.getSuperClass();
 
@@ -77,8 +80,8 @@ public class OllirToJasmin {
             }
 
             if (method.getMethodAccessModifier() != AccessModifiers.DEFAULT) {
-                jasminCodeBuilder.append("\t.limit stack ").append("99").append("\n");
-                jasminCodeBuilder.append("\t.limit locals ").append("99").append("\n");
+                jasminCodeBuilder.append("\t.limit stack ").append(this.stackMaxSize).append("\n");
+                jasminCodeBuilder.append("\t.limit locals ").append(method.getVarTable().size()).append("\n");
             }
 
             jasminCodeBuilder.append(instructions);
@@ -88,6 +91,8 @@ public class OllirToJasmin {
             }
 
             jasminCodeBuilder.append(".end method\n\t\n");
+            this.stackSize = 0;
+            this.stackMaxSize = 0;
         }
 
 
@@ -297,5 +302,14 @@ public class OllirToJasmin {
         jasminCodeBuilder.append(JasminUtils.loadElement(method, instruction.getSingleOperand()));
 
         return jasminCodeBuilder.toString();
+    }
+
+    public int updateStack(int stackUpdate) {
+        this.stackSize += stackUpdate;
+        if (this.stackSize > this.stackMaxSize)
+            this.stackMaxSize = this.stackSize;
+        if (this.stackSize < 0)
+            throw new RuntimeException("Stack size is negative");
+        return this.stackSize;
     }
 }
