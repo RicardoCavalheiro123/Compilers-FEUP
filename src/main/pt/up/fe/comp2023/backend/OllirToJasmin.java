@@ -3,6 +3,10 @@ package pt.up.fe.comp2023.backend;
 import org.specs.comp.ollir.*;
 import pt.up.fe.comp2023.backend.instructions.call.*;
 
+import javax.management.Descriptor;
+import java.util.HashSet;
+import java.util.Set;
+
 public class OllirToJasmin {
     String superClassName;
     boolean isAssign = false;
@@ -83,6 +87,9 @@ public class OllirToJasmin {
                 jasminCodeBuilder.append("\t.limit stack ").append("99").append("\n");
                 jasminCodeBuilder.append("\t.limit locals ").append("99").append("\n");
             }
+
+            Set<Integer> hash_Set = new HashSet<Integer>();
+            // HERE TODO
 
             jasminCodeBuilder.append(instructions);
 
