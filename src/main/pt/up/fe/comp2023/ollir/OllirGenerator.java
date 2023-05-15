@@ -61,9 +61,28 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
         addVisit("IfElse", this::dealWithIfElse);
         addVisit("Block", this::dealWithBlock);
         addVisit("While", this::dealWithWhile);
+        addVisit("UnaryOp", this::dealWithUnaryOp);
 
 
     }
+
+    private String dealWithUnaryOp(JmmNode jmmNode, StringBuilder ollir){
+
+        // Boolean to return the children code instead of appending it
+        returnable = true;
+        String result = "";
+        // Visit the children
+        for(int i = 0; i < jmmNode.getChildren().size(); i++){
+            result = visit(jmmNode.getChildren().get(i), ollir);
+        }
+        this.ollirCode.append("temp" + temp_counter  + ".bool :=.bool !.bool " + result + ";\n");
+        String temp = "temp" + temp_counter;
+        temp_counter++;
+
+        returnable = false;
+        return temp + ".bool";
+    }
+
     private String dealWithWhile(JmmNode jmmNode, StringBuilder ollir){
 
         String result = "";
@@ -92,7 +111,7 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
         return null;
     }
 
-    //TODO if sem else
+
 
     private String dealWithIfElse(JmmNode jmmNode, StringBuilder ollir) {
         String result = "";
@@ -221,8 +240,9 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
         }
         else{
             String return_type = getReturnOfMethod(jmmNode.get("method"));
+            var_type = return_type;
             if(jmmNode.getJmmParent().getKind().equals("Assign")){
-                return "invokevirtual(" + jmmNode.getChildren().get(0).get(var) + getTypeOfVariable(this.currentMethod,jmmNode.getChildren().get(0).get(var) ) +"," + "\"" + jmmNode.get("method")+ "\"" +result+ ")" + var_type + "";
+                return "invokevirtual(" + jmmNode.getChildren().get(0).get(var) + getTypeOfVariable(this.currentMethod,jmmNode.getChildren().get(0).get(var) ) +"," + "\"" + jmmNode.get("method")+ "\"" +result+ ")" + return_type + "";
             }
             else if(jmmNode.getJmmParent().getKind().equals("Stmt")) this.ollirCode.append("invokevirtual(" + jmmNode.getChildren().get(0).get(var) + getTypeOfVariable(this.currentMethod,jmmNode.getChildren().get(0).get(var) ) +"," + "\"" + jmmNode.get("method")+ "\"" +result+ ")" + return_type + "");
 
@@ -265,7 +285,7 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
 
     private String dealWithBinaryOp(JmmNode jmmNode, StringBuilder ollir) {
 
-        List<String> Comp_Op = Arrays.asList("<", ">", "<=", ">=", "==", "!=");
+        List<String> Comp_Op = Arrays.asList("<", ">", "<=", ">=", "==", "!=", "&&", "||");
 
         // Visit right node
         var right = visit(jmmNode.getChildren().get(1), ollir);
