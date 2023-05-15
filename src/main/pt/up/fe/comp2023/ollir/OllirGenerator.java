@@ -562,7 +562,7 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
             }
 
         }
-        this.ollirCode.append("\nret.V;\n}\n");
+        this.ollirCode.append("ret.V;\n}\n");
         return null;
     }
 
