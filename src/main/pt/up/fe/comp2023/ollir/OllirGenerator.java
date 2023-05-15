@@ -74,7 +74,9 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
 
         for (JmmNode child : jmmNode.getChildren()) {
             result = visit(child, ollir);
+
         }
+
         return result;
 
     }
@@ -244,7 +246,7 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
             return "temp" + (temp_counter -1) + var_type;
         }
 
-        if(is_Static(jmmNode.getChildren().get(0).getOptional(var).get())){
+        if(jmmNode.getChildren().get(0).getOptional(var).isPresent() && is_Static(jmmNode.getChildren().get(0).getOptional(var).get())){
             if(jmmNode.getJmmParent().getKind().equals("Assign")){
                 return "invokestatic(" + jmmNode.getChildren().get(0).get(var) +"," + "\"" + jmmNode.get("method")+ "\"" +result+ ").V";
             }
@@ -257,10 +259,16 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
             if(jmmNode.getJmmParent().getKind().equals("Assign")){
                 return "invokevirtual(" + jmmNode.getChildren().get(0).get(var) + getTypeOfVariable(this.currentMethod,jmmNode.getChildren().get(0).get(var) ) +"," + "\"" + jmmNode.get("method")+ "\"" +result+ ")" + return_type + "";
             }
-            else if(jmmNode.getJmmParent().getKind().equals("Stmt")) this.ollirCode.append("invokevirtual(" + jmmNode.getChildren().get(0).get(var) + getTypeOfVariable(this.currentMethod,jmmNode.getChildren().get(0).get(var) ) +"," + "\"" + jmmNode.get("method")+ "\"" +result+ ")" + return_type + "");
-
+            else if(jmmNode.getJmmParent().getKind().equals("Stmt")) {
+                result = visit(jmmNode.getChildren().get(0), ollir);
+                this.ollirCode.append("invokevirtual(" + result + "," + "\"" + jmmNode.get("method") + "\"" + ")" + return_type + "");
+                return null;
+            }
             if(returnable){
-                return "invokevirtual(" + jmmNode.getChildren().get(0).get(var) + getTypeOfVariable(this.currentMethod,jmmNode.getChildren().get(0).get(var) ) +"," + "\"" + jmmNode.get("method")+ "\"" +result+ ")";
+                result = visit(jmmNode.getChildren().get(0), ollir);
+                this.ollirCode.append("temp" + temp_counter + return_type + " :=" + return_type + " invokevirtual(" + result  +"," + "\"" + jmmNode.get("method")+ "\"" + ")" + return_type + ";\n");
+                temp_counter++;
+                return "temp" + (temp_counter -1) + return_type;
 
             }
             this.ollirCode.append("invokevirtual(" + jmmNode.getChildren().get(0).get(var) + getTypeOfVariable(this.currentMethod,jmmNode.getChildren().get(0).get(var) ) +"," + "\"" + jmmNode.get("method")+ "\"" +result+ ")" + return_type + "");
@@ -280,6 +288,7 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
     }
 
     private String dealWithNewObject(JmmNode jmmNode, StringBuilder ollir) {
+
         if(jmmNode.getJmmParent().getKind().equals("Assign")){
             this.ollirCode.append(jmmNode.getJmmParent().get("id"));
         }
@@ -289,11 +298,22 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
         }
         this.ollirCode.append("." +jmmNode.get("id") + " :=." + jmmNode.get("id") + " new(" + jmmNode.get("id") + ")." + jmmNode.get("id") + ";\n");
         this.ollirCode.append("invokespecial(");
-        StringBuilder ex = jmmNode.getJmmParent().getKind().equals("Assign") ? this.ollirCode.append(jmmNode.getJmmParent().get("id")) : this.ollirCode.append("temp" + (temp_counter - 1));
+        String ex = "";
+        if(jmmNode.getJmmParent().getKind().equals("Assign")){
+            this.ollirCode.append(jmmNode.getJmmParent().get("id"));
+            ex = jmmNode.getJmmParent().get("id") + "." + jmmNode.get("id");
+        }
+        else{
+            this.ollirCode.append("temp" + (temp_counter - 1));
+            ex = "temp" + (temp_counter - 1) + "." + jmmNode.get("id");
+        }
         this.ollirCode.append("." + jmmNode.get("id") + ",\"<init>\").V");
+        if(jmmNode.getJmmParent().getKind().equals("Parenthesis")){
+            this.ollirCode.append(";\n");
+        }
 
 
-        return null;
+        return ex;
     }
 
     private String dealWithBinaryOp(JmmNode jmmNode, StringBuilder ollir) {

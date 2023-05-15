@@ -1,22 +1,19 @@
-import io;
-class WhileAndIF {
+class Test{
 
-    public static void main(String[] args){
-        int a;
-        int b;
-        int c;
-        int[] d;
-        a = 20;
-        b = 10;
-        d = new int[10];
+  public Test getTest(){
+        Test a;
+        a = new Test();
+        return a;
+  }
+  public int foo(){
 
-        while((0-1) < c){
-            d[c] = a-b;
-            c= c-1;
-            a= a-1;
-            b= b-1;
-        }
+        return 1;
+  }
 
-    }
+  public static void main(String[] args){
+        Test a;
+        a = new Test();
+        (((a.getTest()).getTest()).getTest()).foo();
+  }
 
 }
