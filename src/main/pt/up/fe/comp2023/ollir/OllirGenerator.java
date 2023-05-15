@@ -62,7 +62,20 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
         addVisit("Block", this::dealWithBlock);
         addVisit("While", this::dealWithWhile);
         addVisit("UnaryOp", this::dealWithUnaryOp);
+        addVisit("Parenthesis", this::dealWithParentheses);
 
+
+    }
+
+    private String dealWithParentheses(JmmNode jmmNode, StringBuilder ollir) {
+        // Boolean to return the children code instead of appending it
+        returnable = true;
+        String result = "";
+
+        for (JmmNode child : jmmNode.getChildren()) {
+            result = visit(child, ollir);
+        }
+        return result;
 
     }
 
