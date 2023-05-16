@@ -257,8 +257,12 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
             String return_type = getReturnOfMethod(jmmNode.get("method"));
             var_type = return_type;
             if(jmmNode.getJmmParent().getKind().equals("Assign")){
-                String res = visit(jmmNode.getChildren().get(0), ollir);
-                return "invokevirtual(" + res + "," + "\"" + jmmNode.get("method")+ "\"" +result+ ")" + return_type + "";
+                if(jmmNode.getChildren().get(0).getKind().equals("Parenthesis")) {
+                    String res = visit(jmmNode.getChildren().get(0).getChildren().get(0), ollir);
+                    return "invokevirtual(" + res + "," + "\"" + jmmNode.get("method") + "\"" + result + ")" + return_type + "";
+                }
+                else
+                    return "invokevirtual(" + jmmNode.getChildren().get(0).get(var) + getTypeOfVariable(this.currentMethod,jmmNode.getChildren().get(0).get(var) ) +"," + "\"" + jmmNode.get("method")+ "\"" +result+ ")" + return_type + "";
             }
             else if(jmmNode.getJmmParent().getKind().equals("Stmt")) {
                 result = visit(jmmNode.getChildren().get(0), ollir);
