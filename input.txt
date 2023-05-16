@@ -1,6 +1,10 @@
 class Test{
 
-
+  public Test getTest(){
+        Test a;
+        a = new Test();
+        return a;
+  }
   public int foo(){
 
         return 1;
@@ -9,9 +13,8 @@ class Test{
   public static void main(String[] args){
         Test a;
         int b;
-
-        b = (new Test()).foo();
-
+        a = new Test();
+        b = (((a.getTest()).getTest()).getTest()).foo();
   }
 
 }
