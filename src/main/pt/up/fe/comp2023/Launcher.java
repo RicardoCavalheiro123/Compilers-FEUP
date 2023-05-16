@@ -64,6 +64,13 @@ public class Launcher {
         // Instantiate JmmOptimizer
         SimpleOptimization ollir = new SimpleOptimization();
 
+        //Optimization before ollir
+        //if(config.get("optimize").equals("true")) {
+            semanticsResult = ollir.optimize(semanticsResult);
+        //}
+
+        TestUtils.noErrors(semanticsResult);
+
         // Ollir stage
         OllirResult ollirResult = ollir.toOllir(semanticsResult);
 
