@@ -9,7 +9,7 @@ class Test{
   public static void main(String[] args){
         Test a;
         int b;
-        b = (new Test()).foo();
+        b = (new Test()).foo() + 2;
 
   }
 
