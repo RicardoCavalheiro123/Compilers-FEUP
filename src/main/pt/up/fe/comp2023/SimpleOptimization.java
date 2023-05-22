@@ -24,7 +24,7 @@ public class SimpleOptimization implements JmmOptimization {
 
         JmmNode root = jmmSemanticsResult.getRootNode();
 
-        visitor.visit(root, new StringBuilder(""));
+        visitor.visit(root, new StringBuilder());
 
 
         return new OllirResult(jmmSemanticsResult, visitor.getOllirCode(), reports);

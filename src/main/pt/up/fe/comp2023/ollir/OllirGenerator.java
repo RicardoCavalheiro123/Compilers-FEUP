@@ -268,13 +268,13 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
                     return "invokevirtual(" + jmmNode.getChildren().get(0).get(var) + getTypeOfVariable(this.currentMethod,jmmNode.getChildren().get(0).get(var) ) +"," + "\"" + jmmNode.get("method")+ "\"" +result+ ")" + return_type + "";
             }
             else if(jmmNode.getJmmParent().getKind().equals("Stmt")) {
-                result = visit(jmmNode.getChildren().get(0), ollir);
-                this.ollirCode.append("invokevirtual(" + result + "," + "\"" + jmmNode.get("method") + "\"" + ")" + return_type + "");
+                String res = visit(jmmNode.getChildren().get(0), ollir);
+                this.ollirCode.append("invokevirtual(" + res + "," + "\"" + jmmNode.get("method") + "\"" + ")" + return_type + "");
                 return null;
             }
             if(returnable){
-                result = visit(jmmNode.getChildren().get(0), ollir);
-                this.ollirCode.append("temp" + temp_counter + return_type + " :=" + return_type + " invokevirtual(" + result  +"," + "\"" + jmmNode.get("method")+ "\"" + ")" + return_type + ";\n");
+                String res = visit(jmmNode.getChildren().get(0), ollir);
+                this.ollirCode.append("temp" + temp_counter + return_type + " :=" + return_type + " invokevirtual(" + res  +"," + "\"" + jmmNode.get("method")+ "\"" + result + ")" + return_type + ";\n");
                 temp_counter++;
                 return "temp" + (temp_counter -1) + return_type;
 
@@ -336,7 +336,6 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
         var left = visit(jmmNode.getChildren().get(0), ollir);
         String result_type = "";
 
-
         if(Comp_Op.contains(jmmNode.get("op"))) result_type = ".bool";
         else result_type = ".i32";
 
@@ -344,13 +343,8 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
             return left + " " + jmmNode.get("op") + result_type + " " + right;
         }
 
-
         this.ollirCode.append("temp" + temp_counter + result_type + " :=" + result_type + " " + left + " " + jmmNode.get("op") + result_type + " " + right + ";\n");
-
-
         temp_counter++;
-
-
         return "temp" + (temp_counter - 1) + result_type;
     }
 

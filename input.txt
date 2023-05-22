@@ -1,16 +1,22 @@
 class Test{
 
+  int field1;
 
-  public int foo(){
+  public int init(){
+        field1 = 1;
+        return field1;
+  }
 
+  public int foo(int c){
         return 1;
   }
 
   public static void main(String[] args){
         Test a;
-        int b;
-        b = (new Test()).foo() + 2;
-
+        int field2;
+        a = new Test();
+        field2 = a.init();
+        a.foo(field2);
   }
 
 }
