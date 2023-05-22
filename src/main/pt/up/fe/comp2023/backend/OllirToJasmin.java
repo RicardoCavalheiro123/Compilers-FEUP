@@ -155,8 +155,8 @@ public class OllirToJasmin {
                     if (literalElement != null && operand != null) {
                          if (operand.getName().equals(((Operand) dest).getName())) {
                              int value = Integer.parseInt(literalElement.getLiteral());
-
-                             return "iinc " + method.getVarTable().get(operand.getName()).getVirtualReg() + " " + value;
+                             if (value >= -128 && value <= 127)
+                                return "iinc " + method.getVarTable().get(operand.getName()).getVirtualReg() + " " + value;
                         }
                     }
                 }
