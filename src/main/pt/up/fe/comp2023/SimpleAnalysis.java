@@ -32,7 +32,7 @@ public class SimpleAnalysis implements JmmAnalysis {
             visitor.visit(root, null);
 
             SymbolTable symbolTable = visitor.getSymbolTable();
-
+/*
             reports.addAll(visitor.getReports());
 
             List<SemanticVisitor> semantic_analyzers = Arrays.asList(
@@ -53,7 +53,7 @@ public class SimpleAnalysis implements JmmAnalysis {
                 analyzer.visit(root, symbolTable);
                 reports.addAll(analyzer.getReports());
             }
-
+*/
             return new JmmSemanticsResult(jmmParserResult, symbolTable, reports);
         }
         catch (Exception e) {
