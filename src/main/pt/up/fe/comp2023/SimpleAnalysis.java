@@ -42,7 +42,7 @@ public class SimpleAnalysis implements JmmAnalysis {
                 new AssigneeAssignedCompatibilityAnalyzer(),
                 new IdentifierAnalyzer(),
                 new MethodExistsAnalyser(),
-                new MainAnalyzer(),
+                //new MainAnalyzer(),
                 new MethodArgumentsCompatibilityAnalyzer(),
                 new MethodReturnTypeAnalyzer()
             );
@@ -50,8 +50,8 @@ public class SimpleAnalysis implements JmmAnalysis {
             System.out.println("Performing semantic analysis...");
 
             for(SemanticVisitor analyzer: semantic_analyzers) {
-                analyzer.visit(root, symbolTable);
-                reports.addAll(analyzer.getReports());
+                //analyzer.visit(root, symbolTable);
+                //reports.addAll(analyzer.getReports());
             }
 
             return new JmmSemanticsResult(jmmParserResult, symbolTable, reports);
