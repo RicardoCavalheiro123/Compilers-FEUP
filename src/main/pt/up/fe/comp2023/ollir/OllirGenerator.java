@@ -269,7 +269,7 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
             }
             else if(jmmNode.getJmmParent().getKind().equals("Stmt")) {
                 String res = visit(jmmNode.getChildren().get(0), ollir);
-                this.ollirCode.append("invokevirtual(" + res + "," + "\"" + jmmNode.get("method") + "\"" + ")" + return_type + "");
+                this.ollirCode.append("invokevirtual(" + res + "," + "\"" + jmmNode.get("method") + "\"" + result + ")" + return_type + "");
                 return null;
             }
             if(returnable){
