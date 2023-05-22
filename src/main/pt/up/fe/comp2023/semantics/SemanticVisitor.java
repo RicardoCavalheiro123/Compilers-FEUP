@@ -51,9 +51,11 @@ public abstract class SemanticVisitor extends PreorderJmmVisitor<SymbolTable, In
         //check existence in class parameters (fields)
         var fields = symbolTable.getFields();
 
-        for(var field: fields) {
-            if(Objects.equals(field.getName(), id)) {
-                return field.getType();
+        if (node.getAncestor("MainMethod").isEmpty()) {
+            for (var field : fields) {
+                if (Objects.equals(field.getName(), id)) {
+                    return field.getType();
+                }
             }
         }
 
