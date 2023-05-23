@@ -19,6 +19,7 @@ public class ConstantPropagationVisitor extends PreorderJmmVisitor<Boolean, Bool
 
         addVisit("Assign", this::assignVisit);
         addVisit("Identifier", this::identifierVisit);
+        addVisit("VarDeclaration", this::varVisit);
     }
 
     public Boolean defaultVisit(JmmNode node, Boolean bool){
@@ -31,9 +32,15 @@ public class ConstantPropagationVisitor extends PreorderJmmVisitor<Boolean, Bool
 
         if(value.getKind().equals("Integer")) {
             variables.put(id, value.get("value"));
+            node.delete();
+
+            return true;
         }
         else if(value.getKind().equals("Boolean")) {
             variables.put(id, value.get("value"));
+            node.delete();
+
+            return true;
         }
         else if(value.getKind().equals("BinaryOp")) {
             boolean changed = false;
@@ -94,9 +101,59 @@ public class ConstantPropagationVisitor extends PreorderJmmVisitor<Boolean, Bool
     }
 
     public Boolean identifierVisit(JmmNode node, Boolean bool) {
-        //var identifier = node.get("name");
+        var identifier = node.get("id");
+
+        var value = variables.get(node.get("id"));
+
+        if(value != null) {
+            JmmNodeImpl aux_node;
+            JmmNodeImpl parent = (JmmNodeImpl) node.getJmmParent();
+
+            int idx = parent.getChildren().indexOf(node);
+
+            if(value.equals("true") || value.equals("false")) {
+                aux_node = new JmmNodeImpl("Boolean");
+            }
+            else {
+                aux_node = new JmmNodeImpl("Integer");
+            }
+
+            aux_node.put("value", value);
+            aux_node.put("colStart", node.get("colStart"));
+            aux_node.put("lineStart", node.get("lineStart"));
+            aux_node.put("colEnd", node.get("colEnd"));
+            aux_node.put("lineEnd", node.get("lineEnd"));
+            aux_node.setParent(node.getJmmParent());
+
+            node.delete();
+            parent.add(aux_node, idx);
+
+
+            return true;
+
+        }
 
         return false;
+    }
+
+    public Boolean varVisit(JmmNode node, Boolean bool) {
+
+        /*JmmNodeImpl parent = (JmmNodeImpl) node.getJmmParent();
+        int idx = parent.getChildren().indexOf(node);*/
+
+        /*var value = variables.get(node.get("var"));
+
+        if(value != null) {
+            node.delete();
+
+            return true;
+        }*/
+
+        variables.put(node.get("var"), null);
+        node.delete();
+
+
+        return true;
     }
 
 }
