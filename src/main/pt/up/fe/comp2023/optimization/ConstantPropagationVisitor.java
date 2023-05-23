@@ -4,6 +4,7 @@ import pt.up.fe.comp.jmm.ast.*;
 import pt.up.fe.comp2023.semantics.symbol_table.SymbolTable;
 
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.function.BiFunction;
 
 public class ConstantPropagationVisitor extends PreorderJmmVisitor<Boolean, Boolean> {
@@ -42,44 +43,48 @@ public class ConstantPropagationVisitor extends PreorderJmmVisitor<Boolean, Bool
 
             JmmNodeImpl aux_node, aux_node2; // need to update node child 0
 
-            switch(variables.get(op1.get("id"))) {
-                case "false", "true":
-                    aux_node = new JmmNodeImpl("Boolean");
-                default:
-                    aux_node = new JmmNodeImpl("Integer");
+            if(Objects.equals(op1.getKind(), "Identifier")) {
+                switch (variables.get(op1.get("id"))) {
+                    case "false", "true":
+                        aux_node = new JmmNodeImpl("Boolean");
+                    default:
+                        aux_node = new JmmNodeImpl("Integer");
+                }
+
+                if (op1.getKind().equals("Identifier") && variables.containsKey(op1.get("id"))) {
+
+                    aux_node.put("value", variables.get(op1.get("id")));
+                    aux_node.put("colStart", op1.get("colStart"));
+                    aux_node.put("lineStart", op1.get("lineStart"));
+                    aux_node.put("colEnd", op1.get("colEnd"));
+                    aux_node.put("lineEnd", op1.get("lineEnd"));
+
+                    value.setChild(aux_node, 0);
+
+                    changed = true;
+                }
             }
 
-            if(op1.getKind().equals("Identifier") && variables.containsKey(op1.get("id"))) {
+            if(Objects.equals(op2.getKind(), "Identifier")) {
+                switch (variables.get(op2.get("id"))) {
+                    case "false", "true":
+                        aux_node2 = new JmmNodeImpl("Boolean");
+                    default:
+                        aux_node2 = new JmmNodeImpl("Integer");
+                }
 
-                aux_node.put("value", variables.get(op1.get("id")));
-                aux_node.put("colStart", op1.get("colStart"));
-                aux_node.put("lineStart", op1.get("lineStart"));
-                aux_node.put("colEnd", op1.get("colEnd"));
-                aux_node.put("lineEnd", op1.get("lineEnd"));
+                if (op2.getKind().equals("Identifier") && variables.containsKey(op2.get("id"))) {
 
-                value.setChild(aux_node, 0);
+                    aux_node2.put("value", variables.get(op2.get("id")));
+                    aux_node2.put("colStart", op2.get("colStart"));
+                    aux_node2.put("lineStart", op2.get("lineStart"));
+                    aux_node2.put("colEnd", op2.get("colEnd"));
+                    aux_node2.put("lineEnd", op2.get("lineEnd"));
 
-                changed |= true;
-            }
+                    value.setChild(aux_node2, 1);
 
-            switch(variables.get(op2.get("id"))) {
-                case "false", "true":
-                    aux_node2 = new JmmNodeImpl("Boolean");
-                default:
-                    aux_node2 = new JmmNodeImpl("Integer");
-            }
-
-            if(op2.getKind().equals("Identifier") && variables.containsKey(op2.get("id"))) {
-
-                aux_node2.put("value", variables.get(op2.get("id")));
-                aux_node2.put("colStart", op2.get("colStart"));
-                aux_node2.put("lineStart", op2.get("lineStart"));
-                aux_node2.put("colEnd", op2.get("colEnd"));
-                aux_node2.put("lineEnd", op2.get("lineEnd"));
-
-                value.setChild(aux_node2, 1);
-
-                changed |= true;
+                    changed = true;
+                }
             }
 
             return changed;
