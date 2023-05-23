@@ -65,9 +65,9 @@ public class Launcher {
         SimpleOptimization ollir = new SimpleOptimization();
 
         //Optimization before ollir
-        //if(config.get("optimize").equals("true")) {
+        if(config.get("optimize").equals("true")) {
             semanticsResult = ollir.optimize(semanticsResult);
-        //}
+        }
 
         TestUtils.noErrors(semanticsResult);
 
@@ -107,7 +107,7 @@ public class Launcher {
         // Create config
         Map<String, String> config = new HashMap<>();
         config.put("inputFile", args[0]);
-        config.put("optimize", "false");
+        config.put("optimize", "true");
         config.put("registerAllocation", "-1");
         config.put("debug", "false");
 
