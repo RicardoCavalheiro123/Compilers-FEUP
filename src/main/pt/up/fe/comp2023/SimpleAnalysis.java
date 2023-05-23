@@ -42,7 +42,7 @@ public class SimpleAnalysis implements JmmAnalysis {
                 new AssigneeAssignedCompatibilityAnalyzer(),
                 new IdentifierAnalyzer(),
                 new MethodExistsAnalyser(),
-                new MainAnalyzer(),
+                //new MainAnalyzer(),
                 new MethodArgumentsCompatibilityAnalyzer(),
                 new MethodReturnTypeAnalyzer()
             );

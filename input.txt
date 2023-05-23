@@ -1,16 +1,14 @@
-class PropSimple {
-    public int foo(){
-	  int a;
-	  int b;
-	  int c;
+class Test{
 
-	  a = 10;
-	  b = 20;
-	  c = a + b;
+  public int foo(int a, int b){ return 1;}
 
-	  return c;
-	}
-    public static void main(String[] args) {
+  public static void main(String[] args){
 
-    }
+    Test a;
+    a = new Test();
+    (a).foo((1+2), 2 * (2 + 3));
+
+  }
+
 }
+

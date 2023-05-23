@@ -3,10 +3,17 @@ package pt.up.fe.comp2023.backend;
 import org.specs.comp.ollir.*;
 import pt.up.fe.comp2023.backend.instructions.call.*;
 
+import javax.management.Descriptor;
+import java.util.HashSet;
+import java.util.Set;
+
 public class OllirToJasmin {
     String superClassName;
     boolean isAssign = false;
     int conditionCounter = 0;
+
+    int stackSize = 0;
+    int stackMaxSize = 0;
 
     public String getJasminString(ClassUnit resultOllirClass) {
         superClassName = resultOllirClass.getSuperClass() == null ? "java/lang/Object" : resultOllirClass.getSuperClass();
@@ -81,6 +88,9 @@ public class OllirToJasmin {
                 jasminCodeBuilder.append("\t.limit locals ").append("99").append("\n");
             }
 
+            Set<Integer> hash_Set = new HashSet<Integer>();
+            // HERE TODO
+
             jasminCodeBuilder.append(instructions);
 
             if (method.getMethodAccessModifier() == AccessModifiers.DEFAULT) {
@@ -88,6 +98,8 @@ public class OllirToJasmin {
             }
 
             jasminCodeBuilder.append(".end method\n\t\n");
+            this.stackSize = 0;
+            this.stackMaxSize = 0;
         }
 
 
@@ -143,8 +155,8 @@ public class OllirToJasmin {
                     if (literalElement != null && operand != null) {
                          if (operand.getName().equals(((Operand) dest).getName())) {
                              int value = Integer.parseInt(literalElement.getLiteral());
-
-                             return "iinc " + method.getVarTable().get(operand.getName()).getVirtualReg() + " " + value;
+                             if (value >= -128 && value <= 127)
+                                return "iinc " + method.getVarTable().get(operand.getName()).getVirtualReg() + " " + value;
                         }
                     }
                 }
@@ -297,5 +309,14 @@ public class OllirToJasmin {
         jasminCodeBuilder.append(JasminUtils.loadElement(method, instruction.getSingleOperand()));
 
         return jasminCodeBuilder.toString();
+    }
+
+    public int updateStack(int stackUpdate) {
+        this.stackSize += stackUpdate;
+        if (this.stackSize > this.stackMaxSize)
+            this.stackMaxSize = this.stackSize;
+        if (this.stackSize < 0)
+            throw new RuntimeException("Stack size is negative");
+        return this.stackSize;
     }
 }
