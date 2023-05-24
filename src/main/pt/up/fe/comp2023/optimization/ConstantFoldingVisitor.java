@@ -1,5 +1,6 @@
 package pt.up.fe.comp2023.optimization;
 
+import pt.up.fe.comp.jmm.ast.AJmmVisitor;
 import pt.up.fe.comp.jmm.ast.JmmNode;
 import pt.up.fe.comp.jmm.ast.JmmNodeImpl;
 import pt.up.fe.comp.jmm.ast.PreorderJmmVisitor;
@@ -27,12 +28,14 @@ public class ConstantFoldingVisitor extends PreorderJmmVisitor<Boolean, Boolean>
     public Boolean assignVisit(JmmNode node, Boolean bool) {
 
         if(node.getJmmChild(0).getKind().equals("BinaryOp")) {
+
             var n = node.getJmmChild(0);
 
             if(n.getJmmChild(0).getKind().equals("Identifier") || n.getJmmChild(1).getKind().equals("Identifier")) return false;
 
             var v1 = n.getJmmChild(0).get("value");
             var v2 = n.getJmmChild(1).get("value");
+
             String value = null;
 
             switch(n.get("op")) {

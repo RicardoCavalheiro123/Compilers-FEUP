@@ -1,12 +1,14 @@
 class PropWithLoop {
     public int foo(){
 	  int a;
+	  int b;
+	  int c;
 	  int i;
 
-
 	  a = 10;
-	  i = 10;
-	  i = i + a;
+	  i = 20;
+	  b = i + a;
+	  c = i + 10;
 
 	  return i;
 	}

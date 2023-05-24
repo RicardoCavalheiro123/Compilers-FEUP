@@ -11,9 +11,12 @@ import pt.up.fe.comp2023.optimization.ConstantPropagationVisitor;
 import pt.up.fe.comp2023.semantics.symbol_table.SymbolTable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class SimpleOptimization implements JmmOptimization {
+
+    public HashMap<String, String> variables = new HashMap<>();
 
     @Override
     public JmmSemanticsResult optimize(JmmSemanticsResult semanticsResult) {
@@ -23,17 +26,17 @@ public class SimpleOptimization implements JmmOptimization {
         if (optimizeValue.equals("true")) {
             while(changed) {
                 var constantPropagation = new ConstantPropagationVisitor();
+                //constantPropagation.variables = this.variables;
                 changed = constantPropagation.visit(semanticsResult.getRootNode(), true);
 
                 var constantFolding = new ConstantFoldingVisitor();
-                constantFolding.variables = constantPropagation.variables;
+                //constantFolding.variables = constantPropagation.variables;
                 changed |= constantFolding.visit(semanticsResult.getRootNode(), true);
+                //this.variables = constantFolding.variables;
 
+                var a = 0;
             }
         }
-
-
-
 
         return semanticsResult;
     }

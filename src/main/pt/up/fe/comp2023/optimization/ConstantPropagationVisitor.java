@@ -19,7 +19,7 @@ public class ConstantPropagationVisitor extends PreorderJmmVisitor<Boolean, Bool
 
         addVisit("Assign", this::assignVisit);
         addVisit("Identifier", this::identifierVisit);
-        //addVisit("VarDeclaration", this::varVisit);
+        addVisit("VarDeclaration", this::varVisit);
     }
 
     public Boolean defaultVisit(JmmNode node, Boolean bool){
@@ -42,15 +42,11 @@ public class ConstantPropagationVisitor extends PreorderJmmVisitor<Boolean, Bool
 
         if(value.getKind().equals("Integer")) {
             variables.put(id, value.get("value"));
-            //node.delete();
-
-            //return true;
+            //value.delete();
         }
         else if(value.getKind().equals("Boolean")) {
             variables.put(id, value.get("value"));
-            //node.delete();
-
-            //return true;
+            //value.delete();
         }
         else if(value.getKind().equals("BinaryOp")) {
             boolean changed = false;
@@ -111,7 +107,6 @@ public class ConstantPropagationVisitor extends PreorderJmmVisitor<Boolean, Bool
     }
 
     public Boolean identifierVisit(JmmNode node, Boolean bool) {
-        var identifier = node.get("id");
 
         var value = variables.get(node.get("id"));
 
@@ -138,9 +133,7 @@ public class ConstantPropagationVisitor extends PreorderJmmVisitor<Boolean, Bool
             node.delete();
             parent.add(aux_node, idx);
 
-
             return true;
-
         }
 
         return false;
@@ -148,20 +141,19 @@ public class ConstantPropagationVisitor extends PreorderJmmVisitor<Boolean, Bool
 
     public Boolean varVisit(JmmNode node, Boolean bool) {
 
-        /*JmmNodeImpl parent = (JmmNodeImpl) node.getJmmParent();
-        int idx = parent.getChildren().indexOf(node);*/
+        JmmNodeImpl parent = (JmmNodeImpl) node.getJmmParent();
+        int idx = parent.getChildren().indexOf(node);
 
-        /*var value = variables.get(node.get("var"));
+        var value = variables.get(node.get("var"));
 
         if(value != null) {
             node.delete();
 
             return true;
-        }*/
+        }
 
         variables.put(node.get("var"), null);
         node.delete();
-
 
         return true;
     }
