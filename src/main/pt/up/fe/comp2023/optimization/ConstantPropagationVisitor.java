@@ -19,13 +19,12 @@ public class ConstantPropagationVisitor extends PreorderJmmVisitor<Boolean, Bool
 
         addVisit("Assign", this::assignVisit);
         addVisit("Identifier", this::identifierVisit);
-        //addVisit("VarDeclaration", this::varVisit);
     }
 
-    public Boolean defaultVisit(JmmNode node, Boolean bool){
+    public Boolean defaultVisit(JmmNode node, Boolean bool) {
         boolean changes = false;
 
-        for(var child: node.getChildren()) {
+        for (var child : node.getChildren()) {
             changes = visit(child) || changes;
         }
 
@@ -36,23 +35,21 @@ public class ConstantPropagationVisitor extends PreorderJmmVisitor<Boolean, Bool
         var value = node.getJmmChild(0);
         var id = node.get("id");
 
-        if(node.getJmmParent().getKind().equals("Block")) {
+        if (node.getJmmParent().getKind().equals("Block")) {
             var var_to_remove = node.get("id");
 
-            if(variables.containsKey(var_to_remove)) {
+            if (variables.containsKey(var_to_remove)) {
                 variables.remove(node.get("id"));
             }
 
             return false;
         }
 
-        if(value.getKind().equals("Integer")) {
+        if (value.getKind().equals("Integer")) {
             variables.put(id, value.get("value"));
-        }
-        else if(value.getKind().equals("Boolean")) {
+        } else if (value.getKind().equals("Boolean")) {
             variables.put(id, value.get("value"));
-        }
-        else if(value.getKind().equals("BinaryOp")) {
+        } else if (value.getKind().equals("BinaryOp")) {
             boolean changed = false;
 
             var op1 = value.getJmmChild(0);
@@ -60,7 +57,7 @@ public class ConstantPropagationVisitor extends PreorderJmmVisitor<Boolean, Bool
 
             JmmNodeImpl aux_node, aux_node2; // need to update node child 0
 
-            if(Objects.equals(op1.getKind(), "Identifier") && variables.containsKey(op1.get("id"))) {
+            if (Objects.equals(op1.getKind(), "Identifier") && variables.containsKey(op1.get("id"))) {
                 switch (variables.get(op1.get("id"))) {
                     case "false", "true":
                         aux_node = new JmmNodeImpl("Boolean");
@@ -82,7 +79,7 @@ public class ConstantPropagationVisitor extends PreorderJmmVisitor<Boolean, Bool
                 }
             }
 
-            if(Objects.equals(op2.getKind(), "Identifier") && variables.containsKey(op2.get("id"))) {
+            if (Objects.equals(op2.getKind(), "Identifier") && variables.containsKey(op2.get("id"))) {
                 switch (variables.get(op2.get("id"))) {
                     case "false", "true":
                         aux_node2 = new JmmNodeImpl("Boolean");
@@ -105,12 +102,11 @@ public class ConstantPropagationVisitor extends PreorderJmmVisitor<Boolean, Bool
             }
 
             return changed;
-        }
-        else if(node.getKind().equals("Assign")) {
+        } else if (node.getKind().equals("Assign")) {
             var identifier = variables.get(node.getJmmChild(0).get("id"));
             var n = node.getJmmChild(0);
 
-            if(identifier != null) {
+            if (identifier != null) {
                 JmmNodeImpl aux_node;
 
                 switch (identifier) {
@@ -143,16 +139,15 @@ public class ConstantPropagationVisitor extends PreorderJmmVisitor<Boolean, Bool
 
         var value = variables.get(node.get("id"));
 
-        if(value != null) {
+        if (value != null) {
             JmmNodeImpl aux_node;
             JmmNodeImpl parent = (JmmNodeImpl) node.getJmmParent();
 
             int idx = parent.getChildren().indexOf(node);
 
-            if(value.equals("true") || value.equals("false")) {
+            if (value.equals("true") || value.equals("false")) {
                 aux_node = new JmmNodeImpl("Boolean");
-            }
-            else {
+            } else {
                 aux_node = new JmmNodeImpl("Integer");
             }
 
@@ -171,24 +166,4 @@ public class ConstantPropagationVisitor extends PreorderJmmVisitor<Boolean, Bool
 
         return false;
     }
-
-    public Boolean varVisit(JmmNode node, Boolean bool) {
-
-        JmmNodeImpl parent = (JmmNodeImpl) node.getJmmParent();
-        int idx = parent.getChildren().indexOf(node);
-
-        var value = variables.get(node.get("var"));
-
-        if(value != null) {
-            node.delete();
-
-            return true;
-        }
-
-        variables.put(node.get("var"), null);
-        node.delete();
-
-        return true;
-    }
-
 }

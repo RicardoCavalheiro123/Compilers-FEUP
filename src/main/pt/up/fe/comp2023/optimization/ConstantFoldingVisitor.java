@@ -10,11 +10,8 @@ import java.util.Objects;
 
 public class ConstantFoldingVisitor extends PreorderJmmVisitor<Boolean, Boolean> {
 
-    public HashMap<String, String> variables;
-
     @Override
     protected void buildVisitor() {
-        this.variables = new HashMap<>();
 
         setDefaultVisit(this::defaultVisit);
 
@@ -58,7 +55,7 @@ public class ConstantFoldingVisitor extends PreorderJmmVisitor<Boolean, Boolean>
                     value = Integer.toString(Integer.parseInt(v1) / Integer.parseInt(v2));
                     break;
                 case "==":
-                    if(v1 == v2) {
+                    if(Objects.equals(v1, v2)) {
                         value = "true";
                     }
                     else {
@@ -66,7 +63,7 @@ public class ConstantFoldingVisitor extends PreorderJmmVisitor<Boolean, Boolean>
                     }
                     break;
                 case "!=":
-                    if(v1 != v2) {
+                    if(!Objects.equals(v1, v2)) {
                         value = "true";
                     }
                     else {
@@ -140,7 +137,7 @@ public class ConstantFoldingVisitor extends PreorderJmmVisitor<Boolean, Boolean>
 
             node.setChild(aux_node, 0);
 
-            variables.put(node.get("id"), value);
+            //variables.put(node.get("id"), value);
 
             return true;
         }
