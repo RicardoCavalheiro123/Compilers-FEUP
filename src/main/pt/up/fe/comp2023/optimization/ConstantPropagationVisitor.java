@@ -23,9 +23,13 @@ public class ConstantPropagationVisitor extends PreorderJmmVisitor<Boolean, Bool
     }
 
     public Boolean defaultVisit(JmmNode node, Boolean bool){
+        boolean changes = false;
 
+        for(var child: node.getChildren()) {
+            changes = visit(child) || changes;
+        }
 
-        return false;
+        return changes;
     }
 
     public Boolean assignVisit(JmmNode node, Boolean bool) {

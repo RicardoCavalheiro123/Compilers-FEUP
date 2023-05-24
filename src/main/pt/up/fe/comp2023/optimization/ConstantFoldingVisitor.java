@@ -25,7 +25,7 @@ public class ConstantFoldingVisitor extends PreorderJmmVisitor<Boolean, Boolean>
         boolean changes = false;
 
         for(var child: node.getChildren()) {
-            var a = 0;
+            changes = visit(child) || changes;
         }
 
         return changes;
