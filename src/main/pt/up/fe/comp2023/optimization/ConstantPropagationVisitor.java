@@ -30,7 +30,15 @@ public class ConstantPropagationVisitor extends PreorderJmmVisitor<Boolean, Bool
         var value = node.getJmmChild(0);
         var id = node.get("id");
 
-        //if(node.getJmmParent().equals())
+        if(node.getJmmParent().getKind().equals("Block")) {
+            var var_to_remove = node.get("id");
+
+            if(variables.containsKey(var_to_remove)) {
+                variables.remove(node.get("id"));
+            }
+
+            return false;
+        }
 
         if(value.getKind().equals("Integer")) {
             variables.put(id, value.get("value"));
@@ -52,7 +60,7 @@ public class ConstantPropagationVisitor extends PreorderJmmVisitor<Boolean, Bool
 
             JmmNodeImpl aux_node, aux_node2; // need to update node child 0
 
-            if(Objects.equals(op1.getKind(), "Identifier")) {
+            if(Objects.equals(op1.getKind(), "Identifier") && variables.containsKey(op1.get("id"))) {
                 switch (variables.get(op1.get("id"))) {
                     case "false", "true":
                         aux_node = new JmmNodeImpl("Boolean");
@@ -74,7 +82,7 @@ public class ConstantPropagationVisitor extends PreorderJmmVisitor<Boolean, Bool
                 }
             }
 
-            if(Objects.equals(op2.getKind(), "Identifier")) {
+            if(Objects.equals(op2.getKind(), "Identifier") && variables.containsKey(op2.get("id"))) {
                 switch (variables.get(op2.get("id"))) {
                     case "false", "true":
                         aux_node2 = new JmmNodeImpl("Boolean");

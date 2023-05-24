@@ -3,10 +3,15 @@ class PropWithLoop {
 	  int a;
 	  int i;
 	  int res;
+	  boolean bool;
+	  bool = true;
 	  a = 10;
 	  i = 0;
-	  while (i < a){
-	    i=i+1;
+	  if(bool) {
+	    i = 10;
+	  }
+	  else {
+	   i = 20;
 	  }
 	  res = i*a;
 	  return res;
