@@ -2,19 +2,13 @@ class PropWithLoop {
     public int foo(){
 	  int a;
 	  int i;
-	  int res;
-	  boolean bool;
-	  bool = true;
+
+
 	  a = 10;
-	  i = 0;
-	  if(bool) {
-	    i = 10;
-	  }
-	  else {
-	   i = 20;
-	  }
-	  res = i*a;
-	  return res;
+	  i = 10;
+	  i = i + a;
+
+	  return i;
 	}
 	public static void main(String[] args) {
 	}

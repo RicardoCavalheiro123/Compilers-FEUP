@@ -9,7 +9,7 @@ import java.util.function.BiFunction;
 
 public class ConstantPropagationVisitor extends PreorderJmmVisitor<Boolean, Boolean> {
 
-    private HashMap<String, String> variables;
+    public HashMap<String, String> variables;
 
     @Override
     protected void buildVisitor() {

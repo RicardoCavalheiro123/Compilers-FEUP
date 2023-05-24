@@ -9,8 +9,11 @@ import java.util.Objects;
 
 public class ConstantFoldingVisitor extends PreorderJmmVisitor<Boolean, Boolean> {
 
+    public HashMap<String, String> variables;
+
     @Override
     protected void buildVisitor() {
+        this.variables = new HashMap<>();
 
         setDefaultVisit(this::defaultVisit);
 
@@ -127,6 +130,8 @@ public class ConstantFoldingVisitor extends PreorderJmmVisitor<Boolean, Boolean>
             aux_node.put("lineEnd", n.get("lineEnd"));
 
             node.setChild(aux_node, 0);
+
+            variables.put(node.get("id"), value);
 
             return true;
         }

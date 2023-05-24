@@ -26,6 +26,7 @@ public class SimpleOptimization implements JmmOptimization {
                 changed = constantPropagation.visit(semanticsResult.getRootNode(), true);
 
                 var constantFolding = new ConstantFoldingVisitor();
+                constantFolding.variables = constantPropagation.variables;
                 changed |= constantFolding.visit(semanticsResult.getRootNode(), true);
 
             }
