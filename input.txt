@@ -5,7 +5,7 @@ class PropSequential {
       boolean c;
       a = true;
       b = false;
-      c = a && b;
+      c = true && false;
 
       return c;
     }

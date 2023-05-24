@@ -10,6 +10,7 @@ import java.util.function.BiFunction;
 public class ConstantPropagationVisitor extends PreorderJmmVisitor<Boolean, Boolean> {
 
     public HashMap<String, String> variables;
+    public boolean changes = false;
 
     @Override
     protected void buildVisitor() {
@@ -22,7 +23,6 @@ public class ConstantPropagationVisitor extends PreorderJmmVisitor<Boolean, Bool
     }
 
     public Boolean defaultVisit(JmmNode node, Boolean bool) {
-        boolean changes = false;
 
         for (var child : node.getChildren()) {
             changes = visit(child) || changes;

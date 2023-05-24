@@ -10,22 +10,28 @@ import java.util.Objects;
 
 public class ConstantFoldingVisitor extends PreorderJmmVisitor<Boolean, Boolean> {
 
+    public boolean changes = false;
+
     @Override
     protected void buildVisitor() {
 
         setDefaultVisit(this::defaultVisit);
 
         addVisit("BinaryOp", this::binaryopVisit);
+        addVisit("UnaryOp", this::unaryopVisit);
     }
 
     public Boolean defaultVisit(JmmNode node, Boolean bool){
-        boolean changes = false;
 
         for(var child: node.getChildren()) {
             changes = visit(child) || changes;
         }
 
         return changes;
+    }
+
+    public Boolean unaryopVisit(JmmNode node, Boolean bool) {
+        return false;
     }
 
     public Boolean binaryopVisit(JmmNode node, Boolean bool) {
