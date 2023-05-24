@@ -1,17 +1,13 @@
-class PropWithLoop {
-    public int foo(){
-	  int a;
-	  int b;
-	  int c;
-	  int i;
+class PropSequential {
+    public int foo(int factor){
+      int a;
+      int b;
+      a = 10;
+      b = a;
+      a = b * factor;
+      return a;
+    }
+    public static void main(String[] args) {
+    }
 
-	  a = 10;
-	  i = 20;
-	  b = i + a;
-	  c = i + 10;
-
-	  return i;
-	}
-	public static void main(String[] args) {
-	}
 }

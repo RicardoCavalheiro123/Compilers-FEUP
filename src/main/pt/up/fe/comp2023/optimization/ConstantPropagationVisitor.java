@@ -19,7 +19,7 @@ public class ConstantPropagationVisitor extends PreorderJmmVisitor<Boolean, Bool
 
         addVisit("Assign", this::assignVisit);
         addVisit("Identifier", this::identifierVisit);
-        addVisit("VarDeclaration", this::varVisit);
+        //addVisit("VarDeclaration", this::varVisit);
     }
 
     public Boolean defaultVisit(JmmNode node, Boolean bool){
@@ -42,11 +42,9 @@ public class ConstantPropagationVisitor extends PreorderJmmVisitor<Boolean, Bool
 
         if(value.getKind().equals("Integer")) {
             variables.put(id, value.get("value"));
-            //value.delete();
         }
         else if(value.getKind().equals("Boolean")) {
             variables.put(id, value.get("value"));
-            //value.delete();
         }
         else if(value.getKind().equals("BinaryOp")) {
             boolean changed = false;
@@ -101,6 +99,35 @@ public class ConstantPropagationVisitor extends PreorderJmmVisitor<Boolean, Bool
             }
 
             return changed;
+        }
+        else if(node.getKind().equals("Assign")) {
+            var identifier = variables.get(node.getJmmChild(0).get("id"));
+            var n = node.getJmmChild(0);
+
+            if(identifier != null) {
+                JmmNodeImpl aux_node;
+
+                switch (identifier) {
+                    case "false", "true":
+                        aux_node = new JmmNodeImpl("Boolean");
+                    default:
+                        aux_node = new JmmNodeImpl("Integer");
+                }
+
+                aux_node.put("value", identifier);
+                aux_node.put("colStart", n.get("colStart"));
+                aux_node.put("lineStart", n.get("lineStart"));
+                aux_node.put("colEnd", n.get("colEnd"));
+                aux_node.put("lineEnd", n.get("lineEnd"));
+
+                node.setChild(aux_node, 0);
+
+                variables.put(node.get("id"), identifier);
+
+                return true;
+            }
+
+            return false;
         }
 
         return false;
