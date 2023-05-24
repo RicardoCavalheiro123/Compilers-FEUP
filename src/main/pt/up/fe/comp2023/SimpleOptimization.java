@@ -18,15 +18,19 @@ public class SimpleOptimization implements JmmOptimization {
     @Override
     public JmmSemanticsResult optimize(JmmSemanticsResult semanticsResult) {
         boolean changed = true;
+        String optimizeValue = semanticsResult.getConfig().getOrDefault("optimize", "false");
 
-        while(changed) {
-            var constantPropagation = new ConstantPropagationVisitor();
-            changed = constantPropagation.visit(semanticsResult.getRootNode(), true);
+        if (optimizeValue.equals("true")) {
+            while(changed) {
+                var constantPropagation = new ConstantPropagationVisitor();
+                changed = constantPropagation.visit(semanticsResult.getRootNode(), true);
 
-            var constantFolding = new ConstantFoldingVisitor();
-            changed |= constantFolding.visit(semanticsResult.getRootNode(), true);
+                var constantFolding = new ConstantFoldingVisitor();
+                changed |= constantFolding.visit(semanticsResult.getRootNode(), true);
 
+            }
         }
+
 
 
 

@@ -1,9 +1,12 @@
 package pt.up.fe.comp2023;
 
 import java.io.File;
+import java.text.ParseException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import pt.up.fe.comp.TestUtils;
 import pt.up.fe.comp.jmm.analysis.JmmSemanticsResult;
@@ -100,9 +103,9 @@ public class Launcher {
         SpecsLogs.info("Executing with args: " + Arrays.toString(args));
 
         // Check if there is at least one argument
-        if (args.length != 1) {
+        /*if (args.length != 1) {
             throw new RuntimeException("Expected a single argument, a path to an existing input file.");
-        }
+        }*/
 
         // Create config
         Map<String, String> config = new HashMap<>();
@@ -110,6 +113,12 @@ public class Launcher {
         config.put("optimize", "false");
         config.put("registerAllocation", "-1");
         config.put("debug", "false");
+
+        for(var arg: args) {
+            if(arg.equals("-o")) {
+                config.put("optimize", "true");
+            }
+        }
 
         return config;
     }

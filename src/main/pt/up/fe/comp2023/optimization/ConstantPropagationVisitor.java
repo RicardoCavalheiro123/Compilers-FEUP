@@ -19,7 +19,7 @@ public class ConstantPropagationVisitor extends PreorderJmmVisitor<Boolean, Bool
 
         addVisit("Assign", this::assignVisit);
         addVisit("Identifier", this::identifierVisit);
-        addVisit("VarDeclaration", this::varVisit);
+        //addVisit("VarDeclaration", this::varVisit);
     }
 
     public Boolean defaultVisit(JmmNode node, Boolean bool){
@@ -30,17 +30,19 @@ public class ConstantPropagationVisitor extends PreorderJmmVisitor<Boolean, Bool
         var value = node.getJmmChild(0);
         var id = node.get("id");
 
+        //if(node.getJmmParent().equals())
+
         if(value.getKind().equals("Integer")) {
             variables.put(id, value.get("value"));
-            node.delete();
+            //node.delete();
 
-            return true;
+            //return true;
         }
         else if(value.getKind().equals("Boolean")) {
             variables.put(id, value.get("value"));
-            node.delete();
+            //node.delete();
 
-            return true;
+            //return true;
         }
         else if(value.getKind().equals("BinaryOp")) {
             boolean changed = false;
