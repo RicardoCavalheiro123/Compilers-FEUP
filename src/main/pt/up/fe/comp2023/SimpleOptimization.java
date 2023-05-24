@@ -24,18 +24,18 @@ public class SimpleOptimization implements JmmOptimization {
         String optimizeValue = semanticsResult.getConfig().getOrDefault("optimize", "false");
 
         if (optimizeValue.equals("true")) {
-            while(changed) {
+            //while(changed) {
+            for(var i = 0; i < 100; i++) {
                 var constantPropagation = new ConstantPropagationVisitor();
                 //constantPropagation.variables = this.variables;
                 changed = constantPropagation.visit(semanticsResult.getRootNode(), true);
 
                 var constantFolding = new ConstantFoldingVisitor();
-                constantFolding.variables = constantPropagation.variables;
+                //constantFolding.variables = constantPropagation.variables;
                 changed |= constantFolding.visit(semanticsResult.getRootNode(), true);
                 //this.variables = constantFolding.variables;
-
-                var a = 0;
             }
+            //}
         }
 
         return semanticsResult;

@@ -141,8 +141,8 @@ public abstract class SemanticVisitor extends PreorderJmmVisitor<SymbolTable, In
     protected Type getUnOpType(JmmNode node, SymbolTable symbolTable) {
         var child = this.getJmmNodeType(node.getJmmChild(0), symbolTable);
 
-        if((Objects.equals(child, new Type("Boolean", false)))) {
-            return new Type("Boolean", false);
+        if((Objects.equals(child, new Type("boolean", false)))) {
+            return new Type("boolean", false);
         }
 
         return new Type("invalid", false);

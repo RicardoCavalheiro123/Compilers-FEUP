@@ -22,7 +22,13 @@ public class ConstantFoldingVisitor extends PreorderJmmVisitor<Boolean, Boolean>
     }
 
     public Boolean defaultVisit(JmmNode node, Boolean bool){
-        return false; // no changes
+        boolean changes = false;
+
+        for(var child: node.getChildren()) {
+            var a = 0;
+        }
+
+        return changes;
     }
 
     public Boolean assignVisit(JmmNode node, Boolean bool) {
