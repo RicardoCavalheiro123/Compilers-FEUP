@@ -31,7 +31,28 @@ public class ConstantFoldingVisitor extends PreorderJmmVisitor<Boolean, Boolean>
     }
 
     public Boolean unaryopVisit(JmmNode node, Boolean bool) {
-        return false;
+
+        var n = node.getJmmChild(0);
+
+        String value = null;
+
+        if(n.get("value").equals("true")) {
+            value = "false";
+        } else {
+            value = "true";
+        }
+
+        JmmNodeImpl aux_node = new JmmNodeImpl("Boolean");
+
+        aux_node.put("value", value);
+        aux_node.put("colStart", n.get("colStart"));
+        aux_node.put("lineStart", n.get("lineStart"));
+        aux_node.put("colEnd", n.get("colEnd"));
+        aux_node.put("lineEnd", n.get("lineEnd"));
+
+        node.replace(aux_node);
+
+        return true;
     }
 
     public Boolean binaryopVisit(JmmNode node, Boolean bool) {

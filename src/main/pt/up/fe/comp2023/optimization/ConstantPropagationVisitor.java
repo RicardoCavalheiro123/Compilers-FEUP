@@ -102,34 +102,67 @@ public class ConstantPropagationVisitor extends PreorderJmmVisitor<Boolean, Bool
             }
 
             return changed;
-        } else if (node.getKind().equals("Assign")) {
-            var identifier = variables.get(node.getJmmChild(0).get("id"));
-            var n = node.getJmmChild(0);
+        }
+        else if (node.getKind().equals("Assign")) {
 
-            if (identifier != null) {
-                JmmNodeImpl aux_node;
+            /*String identifier = null;
 
-                switch (identifier) {
-                    case "false", "true":
-                        aux_node = new JmmNodeImpl("Boolean");
-                    default:
-                        aux_node = new JmmNodeImpl("Integer");
-                }
-
-                aux_node.put("value", identifier);
-                aux_node.put("colStart", n.get("colStart"));
-                aux_node.put("lineStart", n.get("lineStart"));
-                aux_node.put("colEnd", n.get("colEnd"));
-                aux_node.put("lineEnd", n.get("lineEnd"));
-
-                node.setChild(aux_node, 0);
-
-                variables.put(node.get("id"), identifier);
-
-                return true;
+            if(value.getKind().equals("UnaryOp") && node.getJmmChild(0).getJmmChild(0).getKind().equals("Identifier")) {
+                identifier = variables.get(node.getJmmChild(0).getJmmChild(0).get("id"));
             }
+            else if(!value.getKind().equals("UnaryOp")){
+                identifier = variables.get(node.getJmmChild(0).get("id"));
+            }*/
 
-            return false;
+
+            if(!node.getJmmChild(0).getKind().equals("UnaryOp")) {
+                var identifier = variables.get(node.getJmmChild(0).get("id"));
+
+                var n = node.getJmmChild(0);
+
+                if (identifier != null) {
+                    JmmNodeImpl aux_node;
+
+                    switch (identifier) {
+                        case "false", "true":
+                            aux_node = new JmmNodeImpl("Boolean");
+                        default:
+                            aux_node = new JmmNodeImpl("Integer");
+                    }
+
+                    aux_node.put("value", identifier);
+                    aux_node.put("colStart", n.get("colStart"));
+                    aux_node.put("lineStart", n.get("lineStart"));
+                    aux_node.put("colEnd", n.get("colEnd"));
+                    aux_node.put("lineEnd", n.get("lineEnd"));
+
+                    node.setChild(aux_node, 0);
+
+                    variables.put(node.get("id"), identifier);
+
+                    return true;
+                }
+            }
+            else {
+                if(node.getJmmChild(0).getJmmChild(0).getKind().equals("Identifier")) {
+                    var identifier2 = variables.get(node.getJmmChild(0).getJmmChild(0).get("id"));
+                    var n = node.getJmmChild(0).getJmmChild(0);
+
+                    if(identifier2 != null) {
+                        JmmNodeImpl aux_node = new JmmNodeImpl("Boolean");
+
+                        aux_node.put("value", identifier2);
+                        aux_node.put("colStart", n.get("colStart"));
+                        aux_node.put("lineStart", n.get("lineStart"));
+                        aux_node.put("colEnd", n.get("colEnd"));
+                        aux_node.put("lineEnd", n.get("lineEnd"));
+
+                        n.getJmmParent().setChild(aux_node, 0);
+
+                        return true;
+                    }
+                }
+            }
         }
 
         return false;

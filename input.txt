@@ -1,13 +1,15 @@
 class PropSequential {
-    public int foo(int factor){
-      boolean a;
-      boolean b;
-      int c;
-      a = true;
-      b = false;
-      c = 1 + 2 + 3;
+    public boolean foo(int factor){
+      int a;
+      int b;
+      boolean c;
+      boolean d;
+      a = 1;
+      b = 1;
+      c = true;
+      d = !c;
 
-      return c;
+      return d;
     }
     public static void main(String[] args) {
     }
