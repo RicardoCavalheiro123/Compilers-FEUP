@@ -1,13 +1,13 @@
 class PropSequential {
-    public boolean foo(int factor){
+    public int foo(int factor){
       int a;
       int b;
-      boolean c;
-      boolean d;
+      int c;
+      int d;
       a = 1;
-      b = 1;
-      c = true;
-      d = !c;
+      b = 2;
+      c = 3;
+      d = (a + b) * c - (b * c);
 
       return d;
     }

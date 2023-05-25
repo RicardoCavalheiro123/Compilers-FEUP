@@ -32,6 +32,7 @@ public class ConstantPropagationVisitor extends PreorderJmmVisitor<Boolean, Bool
     }
 
     public Boolean assignVisit(JmmNode node, Boolean bool) {
+
         var value = node.getJmmChild(0);
         var id = node.get("id");
 
@@ -104,16 +105,6 @@ public class ConstantPropagationVisitor extends PreorderJmmVisitor<Boolean, Bool
             return changed;
         }
         else if (node.getKind().equals("Assign")) {
-
-            /*String identifier = null;
-
-            if(value.getKind().equals("UnaryOp") && node.getJmmChild(0).getJmmChild(0).getKind().equals("Identifier")) {
-                identifier = variables.get(node.getJmmChild(0).getJmmChild(0).get("id"));
-            }
-            else if(!value.getKind().equals("UnaryOp")){
-                identifier = variables.get(node.getJmmChild(0).get("id"));
-            }*/
-
 
             if(!node.getJmmChild(0).getKind().equals("UnaryOp")) {
                 var identifier = variables.get(node.getJmmChild(0).get("id"));

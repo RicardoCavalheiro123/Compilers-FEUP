@@ -58,10 +58,12 @@ public class ConstantFoldingVisitor extends PreorderJmmVisitor<Boolean, Boolean>
     public Boolean binaryopVisit(JmmNode node, Boolean bool) {
 
         if(node.getJmmChild(0).getKind().equals("Identifier") || node.getJmmChild(1).getKind().equals("Identifier") ||
-        node.getJmmChild(0).getKind().equals("BinaryOp") || node.getJmmChild(1).getKind().equals("BinaryOp")) return false;
+        node.getJmmChild(0).getKind().equals("BinaryOp") || node.getJmmChild(1).getKind().equals("BinaryOp") ||
+        node.getJmmChild(0).getKind().equals("Parenthesis") || node.getJmmChild(1).getKind().equals("Parenthesis")) return false;
 
         var v1 = node.getJmmChild(0).get("value");
         var v2 = node.getJmmChild(1).get("value");
+
 
         String value = null;
 
