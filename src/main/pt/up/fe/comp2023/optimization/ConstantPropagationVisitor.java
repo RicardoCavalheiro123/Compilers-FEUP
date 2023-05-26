@@ -18,8 +18,8 @@ public class ConstantPropagationVisitor extends PreorderJmmVisitor<Boolean, Bool
 
         setDefaultVisit(this::defaultVisit);
 
-        addVisit("Assign", this::assignVisit);
         addVisit("Identifier", this::identifierVisit);
+        addVisit("Assign", this::assignVisit);
     }
 
     public Boolean defaultVisit(JmmNode node, Boolean bool) {
@@ -107,6 +107,8 @@ public class ConstantPropagationVisitor extends PreorderJmmVisitor<Boolean, Bool
         else if (node.getKind().equals("Assign")) {
 
             if(!node.getJmmChild(0).getKind().equals("UnaryOp")) {
+                if(node.getJmmChild(0).getKind().equals("Parenthesis")) return false;
+
                 var identifier = variables.get(node.getJmmChild(0).get("id"));
 
                 var n = node.getJmmChild(0);
@@ -149,6 +151,8 @@ public class ConstantPropagationVisitor extends PreorderJmmVisitor<Boolean, Bool
                         aux_node.put("lineEnd", n.get("lineEnd"));
 
                         n.getJmmParent().setChild(aux_node, 0);
+
+                        variables.put(node.get("id"), identifier2);
 
                         return true;
                     }

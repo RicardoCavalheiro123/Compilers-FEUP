@@ -11,14 +11,17 @@ import java.util.Objects;
 public class ConstantFoldingVisitor extends PreorderJmmVisitor<Boolean, Boolean> {
 
     public boolean changes = false;
+    public HashMap<String, String> variables;
 
     @Override
     protected void buildVisitor() {
+        this.variables = new HashMap<>();
 
         setDefaultVisit(this::defaultVisit);
 
         addVisit("BinaryOp", this::binaryopVisit);
         addVisit("UnaryOp", this::unaryopVisit);
+        addVisit("Parenthesis", this::parenthesisVisit);
     }
 
     public Boolean defaultVisit(JmmNode node, Boolean bool){
@@ -63,7 +66,6 @@ public class ConstantFoldingVisitor extends PreorderJmmVisitor<Boolean, Boolean>
 
         var v1 = node.getJmmChild(0).get("value");
         var v2 = node.getJmmChild(1).get("value");
-
 
         String value = null;
 
@@ -164,5 +166,23 @@ public class ConstantFoldingVisitor extends PreorderJmmVisitor<Boolean, Boolean>
         node.getJmmParent().setChild(aux_node, 0);
 
         return true;
+    }
+
+    public Boolean parenthesisVisit(JmmNode node, Boolean bool) {
+        if(node.getJmmChild(0).getKind().equals("Integer") || node.getJmmChild(0).getKind().equals("Boolean")) {
+            JmmNodeImpl aux_node = new JmmNodeImpl(node.getJmmChild(0).getKind());
+
+            aux_node.put("value", node.getJmmChild(0).get("value"));
+            aux_node.put("colStart", node.get("colStart"));
+            aux_node.put("lineStart", node.get("lineStart"));
+            aux_node.put("colEnd", node.get("colEnd"));
+            aux_node.put("lineEnd", node.get("lineEnd"));
+
+            node.replace(aux_node);
+
+            return true;
+        }
+
+        return false;
     }
 }
