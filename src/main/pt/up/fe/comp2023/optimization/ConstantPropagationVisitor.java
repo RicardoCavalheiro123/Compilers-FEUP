@@ -51,6 +51,10 @@ public class ConstantPropagationVisitor extends PreorderJmmVisitor<Boolean, Bool
         } else if (value.getKind().equals("Boolean")) {
             variables.put(id, value.get("value"));
         } else if (value.getKind().equals("BinaryOp")) {
+            if(variables.get(node.get("id")) != null) {
+                variables.remove(node.get("id"));
+            }
+
             boolean changed = false;
 
             var op1 = value.getJmmChild(0);
@@ -105,6 +109,10 @@ public class ConstantPropagationVisitor extends PreorderJmmVisitor<Boolean, Bool
             return changed;
         }
         else if (node.getKind().equals("Assign")) {
+
+            if(variables.get(node.get("id")) != null) {
+                variables.remove(node.get("id"));
+            }
 
             if(!node.getJmmChild(0).getKind().equals("UnaryOp")) {
                 if(node.getJmmChild(0).getKind().equals("Parenthesis")) return false;
