@@ -39,6 +39,8 @@ public class ConstantFoldingVisitor extends PreorderJmmVisitor<Boolean, Boolean>
 
         String value = null;
 
+        if(n.getKind().equals("Parenthesis")) return false;
+
         if(n.get("value").equals("true")) {
             value = "false";
         } else {

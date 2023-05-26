@@ -7,15 +7,14 @@ class PropWithLoop {
 	  int e;
 	  boolean f;
 	  boolean g;
-	  boolean h;
 
 	  a = 3;
 	  b = 4;
 	  c = (a * b);
 	  d = (c + 2);
-	  e = (d - a);
+	  e = (5 + 3) * 4 - (3 * 4);
       f = false;
-      g = (f && true);
+      g = !(f && true);
 
 
 	  return e;
