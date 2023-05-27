@@ -88,11 +88,7 @@ public class OllirToJasmin {
             if (method.getMethodAccessModifier() != AccessModifiers.DEFAULT) {
                 jasminCodeBuilder.append("\t.limit stack ").append("99").append("\n");
                 jasminCodeBuilder.append("\t.limit locals ").append("99").append("\n");
-
             }
-
-            Set<Integer> hash_Set = new HashSet<Integer>();
-            // HERE TODO
 
             jasminCodeBuilder.append(instructions);
 
