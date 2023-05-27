@@ -309,22 +309,18 @@ public class OllirToJasmin {
         boolean rightIsLiteral = right.isLiteral();
         boolean leftIsLiteral = left.isLiteral();
 
-        if (!(leftIsLiteral && ((LiteralElement) left).getLiteral().equals("0"))) {
             jasminCodeBuilder.append(JasminUtils.loadElement(method, left));
             jasminCodeBuilder.append("\n\t");
-        }
-        if (!(rightIsLiteral && ((LiteralElement) right).getLiteral().equals("0"))) {
+
             jasminCodeBuilder.append(JasminUtils.loadElement(method, right));
             jasminCodeBuilder.append("\n\t");
-        }
+
 
         if(!(instruction.getOperation().getOpType() == OperationType.ADD ||
                 instruction.getOperation().getOpType() == OperationType.SUB ||
                 instruction.getOperation().getOpType() == OperationType.MUL ||
                 instruction.getOperation().getOpType() == OperationType.DIV)) {
             boolean oneIsZero = false;
-            if (leftIsLiteral && ((LiteralElement) left).getLiteral().equals("0")) oneIsZero = true;
-            else if (rightIsLiteral && ((LiteralElement) right).getLiteral().equals("0")) oneIsZero = true;
 
             if (oneIsZero) jasminCodeBuilder.append("if");
             else jasminCodeBuilder.append("if_icmp");
