@@ -106,13 +106,13 @@ public class JasminUtils {
             case DIV -> jasminCodeBuilder.append("idiv");
 
 
-            case ANDB -> jasminCodeBuilder.append("ifeq");
-            case NOTB -> jasminCodeBuilder.append("ifne");
-            case ORB -> jasminCodeBuilder.append("ifor");
-            case LTH -> jasminCodeBuilder.append("iflt");
-            case GTH -> jasminCodeBuilder.append("ifgt");
-            case LTE -> jasminCodeBuilder.append("ifle");
-            case GTE -> jasminCodeBuilder.append("ifge");
+            case EQ, ANDB -> jasminCodeBuilder.append("eq");
+            case NEQ, NOTB -> jasminCodeBuilder.append("ne");
+            case ORB -> jasminCodeBuilder.append("or");
+            case LTH -> jasminCodeBuilder.append("lt");
+            case GTH -> jasminCodeBuilder.append("gt");
+            case LTE -> jasminCodeBuilder.append("le");
+            case GTE -> jasminCodeBuilder.append("ge");
 
             default -> throw new UnsupportedOperationException("Operation not implemented: " + operation.getOpType());
         }

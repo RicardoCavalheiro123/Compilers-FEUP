@@ -35,6 +35,7 @@ public class SimpleAnalysis implements JmmAnalysis {
 
             reports.addAll(visitor.getReports());
 
+
             List<SemanticVisitor> semantic_analyzers = Arrays.asList(
                 new ArrayAccessAnalyzer(),
                 new OperandsTypeCompatibilityAnalyzer(),
