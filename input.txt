@@ -1,16 +1,16 @@
-import io;
+class PropWithLoop {
+    public boolean foo(){
+	  boolean d;
+	  boolean r;
+	  boolean q;
+	  boolean p;
+	  p = true;
+	  q = false;
+	  r = true;
+	  d = (p && q) || (r || (p && !q));
 
-class Arithmetic_and {
+	  return d;
+	}
 	public static void main(String[] args) {
-		boolean a;
-
-		a = true && false;
-
-		if(a) {
-			io.print(1);
-		} else {
-			io.print(0);
-		}
-
 	}
 }

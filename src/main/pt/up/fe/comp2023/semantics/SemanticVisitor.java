@@ -51,9 +51,11 @@ public abstract class SemanticVisitor extends PreorderJmmVisitor<SymbolTable, In
         //check existence in class parameters (fields)
         var fields = symbolTable.getFields();
 
-        for(var field: fields) {
-            if(Objects.equals(field.getName(), id)) {
-                return field.getType();
+        if (node.getAncestor("MainMethod").isEmpty()) {
+            for (var field : fields) {
+                if (Objects.equals(field.getName(), id)) {
+                    return field.getType();
+                }
             }
         }
 
@@ -139,8 +141,8 @@ public abstract class SemanticVisitor extends PreorderJmmVisitor<SymbolTable, In
     protected Type getUnOpType(JmmNode node, SymbolTable symbolTable) {
         var child = this.getJmmNodeType(node.getJmmChild(0), symbolTable);
 
-        if(!(Objects.equals(child, new Type("Boolean", false)))) {
-            return new Type("UnaryOp", false);
+        if((Objects.equals(child, new Type("boolean", false)))) {
+            return new Type("boolean", false);
         }
 
         return new Type("invalid", false);
@@ -165,7 +167,7 @@ public abstract class SemanticVisitor extends PreorderJmmVisitor<SymbolTable, In
                 return new Type("boolean", false);
 
             case "UnaryOp":
-                return  this.getUnOpType(node, symbolTable);
+                return this.getUnOpType(node, symbolTable);
 
             case "ObjectType":
                 return new Type(node.get("typeName"), false);
@@ -189,6 +191,9 @@ public abstract class SemanticVisitor extends PreorderJmmVisitor<SymbolTable, In
                 }
 
                 return new Type("int", false);
+
+            case "Parenthesis":
+                return this.getJmmNodeType(node.getJmmChild(0), symbolTable);
 
             default:
                 return new Type("invalid", false);
