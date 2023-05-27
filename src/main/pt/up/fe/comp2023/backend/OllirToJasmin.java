@@ -312,7 +312,13 @@ public class OllirToJasmin {
         jasminCodeBuilder.append("\n\t");
         jasminCodeBuilder.append(JasminUtils.loadElement(method, right));
         jasminCodeBuilder.append("\n\t");
-        jasminCodeBuilder.append("if_icmp").append(JasminUtils.operationCode(instruction.getOperation()));
+        if(!(instruction.getOperation().getOpType() == OperationType.ADD ||
+                instruction.getOperation().getOpType() == OperationType.SUB ||
+                instruction.getOperation().getOpType() == OperationType.MUL ||
+                instruction.getOperation().getOpType() == OperationType.DIV)) {
+            jasminCodeBuilder.append("if_icmp");
+        }
+        jasminCodeBuilder.append(JasminUtils.operationCode(instruction.getOperation()));
 
         // If boolean operation
         if (JasminUtils.isConditionalOperation(instruction.getOperation())) {
