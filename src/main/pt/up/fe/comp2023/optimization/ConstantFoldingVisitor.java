@@ -11,11 +11,9 @@ import java.util.Objects;
 public class ConstantFoldingVisitor extends PreorderJmmVisitor<Boolean, Boolean> {
 
     public boolean changes = false;
-    public HashMap<String, String> variables;
 
     @Override
     protected void buildVisitor() {
-        this.variables = new HashMap<>();
 
         setDefaultVisit(this::defaultVisit);
 
@@ -166,7 +164,7 @@ public class ConstantFoldingVisitor extends PreorderJmmVisitor<Boolean, Boolean>
         aux_node.put("colEnd", node.get("colEnd"));
         aux_node.put("lineEnd", node.get("lineEnd"));
 
-        node.getJmmParent().setChild(aux_node, 0);
+        node.getJmmParent().setChild(aux_node, node.getIndexOfSelf());
 
         return true;
     }

@@ -1,13 +1,10 @@
-class LocalLimits{
-    public static void main(String[] a){
+class PropSimple {
+    public int foo(){
+	  int a;
+	  a = 10;
+	  return a;
+	}
+    public static void main(String[] args) {
 
-    }
-
-    public int func(int a, int b){
-       int j;
-
-       a = b + 10 * (3 + this.func(3,4));
-       j = this.func(3,4);
-       return 1;
     }
 }
