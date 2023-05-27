@@ -3,8 +3,9 @@ package pt.up.fe.comp2023.backend;
 import org.specs.comp.ollir.*;
 import pt.up.fe.comp2023.backend.instructions.call.*;
 
-import javax.management.Descriptor;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class OllirToJasmin {
@@ -83,9 +84,11 @@ public class OllirToJasmin {
                 instructions.append("\t").append(getInstructionJasminString(method, instruction)).append("\n");
             }
 
+
             if (method.getMethodAccessModifier() != AccessModifiers.DEFAULT) {
-                jasminCodeBuilder.append("\t.limit stack ").append("99").append("\n");
-                jasminCodeBuilder.append("\t.limit locals ").append("99").append("\n");
+                jasminCodeBuilder.append("\t.limit stack ").append(this.stackMaxSize).append("\n");
+                jasminCodeBuilder.append("\t.limit locals ").append(getLimitLocal(method)).append("\n");
+
             }
 
             Set<Integer> hash_Set = new HashSet<Integer>();
@@ -312,6 +315,10 @@ public class OllirToJasmin {
         return jasminCodeBuilder.toString();
     }
 
+    private int getLimitLocal(Method method) {
+        return method.getVarTable().size();
+    }
+
     public int updateStack(int stackUpdate) {
         this.stackSize += stackUpdate;
         if (this.stackSize > this.stackMaxSize)
@@ -320,4 +327,5 @@ public class OllirToJasmin {
             throw new RuntimeException("Stack size is negative");
         return this.stackSize;
     }
+
 }
