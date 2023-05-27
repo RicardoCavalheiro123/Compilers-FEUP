@@ -138,7 +138,7 @@ public class OllirToJasmin {
             if (instruction.getRhs().getInstType() == InstructionType.BINARYOPER) {
                 BinaryOpInstruction binaryOpInstruction = (BinaryOpInstruction) instruction.getRhs();
 
-                if (binaryOpInstruction.getOperation().getOpType() == OperationType.ADD) {
+                if (binaryOpInstruction.getOperation().getOpType() == OperationType.ADD || binaryOpInstruction.getOperation().getOpType() == OperationType.SUB) {
                     boolean ll = binaryOpInstruction.getLeftOperand().isLiteral();
                     boolean rl = binaryOpInstruction.getRightOperand().isLiteral();
                     LiteralElement literalElement = null;
@@ -151,10 +151,10 @@ public class OllirToJasmin {
                         literalElement = (LiteralElement) binaryOpInstruction.getRightOperand();
                         operand = (Operand) binaryOpInstruction.getLeftOperand();
                     }
-
                     if (literalElement != null && operand != null) {
                          if (operand.getName().equals(((Operand) dest).getName())) {
                              int value = Integer.parseInt(literalElement.getLiteral());
+                             if (binaryOpInstruction.getOperation().getOpType() == OperationType.SUB) value = -value;
                              if (value >= -128 && value <= 127)
                                 return "iinc " + method.getVarTable().get(operand.getName()).getVirtualReg() + " " + value;
                         }
