@@ -4,6 +4,8 @@ import org.specs.comp.ollir.*;
 import pt.up.fe.comp2023.backend.JasminUtils;
 
 public class NewInstruction implements InstructionCall {
+    int stackChange = 0;
+
     @Override
     public String toJasmin(Method method, CallInstruction instruction) {
         StringBuilder jasminCodeBuilder = new StringBuilder();
@@ -31,13 +33,19 @@ public class NewInstruction implements InstructionCall {
             jasminCodeBuilder.append("new ")
                     .append(((Operand) instruction.getFirstArg()).getName())
                     .append("\n");
-
+            stackChange++;
             jasminCodeBuilder.append("\tdup");
+            stackChange++;
 
         } else {
             throw new RuntimeException("New type not implemented");
         }
 
         return jasminCodeBuilder.toString();
+    }
+
+    @Override
+    public int getStackChange(CallInstruction instruction) {
+        return stackChange;
     }
 }

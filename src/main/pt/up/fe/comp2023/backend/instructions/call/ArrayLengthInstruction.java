@@ -15,4 +15,9 @@ public class ArrayLengthInstruction implements InstructionCall {
 
         return jasminCodeBuilder.toString();
     }
+
+    @Override
+    public int getStackChange(CallInstruction instruction) {
+        return stackChange;
+    }
 }
