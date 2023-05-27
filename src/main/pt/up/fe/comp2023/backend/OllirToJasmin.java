@@ -87,7 +87,7 @@ public class OllirToJasmin {
 
             if (method.getMethodAccessModifier() != AccessModifiers.DEFAULT) {
                 jasminCodeBuilder.append("\t.limit stack ").append("99").append("\n");
-                jasminCodeBuilder.append("\t.limit locals ").append("99").append("\n");
+                jasminCodeBuilder.append("\t.limit locals ").append(getLimitLocal(method)).append("\n");
             }
 
             jasminCodeBuilder.append(instructions);
@@ -351,7 +351,11 @@ public class OllirToJasmin {
     }
 
     private int getLimitLocal(Method method) {
-        return method.getVarTable().size();
+        final int[] maximum = {0};
+        method.getVarTable().forEach((k, v) -> {
+            if (v.getVirtualReg() > maximum[0]) maximum[0] = v.getVirtualReg();
+        });
+        return maximum[0] + 1;
     }
 
     public int updateStack(int stackUpdate) {
