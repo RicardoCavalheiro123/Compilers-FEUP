@@ -1,16 +1,16 @@
-class PropWithLoop {
-    public boolean foo(){
-	  boolean d;
-	  boolean r;
-	  boolean q;
-	  boolean p;
-	  p = true;
-	  q = false;
-	  r = true;
-	  d = (p && q) || (r || (p && !q));
+class LocalLimits{
+    public static void main(String[] a){
 
-	  return d;
-	}
-	public static void main(String[] args) {
-	}
+    }
+
+    public int func(int a, int b){
+       int j;
+       int a;
+       int b;
+       b = 2;
+
+       a = b + 10 * (3 + 2);
+       j = a + b;
+       return 1;
+    }
 }
