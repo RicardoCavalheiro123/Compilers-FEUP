@@ -1,16 +1,17 @@
-class RegAlloc {
-    public int soManyRegisters(int arg){
-       int a;
-       int b;
-       int c;
-       int d;
-       a = 0;
-       b = a;
-       c = b;
-       d = c;
-       return d;
-    }
+import io;
 
+class RegAlloc {
 	public static void main(String[] args) {
+	    boolean a;
+        int b;
+        b = 2;
+
+	    if (b < 0) {
+	        a = true;
+        } else {
+            a = false;
+	    }
+
+	    io.println(a);
 	}
 }
