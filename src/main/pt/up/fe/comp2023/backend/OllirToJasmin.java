@@ -104,7 +104,7 @@ public class OllirToJasmin {
     private String getInstructionJasminString(Method method, Instruction instruction) {
         StringBuilder jasminCodeBuilder = new StringBuilder();
 
-        method.getLabels(instruction).forEach(label -> jasminCodeBuilder.append("\n").append(label).append(":\n\t"));
+        method.getLabels(instruction).forEach(label -> jasminCodeBuilder.append(label).append(":\n\t"));
         switch (instruction.getInstType()) {
             case ASSIGN -> jasminCodeBuilder.append(getAssignJasminString(method, (AssignInstruction) instruction));
             case CALL -> jasminCodeBuilder.append(getCallJasminString(method, (CallInstruction) instruction));
@@ -205,21 +205,27 @@ public class OllirToJasmin {
         StringBuilder jasminCodeBuilder = new StringBuilder();
         InstructionType conditionType = instruction.getCondition().getInstType();
         boolean hasZero = false;
+
         if (conditionType == InstructionType.BINARYOPER) {
             BinaryOpInstruction binaryOpInstruction = (BinaryOpInstruction) instruction.getCondition();
-            if(!(binaryOpInstruction.getLeftOperand().isLiteral() && ((LiteralElement) binaryOpInstruction.getLeftOperand()).getLiteral().equals("0"))) {
+            boolean leftIsLiteral = binaryOpInstruction.getLeftOperand().isLiteral();
+            boolean rightIsLiteral = binaryOpInstruction.getRightOperand().isLiteral();
+            boolean leftIsZero = leftIsLiteral && ((LiteralElement) binaryOpInstruction.getLeftOperand()).getLiteral().equals("0");
+            boolean rightIsZero = rightIsLiteral && ((LiteralElement) binaryOpInstruction.getRightOperand()).getLiteral().equals("0");
+
+            if(!(leftIsZero) || rightIsZero) {
                 jasminCodeBuilder.append(JasminUtils.loadElement(method, binaryOpInstruction.getLeftOperand()));
                 updateStack(1);
-            } else {
-                hasZero = true;
+                jasminCodeBuilder.append("\n\t");
             }
-            jasminCodeBuilder.append("\n\t");
-            if(!(binaryOpInstruction.getRightOperand().isLiteral() && ((LiteralElement) binaryOpInstruction.getRightOperand()).getLiteral().equals("0"))) {
+
+            if(!(rightIsZero)) {
                 jasminCodeBuilder.append(JasminUtils.loadElement(method, binaryOpInstruction.getRightOperand()));
                 updateStack(1);
-            } else {
-                hasZero = true;
             }
+
+            hasZero = leftIsZero || rightIsZero;
+
         } else if (conditionType == InstructionType.NOPER) {
             jasminCodeBuilder.append(JasminUtils.loadElement(method, instruction.getOperands().get(0)));
             updateStack(1);
@@ -231,9 +237,14 @@ public class OllirToJasmin {
             op.append("if_icmp");
             op.append(JasminUtils.operationCode(((BinaryOpInstruction) instruction.getCondition()).getOperation()));
             updateStack(-2);
-        }
-        else {
-            op.append("if").append(JasminUtils.operationCode(new Operation(OperationType.NEQ, new Type(ElementType.BOOLEAN))));
+        } else {
+            op.append("iconst_1");
+            updateStack(1);
+            op.append("\n\t");
+            op.append("ixor");
+            updateStack(-1);
+            op.append("\n\t");
+            op.append("if").append(JasminUtils.operationCode(new Operation(OperationType.EQ, new Type(ElementType.BOOLEAN))));
             updateStack(-1);
         }
 
@@ -332,7 +343,7 @@ public class OllirToJasmin {
         boolean isConditional = JasminUtils.isConditionalOperation(instruction.getOperation());
         Operation operation = instruction.getOperation();
 
-        if (!(leftIsZero && isConditional)) {
+        if (!(leftIsZero && isConditional) || rightIsZero) {
             jasminCodeBuilder.append(JasminUtils.loadElement(method, left));
             updateStack(1);
             jasminCodeBuilder.append("\n\t");

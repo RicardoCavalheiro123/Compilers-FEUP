@@ -55,7 +55,11 @@ class Graph {
         return adjacencyMap.get(node);
     }
 
-    public void graph_coloring() {
+    public int getVarColor(String var) {
+        return colors.get(var);
+    }
+
+    public Integer graph_coloring() {
         var minimum_registers_number = 1;
         var stack = new Stack<String>();
 
@@ -93,6 +97,8 @@ class Graph {
 
             this.colors.put(front, color);
         }
+
+        return minimum_registers_number;
     }
 
     private void remove_neighbour(String node_to_remove, Map<String, List<String>> map) {

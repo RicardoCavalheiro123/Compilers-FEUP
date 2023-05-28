@@ -8,36 +8,34 @@ public class LiveNode {
     public Instruction instruction;
 
     //Variables
-    public ArrayList<Element> in = new ArrayList<>();
-    public ArrayList<Element> out = new ArrayList<>();
-    public ArrayList<Element> def = new ArrayList<>();
-    public ArrayList<Element> use = new ArrayList<>();
+    public ArrayList<String> in = new ArrayList<>();
+    public ArrayList<String> out = new ArrayList<>();
+    public ArrayList<String> def = new ArrayList<>();
+    public ArrayList<String> use = new ArrayList<>();
 
-    public LiveNode() {
-    }
 
     public void nodeAnalysis(Instruction instruct) {
         switch(instruct.getInstType()) {
 
             case ASSIGN:
-                def.add(((AssignInstruction) instruct).getDest());
+                def.add(findName( (Element) ((AssignInstruction) instruct).getDest()));
                 nodeAnalysis(((AssignInstruction) instruct).getRhs());
                 break;
 
             case NOPER:
                 if(!((SingleOpInstruction) instruct).getSingleOperand().isLiteral()) {
-                    use.add(((SingleOpInstruction) instruct).getSingleOperand());
+                    use.add(findName((Element) ((SingleOpInstruction) instruct).getSingleOperand()));
                 }
                 break;
 
             case BINARYOPER:
 
                 if(!((BinaryOpInstruction) instruct).getLeftOperand().isLiteral()) {
-                    use.add(((BinaryOpInstruction) instruct).getLeftOperand());
+                    use.add(findName( (Element)((BinaryOpInstruction) instruct).getLeftOperand()));
                 }
 
                 if(!((BinaryOpInstruction) instruct).getRightOperand().isLiteral()) {
-                    use.add(((BinaryOpInstruction) instruct).getRightOperand());
+                    use.add(findName( (Element)((BinaryOpInstruction) instruct).getRightOperand()));
                 }
 
                 break;
@@ -45,7 +43,7 @@ public class LiveNode {
             case UNARYOPER:
 
                 if(!(((UnaryOpInstruction) instruct).getOperand().isLiteral())) {
-                    use.add(((UnaryOpInstruction) instruct).getOperand());
+                    use.add(findName( (Element)((UnaryOpInstruction) instruct).getOperand()));
                 }
 
                 break;
@@ -53,11 +51,11 @@ public class LiveNode {
             case PUTFIELD:
 
                 if(!((PutFieldInstruction) instruct).getSecondOperand().isLiteral()) {
-                    def.add(((PutFieldInstruction) instruct).getSecondOperand());
+                    def.add(findName( (Element)((PutFieldInstruction) instruct).getSecondOperand()));
                 }
 
                 if(!((PutFieldInstruction) instruct).getThirdOperand().isLiteral()) {
-                    use.add(((PutFieldInstruction) instruct).getThirdOperand());
+                    use.add(findName( (Element)((PutFieldInstruction) instruct).getThirdOperand()));
                 }
 
                 break;
@@ -65,11 +63,11 @@ public class LiveNode {
             case GETFIELD:
 
                 if(!((GetFieldInstruction) instruct).getFirstOperand().isLiteral()) {
-                    use.add(((GetFieldInstruction) instruct).getFirstOperand());
+                    use.add(findName((Element) ((GetFieldInstruction) instruct).getFirstOperand()));
                 }
 
                 if(!((GetFieldInstruction) instruct).getSecondOperand().isLiteral()) {
-                    use.add(((GetFieldInstruction) instruct).getSecondOperand());
+                    use.add(findName((Element) ((GetFieldInstruction) instruct).getSecondOperand()));
                 }
 
                 break;
@@ -88,18 +86,12 @@ public class LiveNode {
                 break;
 
             case CALL:
-                if (((CallInstruction) instruct).getInvocationType() == CallType.arraylength ||
-                    ((CallInstruction) instruct).getInvocationType() == CallType.invokevirtual ||
-                    ((CallInstruction) instruct).getInvocationType() == CallType.invokespecial )
-                {
-                    use.add(((CallInstruction) instruct).getFirstArg());
-                }
 
                 var operands_list = ((CallInstruction) instruct).getListOfOperands();
 
                 if(operands_list != null) {
                     for(var op : operands_list) {
-                        use.add(op);
+                        use.add(findName( (Element) op));
                     }
                 }
 
@@ -109,7 +101,7 @@ public class LiveNode {
                 if(((ReturnInstruction) instruct).getOperand() == null) break;
 
                 if(!((ReturnInstruction) instruct).getOperand().isLiteral()) {
-                    use.add(((ReturnInstruction) instruct).getOperand());
+                    use.add(findName( (Element)((ReturnInstruction) instruct).getOperand()));
                 }
 
                 break;
@@ -118,6 +110,13 @@ public class LiveNode {
                 break;
 
         }
+    }
+
+    public String findName(Element op) {
+        if(op != null) {
+            return !op.isLiteral() ? ((Operand) op).getName() : null;
+        }
+        return null;
     }
 
 
