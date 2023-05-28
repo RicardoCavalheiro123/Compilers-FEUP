@@ -485,7 +485,7 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
                     this.ollirCode.append("putfield(this," + jmmNode.get("id") + type + "," + temp + ").V;\n");
                     return null;
                 }
-                this.ollirCode.append("temp" + temp_counter + var + " :=" + type + " " + temp + ";\n");
+                this.ollirCode.append("temp" + temp_counter + var + " :=" + var + " " + temp + ";\n");
                 this.ollirCode.append("putfield(this," + jmmNode.get("id") + var + "," + "temp" + temp_counter + var + ").V;\n");
                 temp_counter++;
                 return null;
