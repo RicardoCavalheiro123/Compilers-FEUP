@@ -1,33 +1,14 @@
-class RegAlloc {
+import io;
 
-    int u;
-
-    public int soManyRegisters(int arg){
-       int a;
-       int b;
-       int c;
-       int d;
-       int e;
-       boolean r;
-       a = 0;
-       b = a;
-       c = b;
-       d = c + a;
-       e = c + a + d;
-       r = !false;
-
-       u = 15;
-
-       if(d < 2) {
-
-       }
-       else {
-
-       }
-
-       return d;
-    }
-
+class InstSelection_if_lt {
 	public static void main(String[] args) {
+	    int a;
+        a = 0;
+        a = a - 1;
+        if (0 < 2) {
+            a = 1;
+        }
+
+        io.print(a);
 	}
 }
