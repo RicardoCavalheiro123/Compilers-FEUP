@@ -412,7 +412,7 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
 
         boolean fieldOfClass = false;
 
-
+        String var = "";
         //Check if it is a local variable
         if(this.symbolTable.isLocalVar(this.currentMethod,jmmNode.get("id"))){
             this.symbol = this.symbolTable.getLocalVar(this.currentMethod, jmmNode.get("id"));
@@ -433,13 +433,14 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
         }
 
         //Check if it is a field of the class
+
         else if(this.symbolTable.isFieldOfClass(jmmNode.get("id"))){
             this.symbol = this.symbolTable.getFieldOfClass(jmmNode.get("id"));
             if(symbol.getType().isArray()) {
-                var_type = ".array" + getVariableType(symbol.getType(), ollir);
+                var = ".array" + getVariableType(symbol.getType(), ollir);
             }
             else{
-                var_type = getVariableType(symbol.getType(), ollir);
+                var = getVariableType(symbol.getType(), ollir);
             }
             fieldOfClass = true;
 
@@ -484,8 +485,8 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
                     this.ollirCode.append("putfield(this," + jmmNode.get("id") + type + "," + temp + ").V;\n");
                     return null;
                 }
-                this.ollirCode.append("temp" + temp_counter + type + " :=" + type + " " + temp + ";\n");
-                this.ollirCode.append("putfield(this," + jmmNode.get("id") + type + "," + "temp" + temp_counter + type + ").V;\n");
+                this.ollirCode.append("temp" + temp_counter + var + " :=" + type + " " + temp + ";\n");
+                this.ollirCode.append("putfield(this," + jmmNode.get("id") + var + "," + "temp" + temp_counter + var + ").V;\n");
                 temp_counter++;
                 return null;
             }
