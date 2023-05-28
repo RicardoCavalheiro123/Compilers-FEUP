@@ -1,13 +1,15 @@
-import io;
-
 class MyClass {
-    public static void main(String[] args) {
-        int a;
-        a = 1;
-        while (a >= 0) {
-            a = a - 1;
-            io.println(2);
 
-        }
+    int sum;
+    int[] arr;
+
+    public static void main(String[] args) {
+
     }
+
+  public int calculateSum() {
+    arr = new int[3];
+
+    return 0;
+  }
 }
