@@ -1,12 +1,13 @@
-import io;
+class MyClass {
+  int[] arr;
+  int sum;
 
-class Ifs {
-    public static void main(String[] args){
-        boolean a;
-        int i;
-
-        a = 0 < 1;
-
-        io.println(a);
-    }
+  public int calculateSum() {
+    arr = new int[3];
+    arr[0] = 1;
+    arr[1] = 2;
+    arr[2] = 3;
+    sum = arr[0] + arr[1] * arr[2];
+    return 0;
+  }
 }
