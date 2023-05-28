@@ -101,20 +101,20 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
     private String dealWithWhile(JmmNode jmmNode, StringBuilder ollir){
 
         String result = "";
+        int this_loop_counter = this.loop_counter++;
         // Boolean to return the children code instead of appending it
         returnable = true;
         result = visit(jmmNode.getChildren().get(0), ollir);
         returnable = false;
-        this.ollirCode.append("if (" + result + ") goto whilebody_"+ this.loop_counter +";\n");
-        this.ollirCode.append("goto endwhile_" + this.loop_counter + ";\n");
-        this.ollirCode.append("whilebody_" + this.loop_counter +":\n");
+        this.ollirCode.append("if (" + result + ") goto whilebody_"+ this_loop_counter +";\n");
+        this.ollirCode.append("goto endwhile_" + this_loop_counter + ";\n");
+        this.ollirCode.append("whilebody_" + this_loop_counter +":\n");
         visit(jmmNode.getChildren().get(1), ollir);
         returnable = true;
         result = visit(jmmNode.getChildren().get(0), ollir);
         returnable = false;
-        this.ollirCode.append("if (" + result + ") goto whilebody_"+ this.loop_counter +";\n");
-        this.ollirCode.append("endwhile_" + this.loop_counter + ":\n");
-        this.loop_counter++;
+        this.ollirCode.append("if (" + result + ") goto whilebody_"+ this_loop_counter +";\n");
+        this.ollirCode.append("endwhile_" + this_loop_counter + ":\n");
         return null;
 
     }
@@ -132,17 +132,17 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
 
     private String dealWithIfElse(JmmNode jmmNode, StringBuilder ollir) {
         String result = "";
+        int this_loop_counter = this.loop_counter++;
         // Boolean to return the children code instead of appending it
         returnable = true;
         result = visit(jmmNode.getChildren().get(0), ollir);
         returnable = false;
-        this.ollirCode.append("if (" + result + ") goto ifbody_"+ this.loop_counter +";\n");
+        this.ollirCode.append("if (" + result + ") goto ifbody_"+ this_loop_counter +";\n");
         if(jmmNode.getChildren().size()>2) visit(jmmNode.getChildren().get(2), ollir);
-        this.ollirCode.append("goto endif_"+(this.loop_counter)+";\n");
-        this.ollirCode.append("ifbody_"+(this.loop_counter)+":\n");
+        this.ollirCode.append("goto endif_"+(this_loop_counter)+";\n");
+        this.ollirCode.append("ifbody_"+(this_loop_counter)+":\n");
         visit(jmmNode.getChildren().get(1), ollir);
-        this.ollirCode.append("endif_"+(this.loop_counter)+":\n");
-        this.loop_counter++;
+        this.ollirCode.append("endif_"+(this_loop_counter)+":\n");
         return result;
     }
 
@@ -318,7 +318,7 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
             ex = "temp" + (temp_counter - 1) + "." + jmmNode.get("id");
         }
         this.ollirCode.append("." + jmmNode.get("id") + ",\"<init>\").V");
-        if(jmmNode.getJmmParent().getKind().equals("Parenthesis")){
+        if(!(jmmNode.getJmmParent().getKind().equals("Parenthesis") || jmmNode.getJmmParent().getKind().equals("Assign"))){
             this.ollirCode.append(";\n");
         }
 
@@ -393,7 +393,6 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
 
             for (JmmNode child : jmmNode.getChildren()) {
                 visit(child, ollirCode);
-
             }
             this.ollirCode.append(";\n");
             returnable = false;

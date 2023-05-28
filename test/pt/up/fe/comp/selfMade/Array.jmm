@@ -17,7 +17,9 @@ class Array {
     }
 
     public static void main(String[] args) {
-        io.println(new Array().get1());
+        int a;
+        a = new Array().get1()
+        io.println(a);
     }
 
 }

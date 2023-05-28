@@ -1,18 +1,36 @@
 import io;
 
-class ArrayLoop {
+class SelfMade5 {
 
-    public static void main(String[] args) {
-        int count;
-        count = 0;
-        while (count > 0) {
-          io.print(count);
-          count = count - 1;
-        }
+    int a;
+    int [] b;
 
-        if(count == 0) {
-          io.print(0);
-        }
+    public SelfMade5 getInstance() {
+        return this;
     }
 
+    public int[] getB() {
+        b = new int [35+5*3 - 1/1];   // 49 LENGTH
+        return b;
+    }
+
+    public int getLength() {
+        return b.length;
+    }
+
+    public static void main(String[] args) {
+        SelfMade5 ola;
+        SelfMade5 a;
+        int b;
+        int c;
+        int[] d;
+        ola = new SelfMade5();
+        ola.getB();
+        a = ola.getInstance();
+        d = a.getB();
+        b = d.length;
+        c = ola.getLength();
+
+        io.println(b + c); // RESULT 98
+    }
 }

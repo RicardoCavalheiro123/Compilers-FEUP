@@ -14,6 +14,12 @@ class SelfMade2 {
     }
 
     public static void main(String[] args) {
-        io.println(new SelfMade2().get1().get() + new SelfMade2().get2().get());
+        SelfMade2 s = new SelfMade2();
+        SelfMade2 s2 = new SelfMade2();
+        int a;
+        int b;
+        a = s.get1().get();
+        b = s2.get2().get();
+        io.println(a + b);
     }
 }

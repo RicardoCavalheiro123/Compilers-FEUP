@@ -24,6 +24,10 @@ class ShortCutAnd {
     }
 
     public static void main(String[] args) {
-        io.println(new ShortCutAnd().res());
+        ShortCutAnd a;
+        int b;
+        a = new ShortCutAnd();
+        b = a.res();
+        io.println(b);
     }
 }

@@ -17,6 +17,7 @@ import pt.up.fe.comp.jmm.parser.JmmParserResult;
 
 import pt.up.fe.specs.util.SpecsIo;
 import pt.up.fe.specs.util.SpecsLogs;
+import pt.up.fe.specs.util.SpecsStrings;
 import pt.up.fe.specs.util.SpecsSystem;
 
 public class Launcher {
@@ -92,9 +93,10 @@ public class Launcher {
         // Check if there are jasmin errors
         TestUtils.noErrors(jasminResult.getReports());
 
-        jasminResult.run();
+        var output = SpecsStrings.normalizeFileContents(jasminResult.run(), true);
 
         System.out.println(jasminResult.getJasminCode());
+        System.out.println(output);
 
         // ... add remaining stages
     }

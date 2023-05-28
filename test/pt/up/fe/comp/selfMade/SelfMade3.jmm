@@ -30,6 +30,16 @@ class SelfMade3 {
     }
 
     public static void main(String[] args) {
-        io.println(new SelfMade3().get1().get() + new SelfMade3().get2().getD(35/12));
+        SelfMade3 a;
+        SelfMade3 b;
+        int c;
+        int d;
+        a = new SelfMade3();
+        b = new SelfMade3();
+        a = a.get1();
+        c = a.get();
+        b = a.get2();
+        d = b.getD(35/12);
+        io.println(c + d);
     }
 }

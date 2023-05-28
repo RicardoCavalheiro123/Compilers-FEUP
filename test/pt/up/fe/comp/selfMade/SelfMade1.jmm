@@ -22,6 +22,10 @@ class SelfMade1 {
     }
 
     public static void main(String[] args){
-        io.println(new SelfMade1().call(10, true));
+        SelfMade1 sm1;
+        int call;
+        sm1 = new SelfMade1();
+        call = sm1.call(10, true);
+        io.println(call);
     }
 }

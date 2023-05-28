@@ -1,6 +1,4 @@
-import java.util;
-import java.net.Socket;
-class A extends Socket {
+class A {
     public int f() {
         return 1;
     }
