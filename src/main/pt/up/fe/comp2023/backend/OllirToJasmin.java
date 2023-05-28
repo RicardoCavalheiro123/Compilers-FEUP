@@ -384,8 +384,8 @@ public class OllirToJasmin {
         this.stackSize += stackUpdate;
         if (this.stackSize > this.stackMaxSize)
             this.stackMaxSize = this.stackSize;
-        if (this.stackSize < 0)
-            throw new RuntimeException("Stack size is negative");
+        //if (this.stackSize < 0)
+            //throw new RuntimeException("Stack size is negative");
         return this.stackSize;
     }
 
