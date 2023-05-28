@@ -208,13 +208,22 @@ public class OllirToJasmin {
     private String getBranchJasminString(Method method, CondBranchInstruction instruction) {
         StringBuilder jasminCodeBuilder = new StringBuilder();
         InstructionType conditionType = instruction.getCondition().getInstType();
+        boolean hasZero = false;
         if (conditionType == InstructionType.BINARYOPER) {
             BinaryOpInstruction binaryOpInstruction = (BinaryOpInstruction) instruction.getCondition();
-            jasminCodeBuilder.append(JasminUtils.loadElement(method, binaryOpInstruction.getLeftOperand()));
-            updateStack(1);
+            if(!(binaryOpInstruction.getLeftOperand().isLiteral() && ((LiteralElement) binaryOpInstruction.getLeftOperand()).getLiteral().equals("0"))) {
+                jasminCodeBuilder.append(JasminUtils.loadElement(method, binaryOpInstruction.getLeftOperand()));
+                updateStack(1);
+            } else {
+                hasZero = true;
+            }
             jasminCodeBuilder.append("\n\t");
-            jasminCodeBuilder.append(JasminUtils.loadElement(method, binaryOpInstruction.getRightOperand()));
-            updateStack(1);
+            if(!(binaryOpInstruction.getRightOperand().isLiteral() && ((LiteralElement) binaryOpInstruction.getRightOperand()).getLiteral().equals("0"))) {
+                jasminCodeBuilder.append(JasminUtils.loadElement(method, binaryOpInstruction.getRightOperand()));
+                updateStack(1);
+            } else {
+                hasZero = true;
+            }
         } else if (conditionType == InstructionType.NOPER) {
             jasminCodeBuilder.append(JasminUtils.loadElement(method, instruction.getOperands().get(0)));
             updateStack(1);
@@ -222,7 +231,7 @@ public class OllirToJasmin {
         jasminCodeBuilder.append("\n\t");
 
         String op;
-        if (conditionType ==  InstructionType.BINARYOPER) {
+        if (conditionType ==  InstructionType.BINARYOPER && !hasZero) {
             op = "if_icmp";
             op += JasminUtils.operationCode(((BinaryOpInstruction) instruction.getCondition()).getOperation());
             updateStack(-2);
