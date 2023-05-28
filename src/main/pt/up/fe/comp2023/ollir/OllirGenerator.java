@@ -111,6 +111,9 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
         this.loop_counter++;
         visit(jmmNode.getChildren().get(1), ollir);
         this.loop_counter--;
+        returnable = true;
+        result = visit(jmmNode.getChildren().get(0), ollir);
+        returnable = false;
         this.ollirCode.append("if (" + result + ") goto whilebody_"+ this.loop_counter +";\n");
         this.ollirCode.append("endwhile_" + this.loop_counter + ":\n");
         return null;
@@ -136,7 +139,7 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
         returnable = false;
         this.ollirCode.append("if (" + result + ") goto ifbody_"+ this.loop_counter +";\n");
         this.loop_counter++;
-        visit(jmmNode.getChildren().get(2), ollir);
+        if(jmmNode.getChildren().size()>2) visit(jmmNode.getChildren().get(2), ollir);
         this.ollirCode.append("goto endif_"+(this.loop_counter-1)+";\n");
         this.ollirCode.append("ifbody_"+(this.loop_counter-1)+":\n");
         visit(jmmNode.getChildren().get(1), ollir);
