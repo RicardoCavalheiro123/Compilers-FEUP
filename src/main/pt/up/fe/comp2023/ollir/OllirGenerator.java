@@ -216,7 +216,7 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
         }
 
         else if(fieldOfClass){
-            this.ollirCode.append("temp" + temp_counter + var_type + ":=" + var_type + " getfield(this," + jmmNode.get("id") + type + ")" + var_type + ";\n");
+            this.ollirCode.append("temp" + temp_counter + type + " :=" + type + " getfield(this," + jmmNode.get("id") + type + ")" + type + ";\n");
             this.ollirCode.append("temp" + temp_counter +"[" + temp + var_type + "]" + var_type + " :=" + var_type + " " + result + var_type + ";\n");
             temp_counter++;
             return null;
