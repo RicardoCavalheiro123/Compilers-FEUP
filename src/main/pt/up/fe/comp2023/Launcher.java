@@ -50,8 +50,9 @@ public class Launcher {
         // Check if there are parsing errors
         TestUtils.noErrors(parserResult.getReports());
 
-        System.out.println(parserResult.getRootNode().toTree());
-
+        if(config.get("debug").equals("true")) {
+            System.out.println(parserResult.getRootNode().toTree());
+        }
 
         // Instantiate JmmAnalyzer
         SimpleAnalysis analyzer = new SimpleAnalysis();
@@ -62,8 +63,9 @@ public class Launcher {
         // Check if there are semantic errors
         TestUtils.noErrors(semanticsResult);
 
-        System.out.println(semanticsResult.getSymbolTable());
-
+        if(config.get("debug").equals("true")) {
+            System.out.println(semanticsResult.getSymbolTable());
+        }
 
         // Instantiate JmmOptimizer
         SimpleOptimization ollir = new SimpleOptimization();
@@ -81,7 +83,9 @@ public class Launcher {
         // Check if there are ollir errors
         TestUtils.noErrors(ollirResult.getReports());
 
-        System.out.println(ollirResult.getOllirCode());
+        if(config.get("debug").equals("true")) {
+            System.out.println(ollirResult.getOllirCode());
+        }
 
         if(!config.get("registerAllocation").equals("-1")) {
             ollirResult = ollir.optimize(ollirResult, Integer.parseInt(config.get("registerAllocation")));
@@ -98,10 +102,11 @@ public class Launcher {
 
         var output = SpecsStrings.normalizeFileContents(jasminResult.run(), true);
 
-        System.out.println(jasminResult.getJasminCode());
-        System.out.println(output);
+        if(config.get("debug").equals("true")) {
+            System.out.println(jasminResult.getJasminCode());
+        }
 
-        // ... add remaining stages
+        System.out.println(output);
     }
 
     private static Map<String, String> parseArgs(String[] args) {
@@ -133,5 +138,4 @@ public class Launcher {
 
         return config;
     }
-
 }

@@ -23,6 +23,7 @@ public class SimpleAnalysis implements JmmAnalysis {
     @Override
     public JmmSemanticsResult semanticAnalysis(JmmParserResult jmmParserResult) {
         List<Report> reports = new ArrayList<>(jmmParserResult.getReports());
+        System.out.println("Building Symbol Table...");
 
         try {
             JmmNode root = jmmParserResult.getRootNode();
@@ -31,11 +32,11 @@ public class SimpleAnalysis implements JmmAnalysis {
 
             visitor.visit(root, null);
 
+            System.out.println("Finished building Symbol Table.");
+
             SymbolTable symbolTable = visitor.getSymbolTable();
 
             reports.addAll(visitor.getReports());
-
-
             List<SemanticVisitor> semantic_analyzers = Arrays.asList(
                 new ArrayAccessAnalyzer(),
                 new OperandsTypeCompatibilityAnalyzer(),
@@ -49,12 +50,11 @@ public class SimpleAnalysis implements JmmAnalysis {
             );
 
             System.out.println("Performing semantic analysis...");
-
             for(SemanticVisitor analyzer: semantic_analyzers) {
                 analyzer.visit(root, symbolTable);
                 reports.addAll(analyzer.getReports());
             }
-
+            System.out.println("Finished semantic analysis.");
             return new JmmSemanticsResult(jmmParserResult, symbolTable, reports);
         }
         catch (Exception e) {
