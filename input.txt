@@ -1,10 +1,26 @@
 import io;
 
-class InstSelection_if_lt {
-    public static void main(String[] args) {
-        int a;
-        a = 0;
+class MyClass {
+    int x;
 
-        io.println(a);
+    public int myMethod(int y) {
+        x = y * 2 + 1;
+        return 0;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public static void main(String[] args) {
+        MyClass obj;
+        int x;
+        obj = new MyClass();
+        obj.myMethod(5);
+
+        if (0 != 0) {
+            x = obj.getX();
+            io.print(x);
+        }
     }
 }

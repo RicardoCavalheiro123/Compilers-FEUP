@@ -205,21 +205,27 @@ public class OllirToJasmin {
         StringBuilder jasminCodeBuilder = new StringBuilder();
         InstructionType conditionType = instruction.getCondition().getInstType();
         boolean hasZero = false;
+
         if (conditionType == InstructionType.BINARYOPER) {
             BinaryOpInstruction binaryOpInstruction = (BinaryOpInstruction) instruction.getCondition();
-            if(!(binaryOpInstruction.getLeftOperand().isLiteral() && ((LiteralElement) binaryOpInstruction.getLeftOperand()).getLiteral().equals("0"))) {
+            boolean leftIsLiteral = binaryOpInstruction.getLeftOperand().isLiteral();
+            boolean rightIsLiteral = binaryOpInstruction.getRightOperand().isLiteral();
+            boolean leftIsZero = leftIsLiteral && ((LiteralElement) binaryOpInstruction.getLeftOperand()).getLiteral().equals("0");
+            boolean rightIsZero = rightIsLiteral && ((LiteralElement) binaryOpInstruction.getRightOperand()).getLiteral().equals("0");
+
+            if(!(leftIsZero) || rightIsZero) {
                 jasminCodeBuilder.append(JasminUtils.loadElement(method, binaryOpInstruction.getLeftOperand()));
                 updateStack(1);
-            } else {
-                hasZero = true;
+                jasminCodeBuilder.append("\n\t");
             }
-            jasminCodeBuilder.append("\n\t");
-            if(!(binaryOpInstruction.getRightOperand().isLiteral() && ((LiteralElement) binaryOpInstruction.getRightOperand()).getLiteral().equals("0"))) {
+
+            if(!(rightIsZero)) {
                 jasminCodeBuilder.append(JasminUtils.loadElement(method, binaryOpInstruction.getRightOperand()));
                 updateStack(1);
-            } else {
-                hasZero = true;
             }
+
+            hasZero = leftIsZero || rightIsZero;
+
         } else if (conditionType == InstructionType.NOPER) {
             jasminCodeBuilder.append(JasminUtils.loadElement(method, instruction.getOperands().get(0)));
             updateStack(1);
@@ -332,7 +338,7 @@ public class OllirToJasmin {
         boolean isConditional = JasminUtils.isConditionalOperation(instruction.getOperation());
         Operation operation = instruction.getOperation();
 
-        if (!(leftIsZero && isConditional)) {
+        if (!(leftIsZero && isConditional) || rightIsZero) {
             jasminCodeBuilder.append(JasminUtils.loadElement(method, left));
             updateStack(1);
             jasminCodeBuilder.append("\n\t");
