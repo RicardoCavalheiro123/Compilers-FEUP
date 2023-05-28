@@ -18,9 +18,8 @@ class MyClass {
         obj = new MyClass();
         obj.myMethod(5);
 
-        if (0 != 0) {
-            x = obj.getX();
-            io.print(x);
+        if (0 == 0) {
+            io.print(obj.getX());
         }
     }
 }
