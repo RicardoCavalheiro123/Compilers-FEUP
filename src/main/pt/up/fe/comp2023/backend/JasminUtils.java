@@ -107,8 +107,8 @@ public class JasminUtils {
 
             case ANDB, AND -> jasminCodeBuilder.append("iand");
             case EQ -> jasminCodeBuilder.append("eq");
-            case NEQ, NOTB -> jasminCodeBuilder.append("ne");
-            case ORB -> jasminCodeBuilder.append("or");
+            case NEQ -> jasminCodeBuilder.append("ne");
+            case ORB -> jasminCodeBuilder.append("ior");
             case LTH -> jasminCodeBuilder.append("lt");
             case GTH -> jasminCodeBuilder.append("gt");
             case LTE -> jasminCodeBuilder.append("le");
@@ -123,7 +123,6 @@ public class JasminUtils {
     public static String typeCode(Type type) {
         StringBuilder jasminCodeBuilder = new StringBuilder();
         ElementType typeOfElement = type.getTypeOfElement();
-        boolean array = false;
 
         while (typeOfElement == ElementType.ARRAYREF) {
             jasminCodeBuilder.append("[");
