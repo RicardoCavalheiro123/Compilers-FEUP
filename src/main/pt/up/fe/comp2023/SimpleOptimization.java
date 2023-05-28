@@ -8,6 +8,7 @@ import pt.up.fe.comp.jmm.report.Report;
 import pt.up.fe.comp2023.ollir.OllirGenerator;
 import pt.up.fe.comp2023.optimization.ConstantFoldingVisitor;
 import pt.up.fe.comp2023.optimization.ConstantPropagationVisitor;
+import pt.up.fe.comp2023.optimization.RegisterAllocation;
 import pt.up.fe.comp2023.semantics.symbol_table.SymbolTable;
 
 import java.util.ArrayList;
@@ -57,8 +58,11 @@ public class SimpleOptimization implements JmmOptimization {
         return new OllirResult(jmmSemanticsResult, visitor.getOllirCode(), reports);
     }
 
-    @Override
-    public OllirResult optimize(OllirResult ollirResult) {
+    public OllirResult optimize(OllirResult ollirResult, Integer numberRegisters) {
+        ollirResult.getOllirClass().buildCFGs();
+
+        new RegisterAllocation().allocation(ollirResult.getOllirClass(), numberRegisters);
+
         return ollirResult;
     }
 }
