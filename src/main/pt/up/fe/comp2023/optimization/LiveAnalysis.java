@@ -13,8 +13,8 @@ public class LiveAnalysis {
         this.ollirClass = ollirClass;
     }
 
-    public Map<String, List<LiveNode>> analysis() {
-        Map<String, List<LiveNode>> liveAnalysis = new HashMap<>();
+    public Map<Method, List<LiveNode>> analysis() {
+        Map<Method, List<LiveNode>> liveAnalysis = new HashMap<>();
 
         for (var method : ollirClass.getMethods()) {
             //instruction list
@@ -27,11 +27,13 @@ public class LiveAnalysis {
                 liveNode.nodeAnalysis(liveNode.instruction);
 
                 instructions.add(liveNode);
-            }
 
+            }
             computeInOut(instructions);
 
 
+
+            liveAnalysis.put(method, instructions);
         }
 
         return liveAnalysis;
@@ -41,22 +43,30 @@ public class LiveAnalysis {
         boolean changes = true;
         while(changes) {
             for(LiveNode instruction : instructions) {
-                var in = new HashSet<>(instruction.in);
-                var out = new HashSet<>(instruction.out);
+                Set<Element> in = new HashSet<>(instruction.in);
+                Set<Element> out = new HashSet<>(instruction.out);
 
-                var newIn = new HashSet<>();
-                var newOut = new HashSet<>();
-                var set = new HashSet<>();
+                Set<Element> newIn = new HashSet<>();
+                Set<Element> newOut = new HashSet<>();
+                Set<Element> set = new HashSet<>();
                 set.addAll(instruction.out);
                 set.removeAll(instruction.def);
                 newIn.addAll(set);
-
 
 
                 for(var successor : instruction.instruction.getSuccessors()) {
                     var liveNode = getLiveNode(instructions, successor);
                     newOut.addAll(liveNode.in);
                 }
+
+
+                if(!newIn.equals(in) || !newOut.equals(out)) {
+                    changes = true;
+                }
+                else {
+                    changes = false;
+                }
+
             }
         }
 
@@ -65,7 +75,8 @@ public class LiveAnalysis {
 
     public LiveNode getLiveNode(List<LiveNode> instructions, Node node) {
         for(LiveNode liveNode : instructions) {
-            if(liveNode.instruction.equals(node)) {
+
+            if(liveNode.instruction.equals(node.getPredecessors().get(0))) {
                 return liveNode;
             }
         }

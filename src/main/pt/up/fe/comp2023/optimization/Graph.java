@@ -1,8 +1,10 @@
 package pt.up.fe.comp2023.optimization;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.Stack;
+import java.lang.reflect.Method;
+import java.util.*;
+
+import java.util.Map;
+import java.util.HashMap;
 
 class Graph {
     private int V;
@@ -18,6 +20,12 @@ class Graph {
     void addEdge(int v, int w) {
         adj[v].add(w);
         adj[w].add(v);
+    }
+
+    public void create_graph(Map<Method, List<LiveNode>> map) {
+        for(Map.Entry<Method,List<LiveNode>> entry: map.entrySet()) {
+            
+        }
     }
 
     void GraphPaint(int k) {
