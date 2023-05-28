@@ -105,8 +105,8 @@ public class JasminUtils {
             case MUL -> jasminCodeBuilder.append("imul");
             case DIV -> jasminCodeBuilder.append("idiv");
 
-
-            case EQ, ANDB -> jasminCodeBuilder.append("eq");
+            case ANDB, AND -> jasminCodeBuilder.append("iand");
+            case EQ -> jasminCodeBuilder.append("eq");
             case NEQ, NOTB -> jasminCodeBuilder.append("ne");
             case ORB -> jasminCodeBuilder.append("or");
             case LTH -> jasminCodeBuilder.append("lt");
@@ -163,7 +163,7 @@ public class JasminUtils {
 
     public static boolean isConditionalOperation(Operation operation) {
         return switch (operation.getOpType()) {
-            case ANDB, NOTB, ORB, LTH, GTH, LTE, GTE, EQ, NEQ -> true;
+            case ORB, LTH, GTH, LTE, GTE, EQ, NEQ -> true;
             default -> false;
         };
     }

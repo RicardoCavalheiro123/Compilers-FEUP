@@ -330,24 +330,25 @@ public class OllirToJasmin {
         Element right = instruction.getRightOperand();
         boolean rightIsLiteral = right.isLiteral();
         boolean leftIsLiteral = left.isLiteral();
+        boolean isConditional = JasminUtils.isConditionalOperation(instruction.getOperation());
 
         boolean mathOp = instruction.getOperation().getOpType() == OperationType.ADD ||
                 instruction.getOperation().getOpType() == OperationType.SUB ||
                 instruction.getOperation().getOpType() == OperationType.MUL ||
                 instruction.getOperation().getOpType() == OperationType.DIV;
 
-        if (!(leftIsLiteral && ((LiteralElement) left).getLiteral().equals("0") && !mathOp)) {
+        if (!(leftIsLiteral && ((LiteralElement) left).getLiteral().equals("0") && !mathOp) || !isConditional) {
             jasminCodeBuilder.append(JasminUtils.loadElement(method, left));
             updateStack(1);
             jasminCodeBuilder.append("\n\t");
         }
-        if (!(rightIsLiteral && ((LiteralElement) right).getLiteral().equals("0") && !mathOp)) {
+        if (!(rightIsLiteral && ((LiteralElement) right).getLiteral().equals("0") && !mathOp) || !isConditional) {
             jasminCodeBuilder.append(JasminUtils.loadElement(method, right));
             updateStack(1);
             jasminCodeBuilder.append("\n\t");
         }
 
-        if(!mathOp) {
+        if(!mathOp && isConditional) {
             boolean oneIsZero = false;
             if (leftIsLiteral && ((LiteralElement) left).getLiteral().equals("0")) oneIsZero = true;
             else if (rightIsLiteral && ((LiteralElement) right).getLiteral().equals("0")) oneIsZero = true;

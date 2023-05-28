@@ -1,32 +1,12 @@
 import io;
 
 class Ifs {
-    public int call(int num) {
-        boolean b;
-        int i;
-        int j;
-        b = true;
-        i = 0;
-        j = 0;
-
-
-        if (!b && false) {
-            i = i+1;
-        } else {
-            i = i+2; // i = 221102211 or 221102212
-        }
-
-        ////
-
-
-        return i;
-    }
-
     public static void main(String[] args){
-        int a;
-        Ifs ifs;
-        ifs = new Ifs();
-        a = ifs.call(10);
+        boolean a;
+        int i;
+
+        a = false && false;
+
         io.println(a);
     }
 }
