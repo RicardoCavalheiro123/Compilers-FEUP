@@ -5,7 +5,7 @@ class Ifs {
         boolean a;
         int i;
 
-        a = false && false;
+        a = 0 < 1;
 
         io.println(a);
     }
