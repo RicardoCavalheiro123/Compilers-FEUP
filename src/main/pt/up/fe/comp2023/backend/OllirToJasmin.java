@@ -228,13 +228,13 @@ public class OllirToJasmin {
 
         StringBuilder op = new StringBuilder();
         if (conditionType ==  InstructionType.BINARYOPER && !hasZero) {
-            op.append("isub\n\t");
-            op.append("if");
+            op.append("if_icmp");
             op.append(JasminUtils.operationCode(((BinaryOpInstruction) instruction.getCondition()).getOperation()));
             updateStack(-2);
         }
         else {
-            op.append("if").append(JasminUtils.operationCode(new Operation(OperationType.NEQ, new Type(ElementType.BOOLEAN))));
+
+            op.append("if").append(JasminUtils.operationCode(new Operation(OperationType.EQ, new Type(ElementType.BOOLEAN))));
             updateStack(-1);
         }
 
@@ -332,7 +332,6 @@ public class OllirToJasmin {
         boolean leftIsZero = leftIsLiteral && ((LiteralElement) left).getLiteral().equals("0");
         boolean isConditional = JasminUtils.isConditionalOperation(instruction.getOperation());
         Operation operation = instruction.getOperation();
-        leftIsZero = false;
 
         if (!(leftIsZero && isConditional)) {
             jasminCodeBuilder.append(JasminUtils.loadElement(method, left));
@@ -353,8 +352,7 @@ public class OllirToJasmin {
                 updateStack(-1);
             }
             else {
-                jasminCodeBuilder.append("isub\n\t");
-                jasminCodeBuilder.append("if");
+                jasminCodeBuilder.append("if_icmp");
                 updateStack(-2);
             }
         }
