@@ -163,7 +163,7 @@ public class JasminUtils {
 
     public static boolean isConditionalOperation(Operation operation) {
         return switch (operation.getOpType()) {
-            case ANDB, NOTB, ORB, LTH, GTH, LTE, GTE -> true;
+            case ANDB, NOTB, ORB, LTH, GTH, LTE, GTE, EQ, NEQ -> true;
             default -> false;
         };
     }

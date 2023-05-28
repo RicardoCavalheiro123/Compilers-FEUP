@@ -9,6 +9,10 @@ class ArrayLoop {
           io.print(count);
           count = count - 1;
         }
+
+        if(count == 0) {
+          io.print(0);
+        }
     }
 
 }
