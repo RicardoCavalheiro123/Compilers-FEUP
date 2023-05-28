@@ -93,10 +93,10 @@ public class Launcher {
         // Check if there are jasmin errors
         TestUtils.noErrors(jasminResult.getReports());
 
-        var output = SpecsStrings.normalizeFileContents(jasminResult.run(), true);
+        //var output = SpecsStrings.normalizeFileContents(jasminResult.run(), true);
 
         System.out.println(jasminResult.getJasminCode());
-        System.out.println(output);
+        //System.out.println(output);
 
         // ... add remaining stages
     }
