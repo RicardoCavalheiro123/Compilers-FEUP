@@ -108,7 +108,7 @@ public class JasminUtils {
             case ANDB, AND -> jasminCodeBuilder.append("iand");
             case EQ -> jasminCodeBuilder.append("eq");
             case NEQ -> jasminCodeBuilder.append("ne");
-            case ORB -> jasminCodeBuilder.append("or");
+            case ORB -> jasminCodeBuilder.append("ior");
             case LTH -> jasminCodeBuilder.append("lt");
             case GTH -> jasminCodeBuilder.append("gt");
             case LTE -> jasminCodeBuilder.append("le");
