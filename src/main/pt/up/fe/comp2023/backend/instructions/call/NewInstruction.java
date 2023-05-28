@@ -16,6 +16,7 @@ public class NewInstruction implements InstructionCall {
 
             for (Element e : instruction.getListOfOperands()) {
                 jasminCodeBuilder.append(JasminUtils.loadElement(method, e)).append("\n\t");
+                stackChange++;
             }
 
             if (instruction.getListOfOperands().get(0).getType().getTypeOfElement() == ElementType.INT32) {
@@ -45,7 +46,7 @@ public class NewInstruction implements InstructionCall {
     }
 
     @Override
-    public int getStackChange(CallInstruction instruction) {
+    public int getStackChange() {
         return stackChange;
     }
 }

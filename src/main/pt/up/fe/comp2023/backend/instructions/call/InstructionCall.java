@@ -7,5 +7,5 @@ public interface InstructionCall {
     int stackChange = 0;
     public String toJasmin(Method method, CallInstruction instruction);
 
-    int getStackChange(CallInstruction instruction);
+    int getStackChange();
 }

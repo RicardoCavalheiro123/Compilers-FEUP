@@ -11,7 +11,7 @@ public class InvokeInterfaceInstruction implements InstructionCall {
     }
 
     @Override
-    public int getStackChange(CallInstruction instruction) {
+    public int getStackChange() {
         return stackChange;
     }
 }

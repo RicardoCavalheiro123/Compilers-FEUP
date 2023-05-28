@@ -12,7 +12,10 @@ public class InvokeVirtualInstruction implements InstructionCall {
 
         jasminCodeBuilder.append(JasminUtils.loadElement(method, instruction.getFirstArg()));
 
-        for (Element element : instruction.getListOfOperands()) jasminCodeBuilder.append("\n\t").append(JasminUtils.loadElement(method, element));
+        for (Element element : instruction.getListOfOperands()) {
+            jasminCodeBuilder.append("\n\t").append(JasminUtils.loadElement(method, element));
+            stackChange--;
+        }
 
         jasminCodeBuilder.append("\n\t");
         jasminCodeBuilder.append("invokevirtual ");
@@ -22,7 +25,6 @@ public class InvokeVirtualInstruction implements InstructionCall {
 
         for (Element e: instruction.getListOfOperands()) {
             jasminCodeBuilder.append(JasminUtils.typeCode(e.getType()));
-            stackChange--;
         }
 
         jasminCodeBuilder.append(")" + JasminUtils.typeCode(instruction.getReturnType()));
@@ -31,7 +33,7 @@ public class InvokeVirtualInstruction implements InstructionCall {
     }
 
     @Override
-    public int getStackChange(CallInstruction instruction) {
+    public int getStackChange() {
         return stackChange;
     }
 }

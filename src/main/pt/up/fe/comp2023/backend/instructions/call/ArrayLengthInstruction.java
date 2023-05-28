@@ -17,7 +17,7 @@ public class ArrayLengthInstruction implements InstructionCall {
     }
 
     @Override
-    public int getStackChange(CallInstruction instruction) {
+    public int getStackChange() {
         return stackChange;
     }
 }

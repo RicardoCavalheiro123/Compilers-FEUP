@@ -43,7 +43,7 @@ public class InvokeSpecialInstruction implements InstructionCall {
     }
 
     @Override
-    public int getStackChange(CallInstruction instruction) {
+    public int getStackChange() {
         return stackChange;
     }
 }
