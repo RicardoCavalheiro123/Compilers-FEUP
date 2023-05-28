@@ -233,7 +233,9 @@ public class OllirToJasmin {
             updateStack(-2);
         }
         else {
-            op.append("if").append(JasminUtils.operationCode(new Operation(OperationType.NEQ, new Type(ElementType.BOOLEAN))));
+            op.append("iconst_1\n\t");
+            op.append("ixor\n\t");
+            op.append("if").append(JasminUtils.operationCode(new Operation(OperationType.EQ, new Type(ElementType.BOOLEAN))));
             updateStack(-1);
         }
 
