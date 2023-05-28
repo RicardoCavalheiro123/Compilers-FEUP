@@ -13,28 +13,7 @@ public class LiveNode {
     public ArrayList<String> def = new ArrayList<>();
     public ArrayList<String> use = new ArrayList<>();
 
-<<<<<<< HEAD
-    
-=======
-    public LiveNode() {
-    }
 
-    /*
-    public Map<String, String> calculate(ArrayList<Element> set) {
-        var map = new HashMap<String, String>();
-
-        for(int n1 = 0; n1 < set.size() - 1; n1++) {
-            for(int n2 = n1 + 1; n2 < set.size(); n2++) {
-                map.put(set.get(n1), set.get(n2));
-            }
-        }
-
-        return map;
-    }
-*/
-
-
->>>>>>> 31c6c6a539213ac88c16bfc252dc01326d87aa44
     public void nodeAnalysis(Instruction instruct) {
         switch(instruct.getInstType()) {
 
