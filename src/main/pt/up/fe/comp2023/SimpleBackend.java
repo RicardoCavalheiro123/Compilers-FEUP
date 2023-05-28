@@ -15,6 +15,8 @@ public class SimpleBackend implements JasminBackend {
 
     @Override
     public JasminResult toJasmin(OllirResult ollirResult) {
+        System.out.println("Generating Jasmin code...");
+
         List<Report> reports = new ArrayList<>(ollirResult.getReports());
         ClassUnit resultOllirClass = ollirResult.getOllirClass();
 
@@ -22,8 +24,10 @@ public class SimpleBackend implements JasminBackend {
             OllirToJasmin ollirToJasmin = new OllirToJasmin();
             String jasminCode = ollirToJasmin.getJasminString(resultOllirClass);
 
+            System.out.println("Jasmin code generated successfully");
             return new JasminResult(ollirResult, jasminCode, reports);
         } catch (Exception e) {
+            System.out.println("Error while generating Jasmin code");
             return new JasminResult(resultOllirClass.getClassName(), null, List.of(Report.newError(Stage.GENERATION, -1, -1, "Error while generating Jasmin code", e)));
         }
     }
