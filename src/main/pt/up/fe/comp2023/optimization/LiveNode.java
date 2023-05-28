@@ -13,7 +13,7 @@ public class LiveNode {
     public ArrayList<String> def = new ArrayList<>();
     public ArrayList<String> use = new ArrayList<>();
 
-
+    
     public void nodeAnalysis(Instruction instruct) {
         switch(instruct.getInstType()) {
 

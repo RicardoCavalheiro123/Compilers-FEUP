@@ -87,9 +87,9 @@ public class Launcher {
             System.out.println(ollirResult.getOllirCode());
         }
 
-        if(!config.get("registerAllocation").equals("-1")) {
-            ollirResult = ollir.optimize(ollirResult, Integer.parseInt(config.get("registerAllocation")));
-        }
+        //if(!config.get("registerAllocation").equals("-1")) {
+            ollirResult = ollir.optimize(ollirResult);
+        //}
 
         // Instantiate JasminGenerator
         SimpleBackend simpleBackend = new SimpleBackend();

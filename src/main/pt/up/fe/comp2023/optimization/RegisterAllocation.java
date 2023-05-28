@@ -16,13 +16,13 @@ public class RegisterAllocation {
 
         create_graph(liveAnalysis, numberRegisters);
 
-        var a = 0;
-
     }
 
     public Report create_graph(Map<Method, List<LiveNode>> map, int numRegisters) {
 
         for(var key: map.keySet()) {
+            if(key.isConstructMethod()) continue;
+
             var interference_graph = new Graph(key);
 
             interference_graph.setVarTable(key.getVarTable());
@@ -30,7 +30,7 @@ public class RegisterAllocation {
             for(var list_element: map.get(key)) {
                 var in = list_element.in;
                 var def = list_element.def;
-                ArrayList<String> union = new ArrayList<>(def);
+                Set<String> union = new HashSet<>(def);
                 union.addAll(list_element.out);
 
                 for(var node1: in) {
@@ -41,6 +41,14 @@ public class RegisterAllocation {
                     }
                 }
 
+                if(union.size() == 1) {
+                    interference_graph.addNode(union.iterator().next());
+                }
+
+                if(in.size() == 1) {
+                    interference_graph.addNode(in.iterator().next());
+                }
+
                 for(var node1: union) {
                     for(var node2: union) {
                         if(!node1.equals(node2)) {
@@ -48,7 +56,9 @@ public class RegisterAllocation {
                         }
                     }
                 }
+
             }
+
 
             var minimum_register_number = interference_graph.graph_coloring();
 
@@ -62,13 +72,13 @@ public class RegisterAllocation {
                 );
             }
 
-
             for(var variable : key.getVarTable().keySet()) {
                 key.getVarTable().get(variable).setVirtualReg(interference_graph.getVarColor(variable));
             }
 
+            var a = 0;
         }
-        
+
         return null;
     }
 }

@@ -58,10 +58,17 @@ public class SimpleOptimization implements JmmOptimization {
         return new OllirResult(jmmSemanticsResult, visitor.getOllirCode(), reports);
     }
 
-    public OllirResult optimize(OllirResult ollirResult, Integer numberRegisters) {
-        ollirResult.getOllirClass().buildCFGs();
+    public OllirResult optimize(OllirResult ollirResult) {
+        if(ollirResult.getConfig().containsKey("registerAllocation")) {
+            int register_number = Integer.parseInt(ollirResult.getConfig().get("registerAllocation"));
 
-        new RegisterAllocation().allocation(ollirResult.getOllirClass(), numberRegisters);
+            if(register_number != -1) {
+                ollirResult.getOllirClass().buildCFGs();
+                ollirResult.getOllirClass().buildVarTables();
+
+                new RegisterAllocation().allocation(ollirResult.getOllirClass(), register_number);
+            }
+        }
 
         return ollirResult;
     }
