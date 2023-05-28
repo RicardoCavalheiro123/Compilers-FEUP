@@ -3,10 +3,6 @@ package pt.up.fe.comp2023.backend;
 import org.specs.comp.ollir.*;
 import pt.up.fe.comp2023.backend.instructions.call.*;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
 public class OllirToJasmin {
     String superClassName;
@@ -330,6 +326,8 @@ public class OllirToJasmin {
         Element right = instruction.getRightOperand();
         boolean rightIsLiteral = right.isLiteral();
         boolean leftIsLiteral = left.isLiteral();
+        boolean rightIsZero = rightIsLiteral && ((LiteralElement) right).getLiteral().equals("0");
+        boolean leftIsZero = leftIsLiteral && ((LiteralElement) left).getLiteral().equals("0");
         boolean isConditional = JasminUtils.isConditionalOperation(instruction.getOperation());
 
         boolean mathOp = instruction.getOperation().getOpType() == OperationType.ADD ||
@@ -337,23 +335,20 @@ public class OllirToJasmin {
                 instruction.getOperation().getOpType() == OperationType.MUL ||
                 instruction.getOperation().getOpType() == OperationType.DIV;
 
-        if (!(leftIsLiteral && ((LiteralElement) left).getLiteral().equals("0") && !mathOp) || !isConditional) {
+        if (!(leftIsZero && isConditional)) {
             jasminCodeBuilder.append(JasminUtils.loadElement(method, left));
             updateStack(1);
             jasminCodeBuilder.append("\n\t");
         }
-        if (!(rightIsLiteral && ((LiteralElement) right).getLiteral().equals("0") && !mathOp) || !isConditional) {
+
+        if (!(rightIsZero && isConditional)) {
             jasminCodeBuilder.append(JasminUtils.loadElement(method, right));
             updateStack(1);
             jasminCodeBuilder.append("\n\t");
         }
 
-        if(!mathOp && isConditional) {
-            boolean oneIsZero = false;
-            if (leftIsLiteral && ((LiteralElement) left).getLiteral().equals("0")) oneIsZero = true;
-            else if (rightIsLiteral && ((LiteralElement) right).getLiteral().equals("0")) oneIsZero = true;
-
-            if (oneIsZero) {
+        if(isConditional) {
+            if (leftIsZero || rightIsZero) {
                 jasminCodeBuilder.append("if");
                 updateStack(-1);
             }
