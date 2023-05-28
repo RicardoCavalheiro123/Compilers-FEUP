@@ -424,6 +424,7 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
             else{
                 var_type = getVariableType(symbol.getType(), ollir);
             }
+            var = getVariableType(symbol.getType(), ollir);
 
         }
 
@@ -431,6 +432,7 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
         else if(this.symbolTable.isParameter(this.currentMethod, jmmNode.get("id"))){
             this.symbol = this.symbolTable.getParameter(this.currentMethod, jmmNode.get("id"));
             var_type = getVariableType(symbol.getType(), ollir);
+            var = getVariableType(symbol.getType(), ollir);
             isparameter = this.symbolTable.getParameterIndex(this.currentMethod, jmmNode.get("id")) + 1;
         }
 
@@ -491,7 +493,7 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
             }
 
 
-            this.ollirCode.append(jmmNode.get("id") + var_type + " :=" + var_type + " " + temp + ";\n");
+            this.ollirCode.append(jmmNode.get("id") + var + " :=" + var + " " + temp + ";\n");
 
 
         }
