@@ -16,18 +16,6 @@ public class LiveNode {
     public LiveNode() {
     }
 
-    public Map<Element, Element> calculate(ArrayList<Element> set) {
-        var map = new HashMap<Element, Element>();
-
-        for(int n1 = 0; n1 < set.size() - 1; n1++) {
-            for(int n2 = n1 + 1; n2 < set.size(); n2++) {
-                map.put(set.get(n1), set.get(n2));
-            }
-        }
-
-        return map;
-    }
-
     public void nodeAnalysis(Instruction instruct) {
         switch(instruct.getInstType()) {
 

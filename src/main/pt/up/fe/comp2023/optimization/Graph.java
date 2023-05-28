@@ -1,86 +1,107 @@
 package pt.up.fe.comp2023.optimization;
 
-import java.lang.reflect.Method;
+import org.specs.comp.ollir.*;
+
+import javax.lang.model.element.ElementKind;
+import javax.lang.model.util.Elements;
 import java.util.*;
 
-import java.util.Map;
-import java.util.HashMap;
-
 class Graph {
-    private int V;
-    private LinkedList<Integer>[] adj;
+    private Map<String, List<String>> adjacencyMap;
+    private Map<String, Integer> colors;
+    private Map<String, Descriptor> varTable;
+    private int starting_color;
 
-    Graph(int v) {
-        V = v;
-        adj = new LinkedList[v];
-        for (int i = 0; i < v; ++i)
-            adj[i] = new LinkedList<>();
+    public Graph(Method method) {
+        adjacencyMap = new HashMap<>();
+        colors = new HashMap<>();
+        varTable = new HashMap<>();
+        starting_color = method.isStaticMethod() ? 0 : 1;
     }
 
-    void addEdge(int v, int w) {
-        adj[v].add(w);
-        adj[w].add(v);
+    public void setVarTable(Map<String, Descriptor> varTable) {
+        this.varTable = varTable;
     }
 
-    public void create_graph(Map<Method, List<LiveNode>> map) {
-        for(Map.Entry<Method,List<LiveNode>> entry: map.entrySet()) {
-            
-        }
-    }
+    public void addNode(String node) {
+        if(varTable.get(node).getVarType().getTypeOfElement().equals(ElementType.THIS) ||
+           varTable.get(node).getScope().equals(VarScope.PARAMETER)) {
 
-    void GraphPaint(int k) {
-        int[] colors = new int[V];
-        boolean[] available = new boolean[k];
+            starting_color++;
 
-        Arrays.fill(colors, -1);
-        Stack<Integer> stack = new Stack<>();
-
-        for (int v = 0; v < V; v++) {
-
-            if (adj[v].size() < k) {
-
-                stack.push(v);
-                adj[v].clear();
-
-
-                while (!stack.isEmpty()) {
-                    int node = stack.pop();
-
-                    for (int neighbor : adj[node]) {
-                        if (adj[neighbor].size() > 0) {
-                            adj[neighbor].removeFirstOccurrence(node);
-                            if (adj[neighbor].size() < k)
-                                stack.push(neighbor);
-                        }
-                    }
-                }
-            } else {
-                System.out.println("The algorithm cannot be applied.");
-                return;
-            }
+            return;
         }
 
+        adjacencyMap.put(node, new ArrayList<>());
+        colors.put(node, -1);
+    }
 
-        while (!stack.isEmpty()) {
-            int node = stack.pop();
-            Arrays.fill(available, true);
+    public void addEdge(String source, String destination) {
+        if (!adjacencyMap.containsKey(source)) {
+            addNode(source);
+        }
+        if (!adjacencyMap.containsKey(destination)) {
+            addNode(destination);
+        }
 
-            for (int neighbor : adj[node]) {
-                if (colors[neighbor] != -1)
-                    available[colors[neighbor]] = false;
-            }
+        adjacencyMap.get(source).add(destination);
+        adjacencyMap.get(destination).add(source);
+    }
 
+    public List<String> getNeighbors(String node) {
+        if (!adjacencyMap.containsKey(node)) {
+            throw new IllegalArgumentException("Node does not exist in the graph.");
+        }
+        return adjacencyMap.get(node);
+    }
 
-            for (int i = 0; i < k; i++) {
-                if (available[i]) {
-                    colors[node] = i;
-                    break;
+    public void graph_coloring() {
+        var minimum_registers_number = 1;
+        var stack = new Stack<String>();
+
+        Map<String, List<String>> original_neighbours = new HashMap<>(this.adjacencyMap);
+
+        while(original_neighbours.size() > 0) {
+            boolean aux = false;
+
+            for(var node: original_neighbours.keySet()) {
+                if(original_neighbours.get(node).size() < minimum_registers_number) {
+                    stack.push(node);
+                    original_neighbours.remove(node);
+                    this.remove_neighbour(node, original_neighbours);
+                    aux = true;
                 }
             }
+
+            if(aux == false) {
+                minimum_registers_number += 1;
+            }
         }
 
-        for (int v = 0; v < V; v++) {
-            System.out.println("Node " + v + " --> Color " + colors[v]);
+        while(!stack.isEmpty()) {
+            var front = stack.pop();
+            List<Integer> neigh_colors = new ArrayList<>();
+            var color = this.starting_color;
+
+            for(var neighbour: adjacencyMap.get(front)) {
+                neigh_colors.add(colors.get(neighbour));
+            }
+
+            while(neigh_colors.contains(color)) {
+                color++;
+            }
+
+            this.colors.put(front, color);
+        }
+    }
+
+    private void remove_neighbour(String node_to_remove, Map<String, List<String>> map) {
+        for (var node : map.keySet()) {
+            for (var neighbour : map.get(node)) {
+                if (Objects.equals(neighbour, node_to_remove)) {
+                    map.get(node).remove(neighbour);
+                }
+            }
         }
     }
 }
