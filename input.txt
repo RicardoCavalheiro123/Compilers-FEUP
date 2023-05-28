@@ -1,17 +1,14 @@
 import io;
 
-class RegAlloc {
-	public static void main(String[] args) {
-	    boolean a;
-        int b;
-        b = 2;
-
-	    if (b < 0) {
-	        a = true;
+class VarNotInit {
+    public static void main(String[] a) {
+        int a;
+        a = 0;
+        if (a < 0) {
+            a = 1;
         } else {
-            a = false;
-	    }
-
-	    io.println(a);
-	}
+            a = 2;
+        }
+        io.println(a);
+    }
 }
