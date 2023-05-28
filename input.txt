@@ -2,8 +2,12 @@ import io;
 
 class MyClass {
     public static void main(String[] args) {
-        if (0 != 2) {
+        int a;
+        a = 1;
+        while (a >= 0) {
+            a = a - 1;
             io.println(2);
+
         }
     }
 }
