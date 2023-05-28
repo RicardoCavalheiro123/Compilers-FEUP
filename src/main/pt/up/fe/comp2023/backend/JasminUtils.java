@@ -167,4 +167,14 @@ public class JasminUtils {
             default -> false;
         };
     }
+
+    public static Operation inverseOperation(Operation operation) {
+        return switch (operation.getOpType()) {
+            case LTH -> new Operation(OperationType.GTH, operation.getTypeInfo());
+            case GTH -> new Operation(OperationType.LTH, operation.getTypeInfo());
+            case LTE -> new Operation(OperationType.GTE, operation.getTypeInfo());
+            case GTE -> new Operation(OperationType.LTE, operation.getTypeInfo());
+            default -> operation;
+        };
+    }
 }
