@@ -318,7 +318,7 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
             ex = "temp" + (temp_counter - 1) + "." + jmmNode.get("id");
         }
         this.ollirCode.append("." + jmmNode.get("id") + ",\"<init>\").V");
-        if(!(jmmNode.getJmmParent().getKind().equals("Parenthesis") )){
+        if(!(jmmNode.getJmmParent().getKind().equals("Parenthesis") || jmmNode.getJmmParent().getKind().equals("Assign"))){
             this.ollirCode.append(";\n");
         }
 
