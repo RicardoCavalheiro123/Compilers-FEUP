@@ -17,7 +17,7 @@ public class LiveNode {
     public LiveNode() {
     }
 
-/*
+    /*
     public Map<String, String> calculate(ArrayList<Element> set) {
         var map = new HashMap<String, String>();
 
@@ -30,7 +30,7 @@ public class LiveNode {
         return map;
     }
 */
-     */
+
 
     public void nodeAnalysis(Instruction instruct) {
         switch(instruct.getInstType()) {
@@ -104,6 +104,7 @@ public class LiveNode {
                 break;
 
             case CALL:
+
 
                 var operands_list = ((CallInstruction) instruct).getListOfOperands();
 
