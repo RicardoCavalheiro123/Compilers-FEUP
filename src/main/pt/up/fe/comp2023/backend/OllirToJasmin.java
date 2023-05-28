@@ -104,7 +104,7 @@ public class OllirToJasmin {
     private String getInstructionJasminString(Method method, Instruction instruction) {
         StringBuilder jasminCodeBuilder = new StringBuilder();
 
-        method.getLabels(instruction).forEach(label -> jasminCodeBuilder.append("\n").append(label).append(":\n\t"));
+        method.getLabels(instruction).forEach(label -> jasminCodeBuilder.append(label).append(":\n\t"));
         switch (instruction.getInstType()) {
             case ASSIGN -> jasminCodeBuilder.append(getAssignJasminString(method, (AssignInstruction) instruction));
             case CALL -> jasminCodeBuilder.append(getCallJasminString(method, (CallInstruction) instruction));
