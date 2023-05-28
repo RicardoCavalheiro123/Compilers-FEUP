@@ -330,6 +330,7 @@ public class OllirToJasmin {
         boolean rightIsZero = rightIsLiteral && ((LiteralElement) right).getLiteral().equals("0");
         boolean leftIsZero = leftIsLiteral && ((LiteralElement) left).getLiteral().equals("0");
         boolean isConditional = JasminUtils.isConditionalOperation(instruction.getOperation());
+        Operation operation = instruction.getOperation();
 
         if (!(leftIsZero && isConditional)) {
             jasminCodeBuilder.append(JasminUtils.loadElement(method, left));
@@ -345,6 +346,7 @@ public class OllirToJasmin {
 
         if(isConditional) {
             if (leftIsZero || rightIsZero) {
+                operation = JasminUtils.inverseOperation(operation);
                 jasminCodeBuilder.append("if");
                 updateStack(-1);
             }
@@ -353,7 +355,7 @@ public class OllirToJasmin {
                 updateStack(-2);
             }
         }
-        jasminCodeBuilder.append(JasminUtils.operationCode(instruction.getOperation()));
+        jasminCodeBuilder.append(JasminUtils.operationCode(operation));
 
         if (JasminUtils.isConditionalOperation(instruction.getOperation())) {
             jasminCodeBuilder.append(JasminUtils.booleanResult(conditionCounter));

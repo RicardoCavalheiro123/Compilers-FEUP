@@ -1,17 +1,9 @@
+import io;
+
 class MyClass {
-
-    int sum;
-
     public static void main(String[] args) {
-
+        if (0 < 2) {
+            io.println(2);
+        }
     }
-
-  public int calculateSum(int[] arr) {
-    arr = new int[3];
-    arr[0] = 1;
-    arr[1] = 2;
-    arr[2] = 3;
-    sum = arr[0] + arr[1] * arr[2];
-    return 0;
-  }
 }
