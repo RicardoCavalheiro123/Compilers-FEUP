@@ -298,12 +298,12 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
         }
 
         if(jmmNode.getJmmParent().getKind().equals("BinaryOp") || jmmNode.getJmmParent().getKind().equals("MethodCall")){
-
+            String return_type = getReturnOfMethod(jmmNode.get("method"));
             String res = visit(jmmNode.getChildren().get(0), ollir);
-            this.ollirCode.append("temp" + temp_counter + var_type + " :=" + var_type + " ");
-            this.ollirCode.append("invokevirtual(" + res +"," + "\"" + jmmNode.get("method")+ "\"" +result+ ")" + var_type + ";\n");
+            this.ollirCode.append("temp" + temp_counter + return_type + " :=" + return_type + " ");
+            this.ollirCode.append("invokevirtual(" + res +"," + "\"" + jmmNode.get("method")+ "\"" +result+ ")" + return_type + ";\n");
             temp_counter++;
-            return "temp" + (temp_counter -1) + var_type;
+            return "temp" + (temp_counter -1) + return_type;
         }
 
         if(jmmNode.getChildren().get(0).getOptional(var).isPresent() && is_Static(jmmNode.getChildren().get(0).getOptional(var).get())){
