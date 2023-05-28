@@ -30,12 +30,14 @@ class ArrayLoop {
     public static void main(String[] args) {
         ArrayLoop arrayLoop;
         int[] arr;
+        int a;
 
         arrayLoop = new ArrayLoop();
         arr = new int[100];
         arrayLoop.init(arr);
 
-        io.println(arrayLoop.sum(arr));
+        a = arrayLoop.sum(arr);
+        io.println(a);
     }
 
 }

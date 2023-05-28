@@ -22,6 +22,10 @@ class SelfMade1Fields {
     }
 
     public static void main(String[] args){
-        io.println(new SelfMade1Fields().call(10, true));
+        SelfMade1Fields sm1;
+        int call;
+        sm1 = new SelfMade1Fields();
+        call = sm1.call(10, true);
+        io.println(call);
     }
 }

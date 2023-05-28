@@ -81,6 +81,10 @@ class Ifs {
     }
 
     public static void main(String[] args){
-        io.println(new Ifs().call(10));
+        int a;
+        Ifs ifs;
+        ifs = new Ifs();
+        a = ifs.call(10);
+        io.println(a);
     }
 }

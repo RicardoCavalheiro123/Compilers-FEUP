@@ -16,9 +16,12 @@ class WhileIssue {
 
     public static void main(String[] args) {
         WhileIssue obj;
+        int a;
+        int b;
         obj = new WhileIssue();
-
-        io.println(obj.func(true)); // 1
-        io.println(obj.func(false)); // 0
+        a = obj.func(true);
+        b = obj.func(false);
+        io.println(a); // 1
+        io.println(b); // 0
     }
 }

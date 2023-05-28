@@ -31,6 +31,10 @@ class ConstPropFold2 {
 	}
 
 	public static void main(String[] args) {
-	    io.println(new ConstPropFold2().call(5));
+	    int a;
+	    ConstPropagationFolding c;
+	    c = new ConstPropagationFolding();
+	    a = c.call(5);
+	    io.println(a);
 	}
 }

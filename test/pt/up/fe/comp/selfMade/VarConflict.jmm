@@ -13,6 +13,10 @@ class VarConflict {
     }
 
     public static void main(String[] args) {
-        io.println(new VarConflict().getRes(1)); // RESULT 6
+        VarConflict vc;
+        int a;
+         vc = new VarConflict();
+        a = vc.getRes(1);
+        io.println(a); // RESULT 6
     }
 }

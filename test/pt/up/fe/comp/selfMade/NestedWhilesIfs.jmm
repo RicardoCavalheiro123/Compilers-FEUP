@@ -50,9 +50,11 @@ class NestedWhilesIfs {
 
     public static void main(String[] args) {
         NestedWhilesIfs obj;
+        int a;
         obj = new NestedWhilesIfs();
+        a = obj.call(1, 2, 3, 4);
 
-        io.println(obj.call(1, 2, 3, 4)); // 24
+        io.println(a); // 24
     }
 
 }
