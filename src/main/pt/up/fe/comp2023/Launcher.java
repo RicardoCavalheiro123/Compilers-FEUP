@@ -83,6 +83,9 @@ public class Launcher {
 
         System.out.println(ollirResult.getOllirCode());
 
+        if(!config.get("registerAllocation").equals("-1")) {
+            ollirResult = ollir.optimize(ollirResult, Integer.parseInt(config.get("registerAllocation")));
+        }
 
         // Instantiate JasminGenerator
         SimpleBackend simpleBackend = new SimpleBackend();
@@ -119,6 +122,12 @@ public class Launcher {
         for(var arg: args) {
             if(arg.equals("-o")) {
                 config.put("optimize", "true");
+            }
+            else if(Character.toString(arg.charAt(1)).equals("r")) {
+                config.put("registerAllocation", arg.substring(3));
+            }
+            else if(arg.equals("-d")) {
+                config.put("debug", "true");
             }
         }
 
