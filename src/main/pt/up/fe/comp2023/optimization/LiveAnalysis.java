@@ -16,8 +16,8 @@ public class LiveAnalysis {
         this.ollirClass = ollirClass;
     }
 
-    public Map<String, List<LiveNode>> analysis() {
-        Map<String, List<LiveNode>> liveAnalysis = new HashMap<>();
+    public Map<Method, List<LiveNode>> analysis() {
+        Map<Method, List<LiveNode>> liveAnalysis = new HashMap<>();
 
         for (var method : ollirClass.getMethods()) {
             //instruction list
@@ -32,6 +32,7 @@ public class LiveAnalysis {
                 instructions.add(liveNode);
             }
 
+            liveAnalysis.put(method, instructions);
         }
 
         return liveAnalysis;
