@@ -3,20 +3,9 @@ import io;
 class InstSelection_if_lt {
 	public static void main(String[] args) {
 	    int a;
-	    int b;
-        a = 1;
-        b = 20 + 2;
-
-        while (a < b) {
-            a = a + 1;
-        }
-
-        b = 2;
-        while (b < a) {
-            a = a - 1;
-        }
-
-        if (b == a) {
+        a = 0;
+        a = a - 1;
+        if (0 < a) {
             a = 1;
         }
 
