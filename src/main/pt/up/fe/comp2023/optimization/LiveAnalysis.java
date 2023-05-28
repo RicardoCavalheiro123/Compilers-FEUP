@@ -24,13 +24,14 @@ public class LiveAnalysis {
                 var liveNode = new LiveNode();
                 liveNode.instruction = instruction;
 
+
                 liveNode.nodeAnalysis(liveNode.instruction);
 
                 instructions.add(liveNode);
 
             }
-            computeInOut(instructions);
 
+            computeInOut(instructions);
 
 
             liveAnalysis.put(method, instructions);
@@ -42,33 +43,44 @@ public class LiveAnalysis {
     public void computeInOut(List<LiveNode> instructions){
         boolean changes = true;
         while(changes) {
-            for(LiveNode instruction : instructions) {
-                Set<Element> in = new HashSet<>(instruction.in);
-                Set<Element> out = new HashSet<>(instruction.out);
+            for(int i = instructions.size() - 1; i >= 0; i--) {
+                LiveNode instruction = instructions.get(i);
+                ArrayList<String> inBef = new ArrayList<>(instruction.in);
+                ArrayList<String> outBef = new ArrayList<>(instruction.out);
 
-                Set<Element> newIn = new HashSet<>();
-                Set<Element> newOut = new HashSet<>();
-                Set<Element> set = new HashSet<>();
-                set.addAll(instruction.out);
-                set.removeAll(instruction.def);
-                newIn.addAll(set);
+                ArrayList<String> resOut = new ArrayList<>();
 
-
-                for(var successor : instruction.instruction.getSuccessors()) {
-                    var liveNode = getLiveNode(instructions, successor);
-                    newOut.addAll(liveNode.in);
+                for(Node child: instruction.instruction.getSuccessors()) {
+                    LiveNode node = getLiveNode(instructions,child);
+                    if(node != null) {
+                        ArrayList<String> childIn = new ArrayList<>(node.in);
+                        resOut.addAll(childIn);
+                    }
                 }
 
+                instruction.out = resOut;
 
-                if(!newIn.equals(in) || !newOut.equals(out)) {
+                ArrayList<String> resIn = new ArrayList<>(instruction.use);
+                ArrayList<String> temp = new ArrayList<>(instruction.out);
+
+                temp.removeAll(instruction.def);
+
+                resIn.addAll(temp);
+
+                instruction.in = resIn;
+
+                if(!inBef.equals(instruction.in) || !outBef.equals(instruction.out)) {
                     changes = true;
                 }
                 else {
                     changes = false;
                 }
 
+
+
             }
         }
+
 
 
     }
@@ -76,12 +88,16 @@ public class LiveAnalysis {
     public LiveNode getLiveNode(List<LiveNode> instructions, Node node) {
         for(LiveNode liveNode : instructions) {
 
-            if(liveNode.instruction.equals(node.getPredecessors().get(0))) {
+            if(liveNode.instruction.equals(node)) {
                 return liveNode;
             }
+
         }
         return null;
     }
+
+
+
 
 
 }
