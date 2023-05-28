@@ -1,12 +1,12 @@
 class MyClass {
-    int[] arr;
+
     int sum;
 
     public static void main(String[] args) {
 
     }
 
-  public int calculateSum() {
+  public int calculateSum(int[] arr) {
     arr = new int[3];
     arr[0] = 1;
     arr[1] = 2;

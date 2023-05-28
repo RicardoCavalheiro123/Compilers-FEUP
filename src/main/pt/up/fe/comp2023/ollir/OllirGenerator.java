@@ -236,7 +236,17 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
         }
         this.ollirCode.append("temp" + temp_counter + var_type + " :=" + var_type + " " + args.get(1) + var_type + ";\n");
         temp_counter++;
-        this.ollirCode.append("temp" + temp_counter + var_type + " :=" + var_type + " " + args.get(0).substring(0,args.get(0).indexOf('.')) + "[" + "temp" + (temp_counter -1) + var_type + "]" + var_type + ";\n");
+        if(args.get(0).charAt(0) == '$'){
+            String input = args.get(0);
+            int firstIndex = input.indexOf('.');
+            int secondIndex = input.indexOf('.', firstIndex + 1);
+
+
+            this.ollirCode.append("temp" + temp_counter + var_type + " :=" + var_type + " " + input.substring(0, secondIndex) + "[" + "temp" + (temp_counter -1) + var_type + "]" + var_type + ";\n");
+        }
+        else{
+            this.ollirCode.append("temp" + temp_counter + var_type + " :=" + var_type + " " + args.get(0).substring(0,args.get(0).indexOf('.')) + "[" + "temp" + (temp_counter -1) + var_type + "]" + var_type + ";\n");
+        }
         temp_counter++;
         return "temp" + (temp_counter -1) + var_type;
     }
