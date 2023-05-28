@@ -307,11 +307,12 @@ public class OllirToJasmin {
             jasminCodeBuilder.append(JasminUtils.loadElement(method, instruction.getOperand()));
             updateStack(1);
             jasminCodeBuilder.append("\n\t");
+
             jasminCodeBuilder.append("ifeq ");
             updateStack(-1);
             jasminCodeBuilder.append(JasminUtils.booleanResult(conditionCounter));
             conditionCounter++;
-            updateStack(1);
+            updateStack(2);
         } else {
             throw new RuntimeException("Unary operation not supported");
         }
@@ -357,7 +358,7 @@ public class OllirToJasmin {
         if (JasminUtils.isConditionalOperation(instruction.getOperation())) {
             jasminCodeBuilder.append(JasminUtils.booleanResult(conditionCounter));
             conditionCounter++;
-            updateStack(1);
+            updateStack(2);
         }
 
         return jasminCodeBuilder.toString();
