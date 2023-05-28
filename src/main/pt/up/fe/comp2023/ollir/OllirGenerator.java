@@ -236,7 +236,7 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
         }
         this.ollirCode.append("temp" + temp_counter + var_type + " :=" + var_type + " " + args.get(1) + var_type + ";\n");
         temp_counter++;
-        if(args.get(0).charAt(0) == '$'){
+        /*if(args.get(0).charAt(0) == '$'){
             String input = args.get(0);
             int firstIndex = input.indexOf('.');
             int secondIndex = input.indexOf('.', firstIndex + 1);
@@ -246,7 +246,9 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
         }
         else{
             this.ollirCode.append("temp" + temp_counter + var_type + " :=" + var_type + " " + args.get(0).substring(0,args.get(0).indexOf('.')) + "[" + "temp" + (temp_counter -1) + var_type + "]" + var_type + ";\n");
-        }
+        }*/
+        this.ollirCode.append("temp" + temp_counter + var_type + " :=" + var_type + " " + args.get(0) + "[" + "temp" + (temp_counter -1) + var_type + "]" + var_type + ";\n");
+
         temp_counter++;
         return "temp" + (temp_counter -1) + var_type;
     }
@@ -489,7 +491,7 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
             }
 
 
-            this.ollirCode.append(jmmNode.get("id") + type + " :=" + type + " " + temp + ";\n");
+            this.ollirCode.append(jmmNode.get("id") + var_type + " :=" + var_type + " " + temp + ";\n");
 
 
         }
