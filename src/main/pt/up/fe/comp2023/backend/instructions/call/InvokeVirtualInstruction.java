@@ -11,6 +11,7 @@ public class InvokeVirtualInstruction implements InstructionCall {
         StringBuilder jasminCodeBuilder = new StringBuilder();
 
         jasminCodeBuilder.append(JasminUtils.loadElement(method, instruction.getFirstArg()));
+        stackChange++;
 
         for (Element element : instruction.getListOfOperands()) {
             jasminCodeBuilder.append("\n\t").append(JasminUtils.loadElement(method, element));

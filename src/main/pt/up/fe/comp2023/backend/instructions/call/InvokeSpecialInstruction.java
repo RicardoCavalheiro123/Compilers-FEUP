@@ -16,6 +16,7 @@ public class InvokeSpecialInstruction implements InstructionCall {
         StringBuilder jasminCodeBuilder = new StringBuilder();
 
         jasminCodeBuilder.append(JasminUtils.loadElement(method, instruction.getFirstArg()));
+        stackChange++;
         jasminCodeBuilder.append("\n\t");
 
         if (method.isConstructMethod()  && instruction.getFirstArg().getType().getTypeOfElement() == ElementType.THIS) {
