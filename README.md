@@ -67,7 +67,7 @@ Percentage of work distribution:
 - José Araújo: 33%
 - Ricardo Cavalheiro: 33%
 
-Self-assessment: 19/20
+Self-assessment: 19.7/20
 
 Extra elements:
 - Support of any conditional operator (e.g. <, >, <=, >=, ==, !=)
