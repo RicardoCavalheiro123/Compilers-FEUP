@@ -3,13 +3,23 @@ import io;
 class InstSelection_if_lt {
 	public static void main(String[] args) {
 	    int a;
-        a = 0;
+	    int b;
+        a = 1;
+        b = 20 + 2;
 
-		if(0 < a) {
-			a = 1;
-		} else {
-			a = 2;
-		}
-		io.print(a);
+        while (a < b) {
+            a = a + 1;
+        }
+
+        b = 2;
+        while (b < a) {
+            a = a - 1;
+        }
+
+        if (b == a) {
+            a = 1;
+        }
+
+        io.print(a);
 	}
 }

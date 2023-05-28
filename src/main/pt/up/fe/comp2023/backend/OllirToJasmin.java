@@ -226,14 +226,15 @@ public class OllirToJasmin {
         }
         jasminCodeBuilder.append("\n\t");
 
-        String op;
+        StringBuilder op = new StringBuilder();
         if (conditionType ==  InstructionType.BINARYOPER && !hasZero) {
-            op = "if_icmp";
-            op += JasminUtils.operationCode(((BinaryOpInstruction) instruction.getCondition()).getOperation());
+            op.append("isub\n\t");
+            op.append("if");
+            op.append(JasminUtils.operationCode(((BinaryOpInstruction) instruction.getCondition()).getOperation()));
             updateStack(-2);
         }
         else {
-            op = "if" + JasminUtils.operationCode(new Operation(OperationType.NEQ, new Type(ElementType.BOOLEAN)));
+            op.append("if").append(JasminUtils.operationCode(new Operation(OperationType.NEQ, new Type(ElementType.BOOLEAN))));
             updateStack(-1);
         }
 
@@ -332,11 +333,6 @@ public class OllirToJasmin {
         boolean isConditional = JasminUtils.isConditionalOperation(instruction.getOperation());
         Operation operation = instruction.getOperation();
 
-        if(isConditional && leftIsZero) {
-            jasminCodeBuilder.append("iconst_0");
-            jasminCodeBuilder.append("\n\t");
-        }
-
         if (!(leftIsZero && isConditional)) {
             jasminCodeBuilder.append(JasminUtils.loadElement(method, left));
             updateStack(1);
@@ -350,17 +346,14 @@ public class OllirToJasmin {
         }
 
         if(isConditional) {
-            if (leftIsZero) {
-                jasminCodeBuilder.append("isub");
-                jasminCodeBuilder.append("\n\t");
-                updateStack(-1);
-            }
+            if (leftIsZero)  operation = JasminUtils.inverseOperation(operation);
             if (leftIsZero || rightIsZero) {
                 jasminCodeBuilder.append("if");
                 updateStack(-1);
             }
             else {
-                jasminCodeBuilder.append("if_icmp");
+                jasminCodeBuilder.append("isub\n\t");
+                jasminCodeBuilder.append("if");
                 updateStack(-2);
             }
         }
