@@ -345,7 +345,13 @@ public class OllirToJasmin {
         }
 
         if(isConditional) {
-            if (leftIsZero)  operation = JasminUtils.inverseOperation(operation);
+            if (leftIsZero) {
+                jasminCodeBuilder.append("iconst_0");
+                jasminCodeBuilder.append("\n\t");
+                jasminCodeBuilder.append("isub");
+                jasminCodeBuilder.append("\n\t");
+                updateStack(-1);
+            }
             if (leftIsZero || rightIsZero) {
                 jasminCodeBuilder.append("if");
                 updateStack(-1);

@@ -1,12 +1,15 @@
 import io;
 
-class MyClass {
-    public static void main(String[] args) {
-        int i;
-        i = 0;
-        i = i - 1;
-        if (i < 0) {
-            io.println(1);
-        }
-    }
+class InstSelection_if_lt {
+	public static void main(String[] args) {
+	    int a;
+        a = 0;
+
+		if(0 < a) {
+			a = 1;
+		} else {
+			a = 2;
+		}
+		io.print(a);
+	}
 }
