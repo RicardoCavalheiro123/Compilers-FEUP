@@ -332,6 +332,7 @@ public class OllirToJasmin {
         boolean leftIsZero = leftIsLiteral && ((LiteralElement) left).getLiteral().equals("0");
         boolean isConditional = JasminUtils.isConditionalOperation(instruction.getOperation());
         Operation operation = instruction.getOperation();
+        leftIsZero = false;
 
         if (!(leftIsZero && isConditional)) {
             jasminCodeBuilder.append(JasminUtils.loadElement(method, left));

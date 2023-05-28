@@ -12,11 +12,3 @@ class InstSelection_if_lt {
         io.print(a);
 	}
 }
-
-1 < 0
-iconst_1
-iflt label
-
-0 < 1
-iconst_1
-ifgt label
