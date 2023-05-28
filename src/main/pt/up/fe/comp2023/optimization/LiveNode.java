@@ -98,7 +98,7 @@ public class LiveNode {
                 break;
 
             case RETURN:
-                //if()
+                if(((ReturnInstruction) instruct).getOperand() == null) break;
 
                 if(!((ReturnInstruction) instruct).getOperand().isLiteral()) {
                     use.add(((ReturnInstruction) instruct).getOperand());
