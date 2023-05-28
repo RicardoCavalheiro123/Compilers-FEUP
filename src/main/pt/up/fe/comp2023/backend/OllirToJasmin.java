@@ -237,9 +237,14 @@ public class OllirToJasmin {
             op.append("if_icmp");
             op.append(JasminUtils.operationCode(((BinaryOpInstruction) instruction.getCondition()).getOperation()));
             updateStack(-2);
-        }
-        else {
-            op.append("if").append(JasminUtils.operationCode(new Operation(OperationType.NEQ, new Type(ElementType.BOOLEAN))));
+        } else {
+            op.append("iconst_1");
+            updateStack(1);
+            op.append("\n\t");
+            op.append("ixor");
+            updateStack(-1);
+            op.append("\n\t");
+            op.append("if").append(JasminUtils.operationCode(new Operation(OperationType.EQ, new Type(ElementType.BOOLEAN))));
             updateStack(-1);
         }
 
