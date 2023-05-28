@@ -1,0 +1,27 @@
+import io;
+
+class WhileIssue {
+
+    public int func(boolean b) {
+        int i;
+        i = 0;
+
+        while (i < 1 && b) {
+            i = 1;
+        }
+
+        return i;
+    }
+
+
+    public static void main(String[] args) {
+        WhileIssue obj;
+        int a;
+        int b;
+        obj = new WhileIssue();
+        a = obj.func(true);
+        b = obj.func(false);
+        io.println(a); // 1
+        io.println(b); // 0
+    }
+}

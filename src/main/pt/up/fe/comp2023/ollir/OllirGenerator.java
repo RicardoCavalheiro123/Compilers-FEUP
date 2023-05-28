@@ -101,18 +101,21 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
     private String dealWithWhile(JmmNode jmmNode, StringBuilder ollir){
 
         String result = "";
+        int loop_counter = this.loop_counter;
         // Boolean to return the children code instead of appending it
         returnable = true;
         result = visit(jmmNode.getChildren().get(0), ollir);
         returnable = false;
-        this.ollirCode.append("if (" + result + ") goto whilebody_"+ this.loop_counter +";\n");
-        this.ollirCode.append("goto endwhile_" + this.loop_counter + ";\n");
-        this.ollirCode.append("whilebody_" + this.loop_counter +":\n");
-        this.loop_counter++;
+        this.ollirCode.append("if (" + result + ") goto whilebody_"+ loop_counter +";\n");
+        this.ollirCode.append("goto endwhile_" + loop_counter + ";\n");
+        this.ollirCode.append("whilebody_" + loop_counter +":\n");
         visit(jmmNode.getChildren().get(1), ollir);
-        this.loop_counter--;
-        this.ollirCode.append("if (" + result + ") goto whilebody_"+ this.loop_counter +";\n");
-        this.ollirCode.append("endwhile_" + this.loop_counter + ":\n");
+        returnable = true;
+        result = visit(jmmNode.getChildren().get(0), ollir);
+        returnable = false;
+        this.ollirCode.append("if (" + result + ") goto whilebody_"+ loop_counter +";\n");
+        this.ollirCode.append("endwhile_" + loop_counter + ":\n");
+        this.loop_counter++;
         return null;
 
     }
@@ -130,18 +133,18 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
 
     private String dealWithIfElse(JmmNode jmmNode, StringBuilder ollir) {
         String result = "";
+        int loop_counter = this.loop_counter;
         // Boolean to return the children code instead of appending it
         returnable = true;
         result = visit(jmmNode.getChildren().get(0), ollir);
         returnable = false;
-        this.ollirCode.append("if (" + result + ") goto ifbody_"+ this.loop_counter +";\n");
-        this.loop_counter++;
-        visit(jmmNode.getChildren().get(2), ollir);
-        this.ollirCode.append("goto endif_"+(this.loop_counter-1)+";\n");
-        this.ollirCode.append("ifbody_"+(this.loop_counter-1)+":\n");
+        this.ollirCode.append("if (" + result + ") goto ifbody_"+ loop_counter +";\n");
+        if(jmmNode.getChildren().size()>2) visit(jmmNode.getChildren().get(2), ollir);
+        this.ollirCode.append("goto endif_"+(loop_counter)+";\n");
+        this.ollirCode.append("ifbody_"+(loop_counter)+":\n");
         visit(jmmNode.getChildren().get(1), ollir);
-        this.ollirCode.append("endif_"+(this.loop_counter-1)+":\n");
-        this.loop_counter--;
+        this.ollirCode.append("endif_"+(loop_counter)+":\n");
+        this.loop_counter++;
         return result;
     }
 
@@ -163,6 +166,36 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
     }
 
     private String dealWithArrayAssign(JmmNode jmmNode, StringBuilder ollir) {
+        int parameter = -1;
+        boolean fieldOfClass = false;
+        String type = "";
+
+        //Check if it is a local variable
+        if(this.symbolTable.isLocalVar(this.currentMethod,jmmNode.get("id"))){
+            symbol = this.symbolTable.getLocalVar(this.currentMethod, jmmNode.get("id"));
+            var_type = getVariableType(symbol.getType(), ollir);
+
+        }
+
+        //Check if is a parameter
+        else if(this.symbolTable.isParameter(this.currentMethod, jmmNode.get("id"))){
+            symbol = this.symbolTable.getParameter(this.currentMethod, jmmNode.get("id"));
+            var_type = getVariableType(symbol.getType(), ollir);
+            parameter = this.symbolTable.getParameterIndex(this.currentMethod, jmmNode.get("id")) + 1;
+
+        }
+
+        //Check if it is a field of the class
+        else if(this.symbolTable.isFieldOfClass(jmmNode.get("id"))){
+            symbol = this.symbolTable.getFieldOfClass(jmmNode.get("id"));
+            var_type = getVariableType(symbol.getType(), ollir);
+            fieldOfClass = true;
+            type = var_type;
+
+        }
+
+
+
 
         // Boolean to return the children code instead of appending it
         returnable = true;
@@ -176,6 +209,19 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
         for(int i = 0; i < jmmNode.getChildren().size(); i++){
             result = visit(jmmNode.getChildren().get(i), ollir);
         }
+
+        if(parameter!=-1){
+            this.ollirCode.append("$" + parameter + ".");
+
+        }
+
+        else if(fieldOfClass){
+            this.ollirCode.append("temp" + temp_counter + type + " :=" + type + " getfield(this," + jmmNode.get("id") + type + ")" + type + ";\n");
+            this.ollirCode.append("temp" + temp_counter +"[" + temp + var_type + "]" + var_type + " :=" + var_type + " " + result + var_type + ";\n");
+            temp_counter++;
+            return null;
+        }
+
         this.ollirCode.append(jmmNode.get("id")+"[" + temp + var_type + "]" + var_type + " :=" + var_type + " " + result + ";\n");
         returnable = false;
         return result;
@@ -188,9 +234,21 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
             result = visit(child, ollir);
             args.add(result);
         }
-        this.ollirCode.append("temp" + temp_counter + var_type + " :=" + var_type + " " + args.get(1) + var_type + ";\n");
+        this.ollirCode.append("temp" + temp_counter + var_type + " :=" + var_type + " " + args.get(1) + ";\n");
         temp_counter++;
-        this.ollirCode.append("temp" + temp_counter + var_type + " :=" + var_type + " " + jmmNode.getChildren().get(0).get("id") + "[" + "temp" + (temp_counter -1) + var_type + "]" + var_type + ";\n");
+        /*if(args.get(0).charAt(0) == '$'){
+            String input = args.get(0);
+            int firstIndex = input.indexOf('.');
+            int secondIndex = input.indexOf('.', firstIndex + 1);
+
+
+            this.ollirCode.append("temp" + temp_counter + var_type + " :=" + var_type + " " + input.substring(0, secondIndex) + "[" + "temp" + (temp_counter -1) + var_type + "]" + var_type + ";\n");
+        }
+        else{
+            this.ollirCode.append("temp" + temp_counter + var_type + " :=" + var_type + " " + args.get(0).substring(0,args.get(0).indexOf('.')) + "[" + "temp" + (temp_counter -1) + var_type + "]" + var_type + ";\n");
+        }*/
+        this.ollirCode.append("temp" + temp_counter + var_type + " :=" + var_type + " " + args.get(0) + "[" + "temp" + (temp_counter -1) + var_type + "]" + var_type + ";\n");
+
         temp_counter++;
         return "temp" + (temp_counter -1) + var_type;
     }
@@ -317,7 +375,7 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
             ex = "temp" + (temp_counter - 1) + "." + jmmNode.get("id");
         }
         this.ollirCode.append("." + jmmNode.get("id") + ",\"<init>\").V");
-        if(jmmNode.getJmmParent().getKind().equals("Parenthesis")){
+        if(jmmNode.getJmmParent().getKind().equals("Parenthesis") || jmmNode.getJmmParent().getKind().equals("Ret")){
             this.ollirCode.append(";\n");
         }
 
@@ -356,7 +414,7 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
 
         boolean fieldOfClass = false;
 
-
+        String var = "";
         //Check if it is a local variable
         if(this.symbolTable.isLocalVar(this.currentMethod,jmmNode.get("id"))){
             this.symbol = this.symbolTable.getLocalVar(this.currentMethod, jmmNode.get("id"));
@@ -366,6 +424,7 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
             else{
                 var_type = getVariableType(symbol.getType(), ollir);
             }
+            var = getVariableType(symbol.getType(), ollir);
 
         }
 
@@ -373,18 +432,17 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
         else if(this.symbolTable.isParameter(this.currentMethod, jmmNode.get("id"))){
             this.symbol = this.symbolTable.getParameter(this.currentMethod, jmmNode.get("id"));
             var_type = getVariableType(symbol.getType(), ollir);
+            var = getVariableType(symbol.getType(), ollir);
             isparameter = this.symbolTable.getParameterIndex(this.currentMethod, jmmNode.get("id")) + 1;
         }
 
         //Check if it is a field of the class
+
         else if(this.symbolTable.isFieldOfClass(jmmNode.get("id"))){
             this.symbol = this.symbolTable.getFieldOfClass(jmmNode.get("id"));
-            if(symbol.getType().isArray()) {
-                var_type = ".array" + getVariableType(symbol.getType(), ollir);
-            }
-            else{
-                var_type = getVariableType(symbol.getType(), ollir);
-            }
+
+            var = getVariableType(symbol.getType(), ollir);
+
             fieldOfClass = true;
 
         }
@@ -428,14 +486,14 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
                     this.ollirCode.append("putfield(this," + jmmNode.get("id") + type + "," + temp + ").V;\n");
                     return null;
                 }
-                this.ollirCode.append("temp" + temp_counter + type + " :=" + type + " " + temp + ";\n");
-                this.ollirCode.append("putfield(this," + jmmNode.get("id") + type + "," + "temp" + temp_counter + type + ").V;\n");
+                this.ollirCode.append("temp" + temp_counter + var + " :=" + var + " " + temp + ";\n");
+                this.ollirCode.append("putfield(this," + jmmNode.get("id") + var + "," + "temp" + temp_counter + var + ").V;\n");
                 temp_counter++;
                 return null;
             }
 
 
-            this.ollirCode.append(jmmNode.get("id") + type + " :=" + type + " " + temp + ";\n");
+            this.ollirCode.append(jmmNode.get("id") + var + " :=" + var + " " + temp + ";\n");
 
 
         }

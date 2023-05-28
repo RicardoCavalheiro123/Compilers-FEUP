@@ -1,0 +1,24 @@
+import io;
+import GetterAndSetter;
+
+class GetterAndSetterExtend extends GetterAndSetter {
+
+    public int getArg(int arg) {
+        return arg;
+    }
+
+    public static void main(String[] args) {
+        GetterAndSetterExtend g;
+        int i;
+        int c;
+        int b;
+
+        g = new GetterAndSetterExtend();
+        g.setA(1);
+
+        c = g.getA();
+        b = g.getArg(c);
+        io.println(b); // 1
+    }
+
+}

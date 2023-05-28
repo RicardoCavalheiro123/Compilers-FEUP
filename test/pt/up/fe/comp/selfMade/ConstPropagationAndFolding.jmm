@@ -1,0 +1,34 @@
+import io;
+
+class ConstPropagationFolding {
+
+    public int call(int max) {
+        int a;
+        boolean b;
+
+        a = 10;
+        b = true;
+
+        if (max < a) {
+            a = max;
+        } else {
+            a = a;
+        }
+
+        if (!b) {
+            a = a;
+        } else {
+            a = 0 - a;
+        }
+
+        return a;
+	}
+
+	public static void main(String[] args) {
+	    int a;
+	    ConstPropagationFolding c;
+	    c = new ConstPropagationFolding();
+	    a = c.call(5);
+	    io.println(a);
+	}
+}

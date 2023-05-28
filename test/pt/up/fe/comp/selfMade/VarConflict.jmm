@@ -1,0 +1,22 @@
+import io;
+
+class VarConflict {
+    int t2;
+
+    public int getRes(int t1) {
+        int t3;
+
+        t2 = 2;
+        t3 = 3;
+
+        return t1 + t2 + t3;
+    }
+
+    public static void main(String[] args) {
+        VarConflict vc;
+        int a;
+         vc = new VarConflict();
+        a = vc.getRes(1);
+        io.println(a); // RESULT 6
+    }
+}

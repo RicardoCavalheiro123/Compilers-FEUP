@@ -5,13 +5,18 @@ import pt.up.fe.comp2023.backend.JasminUtils;
 import pt.up.fe.comp2023.backend.instructions.call.InstructionCall;
 
 public class InvokeVirtualInstruction implements InstructionCall {
+    int stackChange = 0;
     @Override
     public String toJasmin(Method method, CallInstruction instruction) {
         StringBuilder jasminCodeBuilder = new StringBuilder();
 
         jasminCodeBuilder.append(JasminUtils.loadElement(method, instruction.getFirstArg()));
+        stackChange++;
 
-        for (Element element : instruction.getListOfOperands()) jasminCodeBuilder.append("\n\t").append(JasminUtils.loadElement(method, element));
+        for (Element element : instruction.getListOfOperands()) {
+            jasminCodeBuilder.append("\n\t").append(JasminUtils.loadElement(method, element));
+            stackChange--;
+        }
 
         jasminCodeBuilder.append("\n\t");
         jasminCodeBuilder.append("invokevirtual ");
@@ -26,5 +31,10 @@ public class InvokeVirtualInstruction implements InstructionCall {
         jasminCodeBuilder.append(")" + JasminUtils.typeCode(instruction.getReturnType()));
 
         return jasminCodeBuilder.toString();
+    }
+
+    @Override
+    public int getStackChange() {
+        return stackChange;
     }
 }

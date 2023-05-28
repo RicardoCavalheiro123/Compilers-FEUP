@@ -3,10 +3,6 @@ package pt.up.fe.comp2023.backend;
 import org.specs.comp.ollir.*;
 import pt.up.fe.comp2023.backend.instructions.call.*;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
 public class OllirToJasmin {
     String superClassName;
@@ -86,7 +82,7 @@ public class OllirToJasmin {
 
 
             if (method.getMethodAccessModifier() != AccessModifiers.DEFAULT) {
-                jasminCodeBuilder.append("\t.limit stack ").append("99").append("\n");
+                jasminCodeBuilder.append("\t.limit stack ").append(this.stackMaxSize + 2).append("\n");
                 jasminCodeBuilder.append("\t.limit locals ").append(getLimitLocal(method)).append("\n");
             }
 
@@ -132,7 +128,9 @@ public class OllirToJasmin {
         if(dest instanceof ArrayOperand) {
             ArrayOperand aop = ((ArrayOperand) dest);
             jasminCodeBuilder.append("aload").append(JasminUtils.regCode(method.getVarTable().get(aop.getName()).getVirtualReg())).append("\n\t");
+            updateStack(1);
             jasminCodeBuilder.append(JasminUtils.loadElement(method, aop.getIndexOperands().get(0))).append("\n\t");
+            updateStack(1);
 
         } else {
             if (instruction.getRhs().getInstType() == InstructionType.BINARYOPER) {
@@ -168,6 +166,7 @@ public class OllirToJasmin {
         this.isAssign = false;
         jasminCodeBuilder.append("\n\t");
         jasminCodeBuilder.append(JasminUtils.storeElement(method, dest));
+        updateStack(-1);
 
         return jasminCodeBuilder.toString();
     }
@@ -187,11 +186,12 @@ public class OllirToJasmin {
         }
 
         jasminCodeBuilder.append(callInstruction.toJasmin(method, instruction));
-
+        if(!method.isConstructMethod()) updateStack(callInstruction.getStackChange());
 
         if(!method.isConstructMethod() && !this.isAssign && ((callInstruction instanceof InvokeSpecialInstruction) || (instruction.getReturnType().getTypeOfElement() != ElementType.VOID))) {
             jasminCodeBuilder.append("\n\t");
             jasminCodeBuilder.append("pop");
+            updateStack(-1);
         }
 
         return jasminCodeBuilder.toString();
@@ -204,23 +204,37 @@ public class OllirToJasmin {
     private String getBranchJasminString(Method method, CondBranchInstruction instruction) {
         StringBuilder jasminCodeBuilder = new StringBuilder();
         InstructionType conditionType = instruction.getCondition().getInstType();
+        boolean hasZero = false;
         if (conditionType == InstructionType.BINARYOPER) {
             BinaryOpInstruction binaryOpInstruction = (BinaryOpInstruction) instruction.getCondition();
-            jasminCodeBuilder.append(JasminUtils.loadElement(method, binaryOpInstruction.getLeftOperand()));
+            if(!(binaryOpInstruction.getLeftOperand().isLiteral() && ((LiteralElement) binaryOpInstruction.getLeftOperand()).getLiteral().equals("0"))) {
+                jasminCodeBuilder.append(JasminUtils.loadElement(method, binaryOpInstruction.getLeftOperand()));
+                updateStack(1);
+            } else {
+                hasZero = true;
+            }
             jasminCodeBuilder.append("\n\t");
-            jasminCodeBuilder.append(JasminUtils.loadElement(method, binaryOpInstruction.getRightOperand()));
+            if(!(binaryOpInstruction.getRightOperand().isLiteral() && ((LiteralElement) binaryOpInstruction.getRightOperand()).getLiteral().equals("0"))) {
+                jasminCodeBuilder.append(JasminUtils.loadElement(method, binaryOpInstruction.getRightOperand()));
+                updateStack(1);
+            } else {
+                hasZero = true;
+            }
         } else if (conditionType == InstructionType.NOPER) {
             jasminCodeBuilder.append(JasminUtils.loadElement(method, instruction.getOperands().get(0)));
+            updateStack(1);
         }
         jasminCodeBuilder.append("\n\t");
 
         String op;
-        if (conditionType ==  InstructionType.BINARYOPER) {
+        if (conditionType ==  InstructionType.BINARYOPER && !hasZero) {
             op = "if_icmp";
             op += JasminUtils.operationCode(((BinaryOpInstruction) instruction.getCondition()).getOperation());
+            updateStack(-2);
         }
         else {
             op = "if" + JasminUtils.operationCode(new Operation(OperationType.NEQ, new Type(ElementType.BOOLEAN)));
+            updateStack(-1);
         }
 
         jasminCodeBuilder.append(op).append(" ").append(instruction.getLabel());
@@ -233,6 +247,7 @@ public class OllirToJasmin {
 
         if(instruction.hasReturnValue()) {
             jasminCodeBuilder.append(JasminUtils.loadElement(method, instruction.getOperand()));
+            updateStack(1);
             jasminCodeBuilder.append("\n\t");
         }
 
@@ -247,6 +262,7 @@ public class OllirToJasmin {
         }
 
         jasminCodeBuilder.append("return");
+        updateStack(-1);
 
         return jasminCodeBuilder.toString();
     }
@@ -255,15 +271,17 @@ public class OllirToJasmin {
         StringBuilder jasminCodeBuilder = new StringBuilder();
 
         jasminCodeBuilder.append(JasminUtils.loadElement(method, instruction.getFirstOperand()));
+        updateStack(1);
         jasminCodeBuilder.append("\n\t");
         jasminCodeBuilder.append(JasminUtils.loadElement(method, instruction.getThirdOperand()));
+        updateStack(1);
         jasminCodeBuilder.append("\n\t");
 
         jasminCodeBuilder.append("putfield ");
         jasminCodeBuilder.append(((ClassType) instruction.getFirstOperand().getType()).getName()).append("/");
         jasminCodeBuilder.append(((Operand) instruction.getSecondOperand()).getName()).append(" ");
         jasminCodeBuilder.append(JasminUtils.typeCode(instruction.getSecondOperand().getType()));
-
+        updateStack(-2);
         return jasminCodeBuilder.toString();
     }
 
@@ -271,29 +289,30 @@ public class OllirToJasmin {
         StringBuilder jasminCodeBuilder = new StringBuilder();
 
         jasminCodeBuilder.append(JasminUtils.loadElement(method, instruction.getFirstOperand()));
-
+        updateStack(1);
         jasminCodeBuilder.append("\n\t");
 
         jasminCodeBuilder.append("getfield ");
         jasminCodeBuilder.append(((ClassType) instruction.getFirstOperand().getType()).getName()).append("/");
         jasminCodeBuilder.append(((Operand) instruction.getSecondOperand()).getName()).append(" ");
         jasminCodeBuilder.append(JasminUtils.typeCode(instruction.getSecondOperand().getType()));
-
+        updateStack(-1);
         return jasminCodeBuilder.toString();
     }
 
     private String getUnaryOperJasminString(Method method, UnaryOpInstruction instruction) {
         StringBuilder jasminCodeBuilder = new StringBuilder();
 
-
-
-
         if (instruction.getOperation().getOpType() == OperationType.NOTB) {
             jasminCodeBuilder.append(JasminUtils.loadElement(method, instruction.getOperand()));
+            updateStack(1);
             jasminCodeBuilder.append("\n\t");
+
             jasminCodeBuilder.append("ifeq ");
+            updateStack(-1);
             jasminCodeBuilder.append(JasminUtils.booleanResult(conditionCounter));
             conditionCounter++;
+            updateStack(2);
         } else {
             throw new RuntimeException("Unary operation not supported");
         }
@@ -308,35 +327,50 @@ public class OllirToJasmin {
         Element right = instruction.getRightOperand();
         boolean rightIsLiteral = right.isLiteral();
         boolean leftIsLiteral = left.isLiteral();
+        boolean rightIsZero = rightIsLiteral && ((LiteralElement) right).getLiteral().equals("0");
+        boolean leftIsZero = leftIsLiteral && ((LiteralElement) left).getLiteral().equals("0");
+        boolean isConditional = JasminUtils.isConditionalOperation(instruction.getOperation());
+        Operation operation = instruction.getOperation();
 
-        boolean mathOp = instruction.getOperation().getOpType() == OperationType.ADD ||
-                instruction.getOperation().getOpType() == OperationType.SUB ||
-                instruction.getOperation().getOpType() == OperationType.MUL ||
-                instruction.getOperation().getOpType() == OperationType.DIV;
+        if(isConditional && leftIsZero) {
+            jasminCodeBuilder.append("iconst_0");
+            jasminCodeBuilder.append("\n\t");
+        }
 
-        if (!(leftIsLiteral && ((LiteralElement) left).getLiteral().equals("0") && !mathOp)) {
+        if (!(leftIsZero && isConditional)) {
             jasminCodeBuilder.append(JasminUtils.loadElement(method, left));
+            updateStack(1);
             jasminCodeBuilder.append("\n\t");
         }
-        if (!(rightIsLiteral && ((LiteralElement) right).getLiteral().equals("0") && !mathOp)) {
+
+        if (!(rightIsZero && isConditional)) {
             jasminCodeBuilder.append(JasminUtils.loadElement(method, right));
+            updateStack(1);
             jasminCodeBuilder.append("\n\t");
         }
 
-        if(!mathOp) {
-            boolean oneIsZero = false;
-            if (leftIsLiteral && ((LiteralElement) left).getLiteral().equals("0")) oneIsZero = true;
-            else if (rightIsLiteral && ((LiteralElement) right).getLiteral().equals("0")) oneIsZero = true;
-
-            if (oneIsZero) jasminCodeBuilder.append("if");
-            else jasminCodeBuilder.append("if_icmp");
+        if(isConditional) {
+            if (leftIsZero) {
+                jasminCodeBuilder.append("isub");
+                jasminCodeBuilder.append("\n\t");
+                updateStack(-1);
+            }
+            if (leftIsZero || rightIsZero) {
+                jasminCodeBuilder.append("if");
+                updateStack(-1);
+            }
+            else {
+                jasminCodeBuilder.append("if_icmp");
+                updateStack(-2);
+            }
         }
-        jasminCodeBuilder.append(JasminUtils.operationCode(instruction.getOperation()));
 
-        // If boolean operation
-        if (JasminUtils.isConditionalOperation(instruction.getOperation())) {
+        jasminCodeBuilder.append(JasminUtils.operationCode(operation));
+
+        if (isConditional) {
             jasminCodeBuilder.append(JasminUtils.booleanResult(conditionCounter));
             conditionCounter++;
+            updateStack(2);
         }
 
         return jasminCodeBuilder.toString();
@@ -346,6 +380,7 @@ public class OllirToJasmin {
         StringBuilder jasminCodeBuilder = new StringBuilder();
 
         jasminCodeBuilder.append(JasminUtils.loadElement(method, instruction.getSingleOperand()));
+        updateStack(1);
 
         return jasminCodeBuilder.toString();
     }
@@ -362,8 +397,6 @@ public class OllirToJasmin {
         this.stackSize += stackUpdate;
         if (this.stackSize > this.stackMaxSize)
             this.stackMaxSize = this.stackSize;
-        if (this.stackSize < 0)
-            throw new RuntimeException("Stack size is negative");
         return this.stackSize;
     }
 

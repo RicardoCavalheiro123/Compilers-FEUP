@@ -4,6 +4,7 @@ import org.specs.comp.ollir.*;
 import pt.up.fe.comp2023.backend.JasminUtils;
 
 public class InvokeStaticInstruction implements InstructionCall {
+    int stackChange = 0;
     @Override
     public String toJasmin(Method method, CallInstruction instruction) {
         StringBuilder jasminCodeBuilder = new StringBuilder();
@@ -19,10 +20,17 @@ public class InvokeStaticInstruction implements InstructionCall {
 
         for (Element e: instruction.getListOfOperands()) {
             jasminCodeBuilder.append(JasminUtils.typeCode(e.getType()));
+            stackChange--;
         }
 
         jasminCodeBuilder.append(")" + JasminUtils.typeCode(instruction.getReturnType()));
+        stackChange++;
 
         return jasminCodeBuilder.toString();
+    }
+
+    @Override
+    public int getStackChange() {
+        return stackChange;
     }
 }

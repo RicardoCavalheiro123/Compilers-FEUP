@@ -1,0 +1,14 @@
+class A {
+    int a;
+    int b;
+    boolean c;
+    public int f() {
+        return 1;
+    }
+
+    public int g() {
+        return a + 1;
+    }
+    public static void main(String[] args) {
+    }
+}

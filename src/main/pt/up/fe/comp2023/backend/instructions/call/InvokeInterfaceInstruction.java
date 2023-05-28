@@ -9,4 +9,9 @@ public class InvokeInterfaceInstruction implements InstructionCall {
         StringBuilder jasminCodeBuilder = new StringBuilder();
         return "";
     }
+
+    @Override
+    public int getStackChange() {
+        return stackChange;
+    }
 }

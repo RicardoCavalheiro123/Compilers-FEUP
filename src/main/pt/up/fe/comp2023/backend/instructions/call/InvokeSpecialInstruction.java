@@ -6,6 +6,7 @@ import pt.up.fe.comp2023.backend.JasminUtils;
 
 public class InvokeSpecialInstruction implements InstructionCall {
     String superClassName;
+    int stackChange = 0;
 
     public InvokeSpecialInstruction(String superClassName) {
         this.superClassName = superClassName;
@@ -15,6 +16,7 @@ public class InvokeSpecialInstruction implements InstructionCall {
         StringBuilder jasminCodeBuilder = new StringBuilder();
 
         jasminCodeBuilder.append(JasminUtils.loadElement(method, instruction.getFirstArg()));
+        stackChange++;
         jasminCodeBuilder.append("\n\t");
 
         if (method.isConstructMethod()  && instruction.getFirstArg().getType().getTypeOfElement() == ElementType.THIS) {
@@ -33,10 +35,16 @@ public class InvokeSpecialInstruction implements InstructionCall {
 
         for (Element e: instruction.getListOfOperands()) {
             jasminCodeBuilder.append(JasminUtils.typeCode(e.getType()));
+            stackChange--;
         }
 
         jasminCodeBuilder.append(")" + JasminUtils.typeCode(instruction.getReturnType()));
 
         return jasminCodeBuilder.toString();
+    }
+
+    @Override
+    public int getStackChange() {
+        return stackChange;
     }
 }

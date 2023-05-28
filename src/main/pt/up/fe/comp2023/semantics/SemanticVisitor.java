@@ -195,6 +195,9 @@ public abstract class SemanticVisitor extends PreorderJmmVisitor<SymbolTable, In
             case "Parenthesis":
                 return this.getJmmNodeType(node.getJmmChild(0), symbolTable);
 
+            case "StringType":
+                return new Type("String", false);
+
             default:
                 return new Type("invalid", false);
         }

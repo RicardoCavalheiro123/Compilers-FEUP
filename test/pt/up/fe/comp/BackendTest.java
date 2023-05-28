@@ -50,13 +50,13 @@ public class BackendTest {
                 "\t\tinvokespecial(this, \"<init>\").V;\n" +
                 "\t}\n" +
                 "\t\n" +
-                "\t.method public check(A.array.classArray, b.Foo).bool {\n" +
+                "\t.method public check(a.array.i32, b.myClass).bool {\n" +
                 "\t\tall.bool :=.bool 0.bool;\n" +
                 "\t\t\n" +
-                "\t\tc.Foo :=.Foo $2.b.Foo;\n" +
-                "\t\tinvokevirtual(c.Foo,\"test\",$1.A.array.classArray).V;\n" +
+                "\t\tc.myClass :=.Foo $2.b.myClass;\n" +
+                "\t\tinvokevirtual(c.myClass,\"test\",$1.a.array.i32).V;\n" +
                 "\n" +
-                "\t\tb.bool :=.bool !.bool true.bool;\n" +
+                "\t\tb.bool :=.bool !.bool 1.bool;\n" +
                 "\n" +
                 "\n" +
                 "\t\tret.bool all.bool;\n" +
