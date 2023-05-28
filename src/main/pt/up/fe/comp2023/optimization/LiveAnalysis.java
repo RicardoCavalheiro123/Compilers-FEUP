@@ -43,8 +43,8 @@ public class LiveAnalysis {
     public void computeInOut(List<LiveNode> instructions){
         boolean changes = true;
         while(changes) {
-            for(int i = instructions.size() - 1; i >= 0; i--) {
-                LiveNode instruction = instructions.get(i);
+            for(LiveNode instruction : instructions) {
+
                 ArrayList<String> inBef = new ArrayList<>(instruction.in);
                 ArrayList<String> outBef = new ArrayList<>(instruction.out);
 
