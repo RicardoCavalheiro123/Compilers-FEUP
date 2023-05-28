@@ -1,45 +1,32 @@
 import io;
 
-class SelfMade4 {
-    int a;
-    int[] b;
-    boolean c;
-    int d;
+class Ifs {
+    public int call(int num) {
+        boolean b;
+        int i;
+        int j;
+        b = true;
+        i = 0;
+        j = 0;
 
-    public int get() {
-        return 2*15 / 15;
-    }
 
-    public int getD(int a) {
-        a = 10;
-        d = 2;
-        while (!(a < 10)) {
-            d = 1;
-            a = 0;
+        if (!b && false) {
+            i = i+1;
+        } else {
+            i = i+2; // i = 221102211 or 221102212
         }
 
-        return d;
+        ////
+
+
+        return i;
     }
 
-    public SelfMade4 get1() {
-        return new SelfMade4();
-    }
-
-    public SelfMade4 get2() {
-        return this;
-    }
-
-    public static void main(String[] args) {
-        SelfMade4 a;
-        SelfMade4 b;
-        int c;
-        int d;
-        a = new SelfMade4();
-        b = new SelfMade4();
-        a = a.get1();
-        b = b.get2();
-        c = a.get();
-        d = b.getD(35/12);
-        io.println(c + d);
+    public static void main(String[] args){
+        int a;
+        Ifs ifs;
+        ifs = new Ifs();
+        a = ifs.call(10);
+        io.println(a);
     }
 }
