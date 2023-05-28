@@ -30,7 +30,7 @@ public class LiveNode {
         return map;
     }
 */
-     */
+     
 
     public void nodeAnalysis(Instruction instruct) {
         switch(instruct.getInstType()) {
