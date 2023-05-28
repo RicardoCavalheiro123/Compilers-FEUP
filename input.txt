@@ -2,7 +2,7 @@ import io;
 
 class MyClass {
     public static void main(String[] args) {
-        if (0 < 2) {
+        if (0 != 2) {
             io.println(2);
         }
     }

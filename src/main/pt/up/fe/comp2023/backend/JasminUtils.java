@@ -174,9 +174,7 @@ public class JasminUtils {
             case GTH -> new Operation(OperationType.LTH, operation.getTypeInfo());
             case LTE -> new Operation(OperationType.GTE, operation.getTypeInfo());
             case GTE -> new Operation(OperationType.LTE, operation.getTypeInfo());
-            case EQ -> new Operation(OperationType.NEQ, operation.getTypeInfo());
-            case NEQ -> new Operation(OperationType.EQ, operation.getTypeInfo());
-            default -> throw new UnsupportedOperationException("Operation not implemented: " + operation.getOpType());
+            default -> operation;
         };
     }
 }
