@@ -234,7 +234,7 @@ public class OllirGenerator extends AJmmVisitor<StringBuilder, String> {
             result = visit(child, ollir);
             args.add(result);
         }
-        this.ollirCode.append("temp" + temp_counter + var_type + " :=" + var_type + " " + args.get(1) + var_type + ";\n");
+        this.ollirCode.append("temp" + temp_counter + var_type + " :=" + var_type + " " + args.get(1) + ";\n");
         temp_counter++;
         /*if(args.get(0).charAt(0) == '$'){
             String input = args.get(0);
